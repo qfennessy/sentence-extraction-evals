@@ -1,0 +1,262 @@
+{
+  "sentences": [
+    {
+      "sentence": "John's sister Mary is a 30-year-old doctor with two kids.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Mary",
+            "age": "30",
+            "gender": "female",
+            "occupation": "doctor",
+            "relation_to": [
+              {
+                "name": "John",
+                "relationship": "sister"
+              }
+            ]
+          },
+          {
+            "name": "John",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Mary",
+                "relationship": "brother"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sentence": "Sarah's father Robert works as an engineer and is 56 years old.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Robert",
+            "age": "56",
+            "gender": "male",
+            "occupation": "engineer",
+            "relation_to": [
+              {
+                "name": "Sarah",
+                "relationship": "father"
+              }
+            ]
+          },
+          {
+            "name": "Sarah",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Robert",
+                "relationship": "daughter"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sentence": "Michael and his wife Jennifer have three children: twins David and Lisa, 8, and baby Emma, who is 2.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Michael",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jennifer",
+                "relationship": "husband"
+              },
+              {
+                "name": "David",
+                "relationship": "father"
+              },
+              {
+                "name": "Lisa",
+                "relationship": "father"
+              },
+              {
+                "name": "Emma",
+                "relationship": "father"
+              }
+            ]
+          },
+          {
+            "name": "Jennifer",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Michael",
+                "relationship": "wife"
+              },
+              {
+                "name": "David",
+                "relationship": "mother"
+              },
+              {
+                "name": "Lisa",
+                "relationship": "mother"
+              },
+              {
+                "name": "Emma",
+                "relationship": "mother"
+              }
+            ]
+          },
+          {
+            "name": "David",
+            "age": "8",
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Michael",
+                "relationship": "son"
+              },
+              {
+                "name": "Jennifer",
+                "relationship": "son"
+              },
+              {
+                "name": "Lisa",
+                "relationship": "brother"
+              },
+              {
+                "name": "Emma",
+                "relationship": "brother"
+              }
+            ]
+          },
+          {
+            "name": "Lisa",
+            "age": "8",
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Michael",
+                "relationship": "daughter"
+              },
+              {
+                "name": "Jennifer",
+                "relationship": "daughter"
+              },
+              {
+                "name": "David",
+                "relationship": "sister"
+              },
+              {
+                "name": "Emma",
+                "relationship": "sister"
+              }
+            ]
+          },
+          {
+            "name": "Emma",
+            "age": "2",
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Michael",
+                "relationship": "daughter"
+              },
+              {
+                "name": "Jennifer",
+                "relationship": "daughter"
+              },
+              {
+                "name": "David",
+                "relationship": "sister"
+              },
+              {
+                "name": "Lisa",
+                "relationship": "sister"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sentence": "Grandmother Elizabeth, 75, knits sweaters for all her grandchildren.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Elizabeth",
+            "age": "75",
+            "gender": "female",
+            "occupation": null,
+            "relation_to": []
+          }
+        ]
+      }
+    },
+    {
+      "sentence": "Tom is the youngest of three brothers; his siblings James and Kevin are both in college.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Tom",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "James",
+                "relationship": "brother"
+              },
+              {
+                "name": "Kevin",
+                "relationship": "brother"
+              }
+            ]
+          },
+          {
+            "name": "James",
+            "age": null,
+            "gender": "male",
+            "occupation": "college student",
+            "relation_to": [
+              {
+                "name": "Tom",
+                "relationship": "brother"
+              },
+              {
+                "name": "Kevin",
+                "relationship": "brother"
+              }
+            ]
+          },
+          {
+            "name": "Kevin",
+            "age": null,
+            "gender": "male",
+            "occupation": "college student",
+            "relation_to": [
+              {
+                "name": "Tom",
+                "relationship": "brother"
+              },
+              {
+                "name": "James",
+                "relationship": "brother"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

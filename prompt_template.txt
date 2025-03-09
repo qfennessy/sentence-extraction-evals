@@ -1,0 +1,55 @@
+You will extract structured information about family members from a sentence. 
+
+Here is the sentence:
+{SENTENCE}
+
+Extract all family relationships mentioned in the sentence, and output a JSON object with the following structure:
+{
+  "family_members": [
+    {
+      "name": "person's name",
+      "age": "age if mentioned, otherwise null",
+      "gender": "gender if mentioned, otherwise null",
+      "occupation": "occupation if mentioned, otherwise null",
+      "relation_to": [
+        {
+          "name": "related person's name",
+          "relationship": "how they are related (e.g., 'son', 'daughter', 'brother', 'sister', 'mother', 'father', etc.)"
+        }
+      ]
+    }
+  ]
+}
+
+Example:
+For the sentence "John's sister Mary is a 30-year-old doctor with two kids", the output would be:
+{
+  "family_members": [
+    {
+      "name": "Mary",
+      "age": "30",
+      "gender": "female",
+      "occupation": "doctor",
+      "relation_to": [
+        {
+          "name": "John",
+          "relationship": "sister"
+        }
+      ]
+    },
+    {
+      "name": "John",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Mary",
+          "relationship": "brother"
+        }
+      ]
+    }
+  ]
+}
+
+Only return the JSON object, with no other text.
