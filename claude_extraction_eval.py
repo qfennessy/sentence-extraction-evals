@@ -146,6 +146,119 @@ def evaluate_extraction(client, prompt_template: str, sentences: List[Dict],
     
     return results
 
+def deep_compare(expected, extracted, field_path=""):
+    """
+    Recursively compare expected and extracted values, handling nested structures.
+    Returns a tuple of (num_correct, num_total, details) where details is a list of 
+    mismatches with their paths.
+    """
+    correct = 0
+    total = 0
+    details = []
+    
+    # If both are dictionaries, compare their keys and values
+    if isinstance(expected, dict) and isinstance(extracted, dict):
+        # Count each key-value pair in expected
+        for key, exp_value in expected.items():
+            total += 1
+            current_path = f"{field_path}.{key}" if field_path else key
+            
+            if key in extracted:
+                ext_value = extracted[key]
+                # Recursively compare nested values
+                sub_correct, sub_total, sub_details = deep_compare(exp_value, ext_value, current_path)
+                correct += sub_correct
+                total += sub_total - 1  # Subtract 1 because we already counted the key existence
+                details.extend(sub_details)
+            else:
+                details.append({
+                    "path": current_path,
+                    "expected": exp_value,
+                    "extracted": None,
+                    "status": "missing"
+                })
+    
+    # If both are lists, compare their elements
+    elif isinstance(expected, list) and isinstance(extracted, list):
+        # For lists, we'll try to match items in a way that maximizes matches
+        # This is a simplified approach - could be improved with more complex matching
+        remaining_extracted = extracted.copy()
+        
+        for i, exp_item in enumerate(expected):
+            total += 1
+            current_path = f"{field_path}[{i}]"
+            
+            best_match = None
+            best_match_score = -1
+            best_match_index = -1
+            
+            # Find the best matching item in the extracted list
+            for j, ext_item in enumerate(remaining_extracted):
+                sub_correct, sub_total, _ = deep_compare(exp_item, ext_item)
+                match_score = sub_correct / max(1, sub_total)
+                
+                if match_score > best_match_score:
+                    best_match_score = match_score
+                    best_match = ext_item
+                    best_match_index = j
+            
+            # If we found a reasonable match
+            if best_match_score > 0.5:
+                sub_correct, sub_total, sub_details = deep_compare(exp_item, best_match, current_path)
+                correct += 1  # Count the item match
+                # Add nested comparison details
+                details.extend(sub_details)
+                # Remove the matched item so we don't match it again
+                if best_match_index >= 0:
+                    del remaining_extracted[best_match_index]
+            else:
+                details.append({
+                    "path": current_path,
+                    "expected": exp_item,
+                    "extracted": "No good match found",
+                    "status": "mismatch"
+                })
+    
+    # For primitive values, direct comparison
+    else:
+        total = 1
+        # Normalize values for comparison (cast to string, lowercase)
+        exp_norm = str(expected).lower() if expected is not None else ""
+        ext_norm = str(extracted).lower() if extracted is not None else ""
+        
+        if exp_norm == ext_norm:
+            correct = 1
+        # Partial credit for numeric values with small differences
+        elif (isinstance(expected, (int, float)) and isinstance(extracted, (int, float)) and 
+              abs(expected - extracted) / max(1, abs(expected)) < 0.1):
+            correct = 0.8
+            details.append({
+                "path": field_path,
+                "expected": expected,
+                "extracted": extracted,
+                "status": "partial_match"
+            })
+        # Partial credit for text with significant overlap
+        elif (isinstance(expected, str) and isinstance(extracted, str) and
+              (expected.lower() in extracted.lower() or extracted.lower() in expected.lower())):
+            correct = 0.5
+            details.append({
+                "path": field_path,
+                "expected": expected,
+                "extracted": extracted,
+                "status": "partial_match"
+            })
+        else:
+            correct = 0
+            details.append({
+                "path": field_path,
+                "expected": expected, 
+                "extracted": extracted,
+                "status": "mismatch"
+            })
+    
+    return correct, total, details
+
 def calculate_metrics(results: List[Dict]) -> Dict:
     """Calculate evaluation metrics for the extraction results."""
     metrics = {
@@ -163,12 +276,17 @@ def calculate_metrics(results: List[Dict]) -> Dict:
             "avg_score": 0.0,
             "median_score": 0.0,
             "total_score": 0.0
-        }
+        },
+        "field_accuracy": {},
+        "error_details": []
     }
     
     total_fields = 0
     total_extracted_fields = 0
+    total_correct_values = 0
+    total_expected_values = 0
     scores = []
+    field_errors = {}
     
     for result in results:
         expected = result["expected"]
@@ -188,19 +306,36 @@ def calculate_metrics(results: List[Dict]) -> Dict:
             metrics["scores"]["by_sentence"].append({
                 "sentence": result["sentence"][:50] + "..." if len(result["sentence"]) > 50 else result["sentence"],
                 "score": sentence_score,
-                "extracted_fields": 0,
-                "total_fields": len(expected) if isinstance(expected, dict) else 0
+                "correct_values": 0,
+                "total_values": len(expected) if isinstance(expected, dict) else 0,
+                "error_details": ["No extraction"]
             })
             continue
         
         metrics["successful_extractions"] += 1
         
-        # Prepare scoring for this sentence
+        # Deep comparison of expected and extracted structures
+        sentence_correct, sentence_total, error_details = deep_compare(expected, extracted)
+        
+        # Accumulate totals for overall accuracy
+        total_correct_values += sentence_correct
+        total_expected_values += sentence_total
+        
+        # Track errors by field
+        for error in error_details:
+            field = error["path"].split(".")[0] if "." in error["path"] else error["path"].split("[")[0]
+            if field not in field_errors:
+                field_errors[field] = []
+            field_errors[field].append(error)
+        
+        # Calculate score for this sentence
+        sentence_score = sentence_correct / sentence_total if sentence_total > 0 else 0.0
+        scores.append(sentence_score)
+        
+        # Count basic field presence for backward compatibility
         sentence_extracted_fields = 0
         sentence_total_fields = 0
-        
-        # Compare expected and extracted fields
-        for field, expected_value in expected.items():
+        for field in expected:
             # Count this field
             metrics["field_counts"][field] = metrics["field_counts"].get(field, 0) + 1
             total_fields += 1
@@ -213,32 +348,50 @@ def calculate_metrics(results: List[Dict]) -> Dict:
                 total_extracted_fields += 1
                 sentence_extracted_fields += 1
         
-        # Calculate score for this sentence as a percentage of correctly extracted fields
-        sentence_score = sentence_extracted_fields / sentence_total_fields if sentence_total_fields > 0 else 0.0
-        scores.append(sentence_score)
-        
-        # Store sentence score
+        # Store detailed sentence score info
         metrics["scores"]["by_sentence"].append({
             "sentence": result["sentence"][:50] + "..." if len(result["sentence"]) > 50 else result["sentence"],
             "score": sentence_score,
+            "correct_values": sentence_correct,
+            "total_values": sentence_total,
             "extracted_fields": sentence_extracted_fields,
-            "total_fields": sentence_total_fields
+            "total_fields": sentence_total_fields,
+            "error_count": len(error_details)
         })
+        
+        # Store detailed error information
+        if error_details:
+            metrics["error_details"].append({
+                "sentence": result["sentence"][:100] + "..." if len(result["sentence"]) > 100 else result["sentence"],
+                "errors": error_details[:10]  # Limit to first 10 errors to keep the output manageable
+            })
     
-    # Calculate extraction rates
+    # Calculate extraction rates (field presence)
     for field, count in metrics["extraction_rates_by_field"].items():
         metrics["extraction_rates_by_field"][field] = count / metrics["field_counts"][field]
     
-    # Calculate overall field extraction rate
+    # Calculate overall field extraction rate (presence only)
     if total_fields > 0:
         metrics["overall_field_extraction_rate"] = total_extracted_fields / total_fields
+    
+    # Calculate overall value accuracy (content correctness)
+    metrics["overall_value_accuracy"] = total_correct_values / total_expected_values if total_expected_values > 0 else 0.0
+    
+    # Calculate field-specific accuracy
+    for field, errors in field_errors.items():
+        total_instances = metrics["field_counts"].get(field, 0)
+        error_count = len(errors)
+        if total_instances > 0:
+            metrics["field_accuracy"][field] = 1.0 - (error_count / total_instances)
+        else:
+            metrics["field_accuracy"][field] = 0.0
     
     # Calculate score statistics
     if scores:
         metrics["scores"]["min_score"] = min(scores)
         metrics["scores"]["max_score"] = max(scores)
         metrics["scores"]["avg_score"] = sum(scores) / len(scores)
-        metrics["scores"]["total_score"] = metrics["overall_field_extraction_rate"]
+        metrics["scores"]["total_score"] = metrics["overall_value_accuracy"]  # Use value accuracy as total score
         
         # Calculate median score
         sorted_scores = sorted(scores)
@@ -260,13 +413,30 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
     with open(output_file, 'w') as f:
         json.dump(output, f, indent=2)
     
-    # Save scores by sentence to CSV
+    # Save scores by sentence to CSV with detailed metrics
     if metrics["scores"]["by_sentence"]:
         scores_df = pd.DataFrame(metrics["scores"]["by_sentence"])
         scores_csv_file = output_file.replace('.json', '_scores.csv')
         scores_df.sort_values("score", ascending=False).to_csv(scores_csv_file, index=False)
     
-    # Save extraction rates by field to CSV
+    # Save field accuracy to CSV (more detailed than just presence/absence)
+    if metrics.get("field_accuracy"):
+        field_accuracy_data = []
+        for field, accuracy in metrics["field_accuracy"].items():
+            presence_rate = metrics["extraction_rates_by_field"].get(field, 0)
+            count = metrics["field_counts"].get(field, 0)
+            field_accuracy_data.append({
+                "Field": field,
+                "Content Accuracy": accuracy,
+                "Presence Rate": presence_rate,
+                "Count": count
+            })
+        
+        field_accuracy_df = pd.DataFrame(field_accuracy_data)
+        accuracy_csv_file = output_file.replace('.json', '_field_accuracy.csv')
+        field_accuracy_df.sort_values("Content Accuracy", ascending=False).to_csv(accuracy_csv_file, index=False)
+    
+    # Save extraction rates by field to CSV (simple presence/absence)
     if metrics["extraction_rates_by_field"]:
         fields_df = pd.DataFrame({
             "Field": list(metrics["extraction_rates_by_field"].keys()),
@@ -278,16 +448,30 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
         csv_file = output_file.replace('.json', '_summary.csv')
         fields_df.sort_values("Extraction Rate", ascending=False).to_csv(csv_file, index=False)
         
-        # Append score summary to the CSV
+        # Append detailed score summary to the CSV
         with open(csv_file, 'a') as f:
             f.write("\n\nOverall Score Statistics\n")
-            f.write(f"Total Score,{metrics['scores']['total_score']:.4f}\n")
-            f.write(f"Average Score,{metrics['scores']['avg_score']:.4f}\n")
-            f.write(f"Median Score,{metrics['scores']['median_score']:.4f}\n")
-            f.write(f"Min Score,{metrics['scores']['min_score']:.4f}\n")
-            f.write(f"Max Score,{metrics['scores']['max_score']:.4f}\n")
+            f.write(f"Value Accuracy (Total Score),{metrics.get('overall_value_accuracy', 0):.4f}\n")
+            f.write(f"Field Extraction Rate,{metrics['overall_field_extraction_rate']:.4f}\n")
+            f.write(f"Average Sentence Score,{metrics['scores']['avg_score']:.4f}\n")
+            f.write(f"Median Sentence Score,{metrics['scores']['median_score']:.4f}\n")
+            f.write(f"Min Sentence Score,{metrics['scores']['min_score']:.4f}\n")
+            f.write(f"Max Sentence Score,{metrics['scores']['max_score']:.4f}\n")
             f.write(f"Successful Extractions,{metrics['successful_extractions']}\n")
             f.write(f"Failed Extractions,{metrics['failed_extractions']}\n")
+            
+    # Save detailed error examples to a text file for analysis
+    if metrics.get("error_details"):
+        error_file = output_file.replace('.json', '_errors.txt')
+        with open(error_file, 'w') as f:
+            f.write(f"Detailed Error Analysis\n{'='*50}\n\n")
+            for i, error_item in enumerate(metrics["error_details"]):
+                f.write(f"Sentence {i+1}: {error_item['sentence']}\n\n")
+                for j, error in enumerate(error_item['errors']):
+                    f.write(f"  Error {j+1}: {error['path']} - {error['status']}\n")
+                    f.write(f"    Expected: {error['expected']}\n")
+                    f.write(f"    Extracted: {error['extracted']}\n\n")
+                f.write(f"{'-'*50}\n\n")
 
 def main():
     args = parse_arguments()
@@ -323,34 +507,69 @@ def main():
     print(f"Total sentences: {metrics['total_sentences']}")
     print(f"Successful extractions: {metrics['successful_extractions']} ({metrics['successful_extractions']/metrics['total_sentences']*100:.2f}%)")
     print(f"Failed extractions: {metrics['failed_extractions']} ({metrics['failed_extractions']/metrics['total_sentences']*100:.2f}%)")
-    print(f"Overall field extraction rate: {metrics['overall_field_extraction_rate']*100:.2f}%")
     
-    # Print score statistics
-    print("\nScore Statistics:")
-    print(f"  Total score: {metrics['scores']['total_score']:.4f}")
-    print(f"  Average score: {metrics['scores']['avg_score']:.4f}")
-    print(f"  Median score: {metrics['scores']['median_score']:.4f}")
-    print(f"  Min score: {metrics['scores']['min_score']:.4f}")
-    print(f"  Max score: {metrics['scores']['max_score']:.4f}")
+    # Print detailed score statistics
+    print("\nDetailed Score Statistics:")
+    print(f"  Value accuracy (total score): {metrics.get('overall_value_accuracy', 0)*100:.2f}%")
+    print(f"  Field extraction rate: {metrics['overall_field_extraction_rate']*100:.2f}%")
+    print(f"  Average sentence score: {metrics['scores']['avg_score']*100:.2f}%")
+    print(f"  Median sentence score: {metrics['scores']['median_score']*100:.2f}%")
+    print(f"  Min sentence score: {metrics['scores']['min_score']*100:.2f}%")
+    print(f"  Max sentence score: {metrics['scores']['max_score']*100:.2f}%")
+    
+    # Print field accuracy (content correctness)
+    if metrics.get("field_accuracy"):
+        print("\nTop 5 most accurate fields (content correctness):")
+        accuracy_sorted = sorted(metrics["field_accuracy"].items(), key=lambda x: x[1], reverse=True)
+        for field, accuracy in accuracy_sorted[:5]:
+            count = metrics["field_counts"].get(field, 0)
+            print(f"  {field}: {accuracy*100:.2f}% correct ({count} occurrences)")
+        
+        if len(accuracy_sorted) > 5:
+            print("\nBottom 5 least accurate fields (content correctness):")
+            for field, accuracy in accuracy_sorted[-5:]:
+                count = metrics["field_counts"].get(field, 0)
+                print(f"  {field}: {accuracy*100:.2f}% correct ({count} occurrences)")
     
     # Print top 3 and bottom 3 scoring sentences
     scores_sorted = sorted(metrics["scores"]["by_sentence"], key=lambda x: x["score"], reverse=True)
     print("\nTop 3 best performing sentences:")
     for item in scores_sorted[:3]:
-        print(f"  Score: {item['score']:.4f} - \"{item['sentence']}\"")
+        correct = item.get("correct_values", 0)
+        total = item.get("total_values", 1)
+        print(f"  Score: {item['score']*100:.2f}% ({correct}/{total} correct values) - \"{item['sentence']}\"")
     
     print("\nBottom 3 worst performing sentences:")
     for item in scores_sorted[-3:]:
-        print(f"  Score: {item['score']:.4f} - \"{item['sentence']}\"")
+        correct = item.get("correct_values", 0)
+        total = item.get("total_values", 1)
+        print(f"  Score: {item['score']*100:.2f}% ({correct}/{total} correct values) - \"{item['sentence']}\"")
     
-    print("\nTop 5 best extracted fields:")
+    # Print field presence rates (for backward compatibility)
+    print("\nTop 5 most frequently extracted fields (presence only):")
     fields_sorted = sorted(metrics["extraction_rates_by_field"].items(), key=lambda x: x[1], reverse=True)
     for field, rate in fields_sorted[:5]:
-        print(f"  {field}: {rate*100:.2f}% ({metrics['field_counts'][field]} occurrences)")
+        print(f"  {field}: {rate*100:.2f}% present ({metrics['field_counts'][field]} occurrences)")
     
-    print("\nBottom 5 worst extracted fields:")
-    for field, rate in fields_sorted[-5:]:
-        print(f"  {field}: {rate*100:.2f}% ({metrics['field_counts'][field]} occurrences)")
+    if len(fields_sorted) > 5:
+        print("\nBottom 5 least frequently extracted fields (presence only):")
+        for field, rate in fields_sorted[-5:]:
+            print(f"  {field}: {rate*100:.2f}% present ({metrics['field_counts'][field]} occurrences)")
+    
+    # Print error summary
+    if metrics.get("error_details"):
+        error_count = sum(len(item["errors"]) for item in metrics["error_details"])
+        error_types = {}
+        for item in metrics["error_details"]:
+            for error in item["errors"]:
+                status = error["status"]
+                error_types[status] = error_types.get(status, 0) + 1
+        
+        print("\nError Summary:")
+        print(f"  Total errors found: {error_count}")
+        print("  Error types:")
+        for status, count in sorted(error_types.items(), key=lambda x: x[1], reverse=True):
+            print(f"    {status}: {count} ({count/error_count*100:.1f}%)")
     
     # Save results
     save_results(results, metrics, args.output_file)
