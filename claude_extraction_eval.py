@@ -13,18 +13,63 @@ import time
 import shutil
 import datetime
 import anthropic
+import openai
 import pandas as pd
 import click
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Protocol, Union
 from tqdm import tqdm
 from pathlib import Path
 
-# Available Claude models
+# Available models
 CLAUDE_MODELS = {
     "opus": "claude-3-opus-20240229",
     "sonnet": "claude-3-5-sonnet-20240620",
     "haiku": "claude-3-haiku-20240307"
 }
+
+OPENAI_MODELS = {
+    "gpt4o": "gpt-4o",
+    "gpt4": "gpt-4-turbo-2024-04-09",
+    "gpt35": "gpt-3.5-turbo-0125"
+}
+
+# Protocol for model clients
+class ModelClient(Protocol):
+    """Protocol for model clients (Anthropic, OpenAI)"""
+    def __call__(self, prompt: str, model: str, temperature: float = 0.0) -> str:
+        """Call the model with a prompt and return the response"""
+        pass
+
+# Adapter for Anthropic models
+class AnthropicAdapter:
+    def __init__(self, api_key: str):
+        self.client = anthropic.Anthropic(api_key=api_key)
+    
+    def __call__(self, prompt: str, model: str, temperature: float = 0.0) -> str:
+        response = self.client.messages.create(
+            model=model,
+            max_tokens=4000,
+            temperature=temperature,
+            system="You extract structured information from text about family members.",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text
+
+# Adapter for OpenAI models
+class OpenAIAdapter:
+    def __init__(self, api_key: str):
+        self.client = openai.OpenAI(api_key=api_key)
+    
+    def __call__(self, prompt: str, model: str, temperature: float = 0.0) -> str:
+        response = self.client.chat.completions.create(
+            model=model,
+            temperature=temperature,
+            messages=[
+                {"role": "system", "content": "You extract structured information from text about family members."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return response.choices[0].message.content
 
 def load_data(prompt_file: str, eval_data_file: str, max_sentences: Optional[int] = None) -> tuple:
     """Load the prompt template and evaluation data."""
@@ -86,9 +131,13 @@ def extract_json_from_response(response: str) -> Dict:
         print(f"Failed to extract JSON from response: {response[:100]}...")
         return {}
 
-def evaluate_extraction(client, prompt_template: str, sentences: List[Dict], 
-                       model: str, batch_size: int = 5, temperature: float = 0.0) -> List[Dict]:
-    """Evaluate Claude's extraction capabilities on the given sentences."""
+def evaluate_extraction(client: Union[AnthropicAdapter, OpenAIAdapter], 
+                       prompt_template: str, 
+                       sentences: List[Dict], 
+                       model: str, 
+                       batch_size: int = 5, 
+                       temperature: float = 0.0) -> List[Dict]:
+    """Evaluate model's extraction capabilities on the given sentences."""
     results = []
     
     # Process sentences in batches
@@ -103,17 +152,8 @@ def evaluate_extraction(client, prompt_template: str, sentences: List[Dict],
             prompt = format_prompt(prompt_template, sentence)
             
             try:
-                # Call Claude API
-                response = client.messages.create(
-                    model=model,
-                    max_tokens=4000,
-                    temperature=temperature,
-                    system="You extract structured information from text about family members.",
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                
-                # Extract response content
-                response_text = response.content[0].text
+                # Call model API through the adapter interface
+                response_text = client(prompt, model, temperature)
                 
                 # Parse the extracted information from the response
                 extracted = extract_json_from_response(response_text)
@@ -662,7 +702,7 @@ def create_output_directory(model_name, prompt_file_path):
     
     return output_dir
 
-def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str, runtime_seconds: float, prompt_file_path: str = None):
+def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str, runtime_seconds: float, prompt_file_path: str = None, model_provider: str = None):
     """
     Save the evaluation results and metrics to files in the specified directory.
     
@@ -670,10 +710,11 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
         results: The evaluation results
         metrics: The calculated metrics
         output_dir: Directory where results should be saved
-        model_name: Name of the Claude model used
+        model_name: Name of the model used
         eval_data_path: Path to the evaluation data file used
         runtime_seconds: Total execution time in seconds
         prompt_file_path: Path to the prompt template file (optional)
+        model_provider: Provider of the model (anthropic, openai)
     """
     # Format runtime as human-readable
     runtime_formatted = str(datetime.timedelta(seconds=int(runtime_seconds)))
@@ -682,6 +723,7 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
     metadata = {
         "timestamp": datetime.datetime.now().isoformat(),
         "model": model_name,
+        "model_provider": model_provider,
         "eval_data": str(eval_data_path),
         "sentence_count": metrics["total_sentences"],
         "overall_accuracy": metrics.get("overall_value_accuracy", 0),
@@ -766,7 +808,7 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
     with open(output_dir / "README.md", 'w') as f:
         f.write(f"# Extraction Evaluation Results\n\n")
         f.write(f"- **Date:** {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"- **Model:** {model_name}\n")
+        f.write(f"- **Model:** {model_name}" + (f" ({model_provider})" if model_provider else "") + "\n")
         f.write(f"- **Test data:** {Path(eval_data_path).name}\n")
         f.write(f"- **Sentences evaluated:** {metrics['total_sentences']}\n")
         f.write(f"- **Overall accuracy:** {metrics.get('overall_value_accuracy', 0)*100:.2f}%\n")
@@ -862,7 +904,8 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
             assessment = "minor improvements needed"
             
         f.write(f"## Overall Assessment\n\n")
-        f.write(f"Based on an evaluation with {metrics['total_sentences']} sentences using {model_name}, ")
+        f.write(f"Based on an evaluation with {metrics['total_sentences']} sentences using {model_name}" + 
+               (f" ({model_provider})" if model_provider else "") + f", ")
         f.write(f"the current prompt achieves {score:.2f}% accuracy with {assessment}.\n\n")
         
         # Specific recommendations
@@ -979,29 +1022,39 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
 @click.command()
 @click.option("--prompt-file", required=True, type=click.Path(exists=True), help="Path to the prompt template file")
 @click.option("--eval-data", required=True, type=click.Path(exists=True), help="Path to the evaluation data JSON file")
-@click.option("--api-key", help="Anthropic API key (or set via ANTHROPIC_API_KEY env var)")
-@click.option("--model", type=click.Choice(["opus", "sonnet", "haiku"], case_sensitive=False), default="sonnet", 
-              help="Claude model to use (opus, sonnet, haiku)")
+@click.option("--api-key", help="API key (or set via ANTHROPIC_API_KEY or OPENAI_API_KEY env var)")
+@click.option("--model", type=click.Choice(["opus", "sonnet", "haiku", "gpt4o", "gpt4", "gpt35"], case_sensitive=False), 
+              default="sonnet", help="Model to use (opus/sonnet/haiku for Claude, gpt4o/gpt4/gpt35 for OpenAI)")
 @click.option("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
 @click.option("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
-@click.option("--temperature", type=float, default=0.0, help="Temperature for Claude responses (0.0-1.0)")
+@click.option("--temperature", type=float, default=0.0, help="Temperature for model responses (0.0-1.0)")
 def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temperature):
-    """Evaluate Claude's ability to extract family details from sentences."""
+    """Evaluate a model's ability to extract family details from sentences."""
     # Start timing the evaluation
     start_time = time.time()
     
-    # Get API key from args or environment
-    api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise click.UsageError("API key must be provided via --api-key or ANTHROPIC_API_KEY environment variable")
+    # Determine model type (Claude or OpenAI)
+    is_claude = model.lower() in CLAUDE_MODELS
+    is_openai = model.lower() in OPENAI_MODELS
     
-    # Get the proper model identifier
-    model_id = CLAUDE_MODELS.get(model.lower())
-    if not model_id:
-        raise click.UsageError(f"Unknown model '{model}'. Choose from: opus, sonnet, haiku")
+    if not is_claude and not is_openai:
+        raise click.UsageError(f"Unknown model '{model}'. Choose from: {', '.join(list(CLAUDE_MODELS.keys()) + list(OPENAI_MODELS.keys()))}")
     
-    # Initialize Anthropic client
-    client = anthropic.Anthropic(api_key=api_key)
+    # Get API key from args or environment based on model type
+    if is_claude:
+        model_type = "claude"
+        model_id = CLAUDE_MODELS.get(model.lower())
+        api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise click.UsageError("Anthropic API key must be provided via --api-key or ANTHROPIC_API_KEY environment variable")
+        client = AnthropicAdapter(api_key)
+    else:  # OpenAI
+        model_type = "openai"
+        model_id = OPENAI_MODELS.get(model.lower())
+        api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise click.UsageError("OpenAI API key must be provided via --api-key or OPENAI_API_KEY environment variable")
+        client = OpenAIAdapter(api_key)
     
     # Load data
     prompt_template, sentences = load_data(prompt_file, eval_data, max_sentences)
@@ -1010,7 +1063,7 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
     output_dir = create_output_directory(model, prompt_file)
     
     click.echo(f"Loaded {len(sentences)} sentences for evaluation")
-    click.echo(f"Using model: {model} ({model_id})")
+    click.echo(f"Using model: {model} ({model_id}) from {model_type.upper()}")
     click.echo(f"Temperature: {temperature}")
     click.echo(f"Output directory: {output_dir}")
     
@@ -1111,7 +1164,7 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
         click.echo(f"  Processing rate: {rate:.2f} sentences per minute")
     
     # Save results
-    output_file = save_results(results, metrics, output_dir, model, eval_data, runtime_seconds, prompt_file)
+    output_file = save_results(results, metrics, output_dir, model, eval_data, runtime_seconds, prompt_file, model_type)
     click.echo(f"\nDetailed results saved to {output_dir}")
     
     # Print prompt refinement recommendations
