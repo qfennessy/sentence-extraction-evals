@@ -1,2 +1,13 @@
 Field,Extraction Rate,Count
 family_members,1.0,5
+
+
+Overall Score Statistics
+Value Accuracy (Total Score),0.8476
+Field Extraction Rate,1.0000
+Average Sentence Score,0.8453
+Median Sentence Score,1.0000
+Min Sentence Score,0.5600
+Max Sentence Score,1.0000
+Successful Extractions,5
+Failed Extractions,0
