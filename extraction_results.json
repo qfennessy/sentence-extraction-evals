@@ -1,0 +1,1213 @@
+{
+  "results": [
+    {
+      "sentence": "My father, David Johnson, was a mechanic who worked in Chicago for 35 years before retiring in 2018.",
+      "expected": {
+        "name": "David Johnson",
+        "relationship": "Father",
+        "occupation": "Mechanic",
+        "location": "Chicago",
+        "duration": "35 years",
+        "retirement_year": 2018
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "David Johnson",
+            "age": null,
+            "gender": "male",
+            "occupation": "mechanic",
+            "relation_to": [
+              {
+                "name": "unnamed narrator",
+                "relationship": "father"
+              }
+            ]
+          },
+          {
+            "name": "unnamed narrator",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "David Johnson",
+                "relationship": "child"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"David Johnson\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"mechanic\",\n      \"relation_to\": [\n        {\n          \"name\": \"unnamed narrator\",\n          \"relationship\": \"father\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed narrator\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"David Johnson\",\n          \"relationship\": \"child\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My grandmother Maria Elena Rodriguez immigrated from Mexico to California in 1965 and raised seven children on her own.",
+      "expected": {
+        "name": "Maria Elena Rodriguez",
+        "relationship": "Grandmother",
+        "origin": "Mexico",
+        "destination": "California",
+        "immigration_year": 1965,
+        "number_of_children": 7,
+        "parental_status": "Single parent"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Maria Elena Rodriguez",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Unnamed Child 1",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Child 2",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Child 3",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Child 4",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Child 5",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Child 6",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Child 7",
+                "relationship": "mother"
+              },
+              {
+                "name": "Unnamed Grandchild",
+                "relationship": "grandmother"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Grandchild",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "grandchild"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 1",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 2",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 3",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 4",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 5",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 6",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Child 7",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Maria Elena Rodriguez",
+                "relationship": "child"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Maria Elena Rodriguez\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Unnamed Child 1\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Child 2\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Child 3\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Child 4\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Child 5\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Child 6\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Child 7\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"Unnamed Grandchild\",\n          \"relationship\": \"grandmother\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Grandchild\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"grandchild\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 1\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 2\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 3\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 4\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 5\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 6\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Child 7\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Maria Elena Rodriguez\",\n          \"relationship\": \"child\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My sister Sarah graduated from Harvard Medical School in 2015 and now practices pediatrics in Seattle.",
+      "expected": {
+        "name": "Sarah",
+        "relationship": "Sister",
+        "education": "Harvard Medical School",
+        "graduation_year": 2015,
+        "occupation": "Pediatrician",
+        "location": "Seattle"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Sarah",
+            "age": null,
+            "gender": "female",
+            "occupation": "pediatrician",
+            "relation_to": [
+              {
+                "name": null,
+                "relationship": "sister"
+              }
+            ]
+          },
+          {
+            "name": null,
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Sarah",
+                "relationship": "sibling"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Sarah\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": \"pediatrician\",\n      \"relation_to\": [\n        {\n          \"name\": null,\n          \"relationship\": \"sister\"\n        }\n      ]\n    },\n    {\n      \"name\": null,\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Sarah\",\n          \"relationship\": \"sibling\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My uncle James and aunt Patricia celebrated their 50th wedding anniversary last June at their farm in Iowa.",
+      "expected": {
+        "name_1": "James",
+        "name_2": "Patricia",
+        "relationship_1": "Uncle",
+        "relationship_2": "Aunt",
+        "event": "Wedding anniversary",
+        "duration": "50 years",
+        "date": "Last June",
+        "location": "Farm in Iowa"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "James",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Patricia",
+                "relationship": "husband"
+              }
+            ]
+          },
+          {
+            "name": "Patricia",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "James",
+                "relationship": "wife"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"James\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Patricia\",\n          \"relationship\": \"husband\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Patricia\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"James\",\n          \"relationship\": \"wife\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My cousin Alex was born with cystic fibrosis in 2002 but has become an accomplished swimmer despite his condition.",
+      "expected": {
+        "name": "Alex",
+        "relationship": "Cousin",
+        "medical_condition": "Cystic fibrosis",
+        "birth_year": 2002,
+        "achievement": "Accomplished swimmer"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Alex",
+            "age": null,
+            "gender": "male",
+            "occupation": "swimmer",
+            "relation_to": [
+              {
+                "name": null,
+                "relationship": "cousin"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Alex\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"swimmer\",\n      \"relation_to\": [\n        {\n          \"name\": null,\n          \"relationship\": \"cousin\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My great-grandfather fought in World War II from 1942-1945 and received a Purple Heart after being wounded at Normandy.",
+      "expected": {
+        "relationship": "Great-grandfather",
+        "event": "World War II",
+        "time_period": "1942-1945",
+        "award": "Purple Heart",
+        "injury_location": "Normandy"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "great-grandfather",
+            "age": null,
+            "gender": "male",
+            "occupation": "soldier",
+            "relation_to": []
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"great-grandfather\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"soldier\",\n      \"relation_to\": []\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My twin brothers, Michael and Matthew, were born on April 15, 1998, and both now work as software engineers in Austin.",
+      "expected": {
+        "name_1": "Michael",
+        "name_2": "Matthew",
+        "relationship": "Twin brothers",
+        "birth_date": "April 15, 1998",
+        "occupation": "Software engineers",
+        "location": "Austin"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Michael",
+            "age": null,
+            "gender": "male",
+            "occupation": "software engineer",
+            "relation_to": [
+              {
+                "name": "Matthew",
+                "relationship": "twin"
+              }
+            ]
+          },
+          {
+            "name": "Matthew",
+            "age": null,
+            "gender": "male",
+            "occupation": "software engineer",
+            "relation_to": [
+              {
+                "name": "Michael",
+                "relationship": "twin"
+              }
+            ]
+          },
+          {
+            "name": "Narrator",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Michael",
+                "relationship": "sibling"
+              },
+              {
+                "name": "Matthew",
+                "relationship": "sibling"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Michael\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"software engineer\",\n      \"relation_to\": [\n        {\n          \"name\": \"Matthew\",\n          \"relationship\": \"twin\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Matthew\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"software engineer\",\n      \"relation_to\": [\n        {\n          \"name\": \"Michael\",\n          \"relationship\": \"twin\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Narrator\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Michael\",\n          \"relationship\": \"sibling\"\n        },\n        {\n          \"name\": \"Matthew\",\n          \"relationship\": \"sibling\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My mother-in-law, Dr. Elizabeth Chang, founded a nonprofit organization in 2010 that provides medical care to underserved communities in rural Tennessee.",
+      "expected": {
+        "name": "Dr. Elizabeth Chang",
+        "relationship": "Mother-in-law",
+        "title": "Doctor",
+        "achievement": "Founded nonprofit organization",
+        "year": 2010,
+        "purpose": "Medical care for underserved communities",
+        "location": "Rural Tennessee"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Dr. Elizabeth Chang",
+            "age": null,
+            "gender": "female",
+            "occupation": "founder of nonprofit organization",
+            "relation_to": [
+              {
+                "name": null,
+                "relationship": "mother-in-law"
+              }
+            ]
+          },
+          {
+            "name": null,
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Dr. Elizabeth Chang",
+                "relationship": "child-in-law"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Dr. Elizabeth Chang\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": \"founder of nonprofit organization\",\n      \"relation_to\": [\n        {\n          \"name\": null,\n          \"relationship\": \"mother-in-law\"\n        }\n      ]\n    },\n    {\n      \"name\": null,\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Dr. Elizabeth Chang\",\n          \"relationship\": \"child-in-law\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My son Kevin was diagnosed with autism at age 3 but has thrived since we enrolled him in a specialized education program in 2018.",
+      "expected": {
+        "name": "Kevin",
+        "relationship": "Son",
+        "medical_condition": "Autism",
+        "diagnosis_age": 3,
+        "program": "Specialized education",
+        "enrollment_year": 2018
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Kevin",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": null,
+                "relationship": "son"
+              }
+            ]
+          },
+          {
+            "name": null,
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Kevin",
+                "relationship": "parent"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Kevin\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": null,\n          \"relationship\": \"son\"\n        }\n      ]\n    },\n    {\n      \"name\": null,\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Kevin\",\n          \"relationship\": \"parent\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My wife's parents, Robert and Janice Wilson, emigrated from Scotland in 1975 and opened a bakery in Portland that's still operating today.",
+      "expected": {
+        "name_1": "Robert Wilson",
+        "name_2": "Janice Wilson",
+        "relationship": "Wife's parents",
+        "origin": "Scotland",
+        "immigration_year": 1975,
+        "business": "Bakery",
+        "location": "Portland",
+        "status": "Still operating"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Robert Wilson",
+            "age": null,
+            "gender": "male",
+            "occupation": "bakery owner",
+            "relation_to": [
+              {
+                "name": "Janice Wilson",
+                "relationship": "husband"
+              },
+              {
+                "name": "unnamed wife",
+                "relationship": "father-in-law"
+              }
+            ]
+          },
+          {
+            "name": "Janice Wilson",
+            "age": null,
+            "gender": "female",
+            "occupation": "bakery owner",
+            "relation_to": [
+              {
+                "name": "Robert Wilson",
+                "relationship": "wife"
+              },
+              {
+                "name": "unnamed wife",
+                "relationship": "mother-in-law"
+              }
+            ]
+          },
+          {
+            "name": "unnamed wife",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Robert Wilson",
+                "relationship": "daughter-in-law"
+              },
+              {
+                "name": "Janice Wilson",
+                "relationship": "daughter-in-law"
+              },
+              {
+                "name": "unnamed narrator",
+                "relationship": "wife"
+              }
+            ]
+          },
+          {
+            "name": "unnamed narrator",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "unnamed wife",
+                "relationship": "husband"
+              },
+              {
+                "name": "Robert Wilson",
+                "relationship": "son-in-law"
+              },
+              {
+                "name": "Janice Wilson",
+                "relationship": "son-in-law"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Robert Wilson\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"bakery owner\",\n      \"relation_to\": [\n        {\n          \"name\": \"Janice Wilson\",\n          \"relationship\": \"husband\"\n        },\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"father-in-law\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Janice Wilson\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": \"bakery owner\",\n      \"relation_to\": [\n        {\n          \"name\": \"Robert Wilson\",\n          \"relationship\": \"wife\"\n        },\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"mother-in-law\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed wife\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Robert Wilson\",\n          \"relationship\": \"daughter-in-law\"\n        },\n        {\n          \"name\": \"Janice Wilson\",\n          \"relationship\": \"daughter-in-law\"\n        },\n        {\n          \"name\": \"unnamed narrator\",\n          \"relationship\": \"wife\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed narrator\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"husband\"\n        },\n        {\n          \"name\": \"Robert Wilson\",\n          \"relationship\": \"son-in-law\"\n        },\n        {\n          \"name\": \"Janice Wilson\",\n          \"relationship\": \"son-in-law\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My stepfather, Colonel Thomas Bradley, served in the Marine Corps for 28 years before retiring in 2005 and marrying my mother in 2007.",
+      "expected": {
+        "name": "Colonel Thomas Bradley",
+        "relationship": "Stepfather",
+        "title": "Colonel",
+        "military_branch": "Marine Corps",
+        "service_duration": "28 years",
+        "retirement_year": 2005,
+        "marriage_year": 2007
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Colonel Thomas Bradley",
+            "age": null,
+            "gender": "male",
+            "occupation": "retired Marine Corps Colonel",
+            "relation_to": [
+              {
+                "name": "Unnamed Mother",
+                "relationship": "husband"
+              },
+              {
+                "name": "Unnamed Narrator",
+                "relationship": "stepfather"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Mother",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Colonel Thomas Bradley",
+                "relationship": "wife"
+              },
+              {
+                "name": "Unnamed Narrator",
+                "relationship": "mother"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Narrator",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Colonel Thomas Bradley",
+                "relationship": "stepchild"
+              },
+              {
+                "name": "Unnamed Mother",
+                "relationship": "child"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Colonel Thomas Bradley\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"retired Marine Corps Colonel\",\n      \"relation_to\": [\n        {\n          \"name\": \"Unnamed Mother\",\n          \"relationship\": \"husband\"\n        },\n        {\n          \"name\": \"Unnamed Narrator\",\n          \"relationship\": \"stepfather\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Mother\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Colonel Thomas Bradley\",\n          \"relationship\": \"wife\"\n        },\n        {\n          \"name\": \"Unnamed Narrator\",\n          \"relationship\": \"mother\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Narrator\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Colonel Thomas Bradley\",\n          \"relationship\": \"stepchild\"\n        },\n        {\n          \"name\": \"Unnamed Mother\",\n          \"relationship\": \"child\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My daughter Emma was born on February 12, 2019, at Massachusetts General Hospital, weighing 7 pounds and 3 ounces.",
+      "expected": {
+        "name": "Emma",
+        "relationship": "Daughter",
+        "birth_date": "February 12, 2019",
+        "birth_location": "Massachusetts General Hospital",
+        "birth_weight": "7 pounds, 3 ounces"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Emma",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": null,
+                "relationship": "daughter"
+              }
+            ]
+          },
+          {
+            "name": null,
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Emma",
+                "relationship": "parent"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Emma\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": null,\n          \"relationship\": \"daughter\"\n        }\n      ]\n    },\n    {\n      \"name\": null,\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Emma\",\n          \"relationship\": \"parent\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My half-brother from my father's first marriage, Jonathan, is 15 years older than me and lives in Sydney, Australia with his wife and three children.",
+      "expected": {
+        "name": "Jonathan",
+        "relationship": "Half-brother",
+        "age_difference": "15 years older",
+        "location": "Sydney, Australia",
+        "family_status": "Married with three children"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Jonathan",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "unnamed narrator",
+                "relationship": "half-brother"
+              },
+              {
+                "name": "unnamed wife",
+                "relationship": "husband"
+              },
+              {
+                "name": "unnamed child 1",
+                "relationship": "father"
+              },
+              {
+                "name": "unnamed child 2",
+                "relationship": "father"
+              },
+              {
+                "name": "unnamed child 3",
+                "relationship": "father"
+              },
+              {
+                "name": "unnamed father",
+                "relationship": "son"
+              }
+            ]
+          },
+          {
+            "name": "unnamed narrator",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jonathan",
+                "relationship": "half-sibling"
+              },
+              {
+                "name": "unnamed father",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "unnamed father",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jonathan",
+                "relationship": "father"
+              },
+              {
+                "name": "unnamed narrator",
+                "relationship": "father"
+              }
+            ]
+          },
+          {
+            "name": "unnamed wife",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jonathan",
+                "relationship": "wife"
+              },
+              {
+                "name": "unnamed child 1",
+                "relationship": "mother"
+              },
+              {
+                "name": "unnamed child 2",
+                "relationship": "mother"
+              },
+              {
+                "name": "unnamed child 3",
+                "relationship": "mother"
+              }
+            ]
+          },
+          {
+            "name": "unnamed child 1",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jonathan",
+                "relationship": "child"
+              },
+              {
+                "name": "unnamed wife",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "unnamed child 2",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jonathan",
+                "relationship": "child"
+              },
+              {
+                "name": "unnamed wife",
+                "relationship": "child"
+              }
+            ]
+          },
+          {
+            "name": "unnamed child 3",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Jonathan",
+                "relationship": "child"
+              },
+              {
+                "name": "unnamed wife",
+                "relationship": "child"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Jonathan\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"unnamed narrator\",\n          \"relationship\": \"half-brother\"\n        },\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"husband\"\n        },\n        {\n          \"name\": \"unnamed child 1\",\n          \"relationship\": \"father\"\n        },\n        {\n          \"name\": \"unnamed child 2\",\n          \"relationship\": \"father\"\n        },\n        {\n          \"name\": \"unnamed child 3\",\n          \"relationship\": \"father\"\n        },\n        {\n          \"name\": \"unnamed father\",\n          \"relationship\": \"son\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed narrator\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Jonathan\",\n          \"relationship\": \"half-sibling\"\n        },\n        {\n          \"name\": \"unnamed father\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed father\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Jonathan\",\n          \"relationship\": \"father\"\n        },\n        {\n          \"name\": \"unnamed narrator\",\n          \"relationship\": \"father\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed wife\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Jonathan\",\n          \"relationship\": \"wife\"\n        },\n        {\n          \"name\": \"unnamed child 1\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"unnamed child 2\",\n          \"relationship\": \"mother\"\n        },\n        {\n          \"name\": \"unnamed child 3\",\n          \"relationship\": \"mother\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed child 1\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Jonathan\",\n          \"relationship\": \"child\"\n        },\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed child 2\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Jonathan\",\n          \"relationship\": \"child\"\n        },\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"child\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed child 3\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Jonathan\",\n          \"relationship\": \"child\"\n        },\n        {\n          \"name\": \"unnamed wife\",\n          \"relationship\": \"child\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My husband's grandmother, Hiroko Tanaka, survived the Hiroshima bombing in 1945 when she was just 8 years old and later moved to Hawaii in 1960.",
+      "expected": {
+        "name": "Hiroko Tanaka",
+        "relationship": "Husband's grandmother",
+        "historical_event": "Hiroshima bombing",
+        "year_of_event": 1945,
+        "age_during_event": "8 years old",
+        "relocation_destination": "Hawaii",
+        "relocation_year": 1960
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Hiroko Tanaka",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "unnamed husband",
+                "relationship": "grandmother"
+              }
+            ]
+          },
+          {
+            "name": "unnamed husband",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Hiroko Tanaka",
+                "relationship": "grandson"
+              },
+              {
+                "name": "unnamed narrator",
+                "relationship": "husband"
+              }
+            ]
+          },
+          {
+            "name": "unnamed narrator",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "unnamed husband",
+                "relationship": "wife"
+              },
+              {
+                "name": "Hiroko Tanaka",
+                "relationship": "granddaughter-in-law"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Hiroko Tanaka\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"unnamed husband\",\n          \"relationship\": \"grandmother\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed husband\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Hiroko Tanaka\",\n          \"relationship\": \"grandson\"\n        },\n        {\n          \"name\": \"unnamed narrator\",\n          \"relationship\": \"husband\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed narrator\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"unnamed husband\",\n          \"relationship\": \"wife\"\n        },\n        {\n          \"name\": \"Hiroko Tanaka\",\n          \"relationship\": \"granddaughter-in-law\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My niece, Olivia Chen Williams, was adopted from China in 2012 when she was 14 months old and has become an amazing pianist.",
+      "expected": {
+        "name": "Olivia Chen Williams",
+        "relationship": "Niece",
+        "birth_country": "China",
+        "adoption_year": 2012,
+        "age_at_adoption": "14 months",
+        "talent": "Pianist"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Olivia Chen Williams",
+            "age": null,
+            "gender": "female",
+            "occupation": "pianist",
+            "relation_to": [
+              {
+                "name": "Unnamed Speaker",
+                "relationship": "niece"
+              }
+            ]
+          },
+          {
+            "name": "Unnamed Speaker",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Olivia Chen Williams",
+                "relationship": "aunt/uncle"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Olivia Chen Williams\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": \"pianist\",\n      \"relation_to\": [\n        {\n          \"name\": \"Unnamed Speaker\",\n          \"relationship\": \"niece\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Unnamed Speaker\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Olivia Chen Williams\",\n          \"relationship\": \"aunt/uncle\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "Both my parents grew up in Buffalo, New York, met at Syracuse University in 1985, and got married in 1990 after graduating with degrees in engineering.",
+      "expected": {
+        "relationship": "Parents",
+        "hometown": "Buffalo, New York",
+        "meeting_location": "Syracuse University",
+        "meeting_year": 1985,
+        "marriage_year": 1990,
+        "field_of_study": "Engineering"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Father",
+            "age": null,
+            "gender": "male",
+            "occupation": "engineer",
+            "relation_to": [
+              {
+                "name": "Mother",
+                "relationship": "husband"
+              }
+            ]
+          },
+          {
+            "name": "Mother",
+            "age": null,
+            "gender": "female",
+            "occupation": "engineer",
+            "relation_to": [
+              {
+                "name": "Father",
+                "relationship": "wife"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Father\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"engineer\",\n      \"relation_to\": [\n        {\n          \"name\": \"Mother\",\n          \"relationship\": \"husband\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Mother\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": \"engineer\",\n      \"relation_to\": [\n        {\n          \"name\": \"Father\",\n          \"relationship\": \"wife\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My brother-in-law served as a Peace Corps volunteer in Kenya from 2008 to 2010 before returning to complete his PhD in Anthropology at UCLA.",
+      "expected": {
+        "relationship": "Brother-in-law",
+        "organization": "Peace Corps",
+        "location_of_service": "Kenya",
+        "service_period": "2008-2010",
+        "degree": "PhD in Anthropology",
+        "university": "UCLA"
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "brother-in-law",
+            "age": null,
+            "gender": "male",
+            "occupation": "Peace Corps volunteer, PhD student",
+            "relation_to": [
+              {
+                "name": "speaker",
+                "relationship": "brother-in-law"
+              }
+            ]
+          },
+          {
+            "name": "speaker",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "brother-in-law",
+                "relationship": "sibling's spouse"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"brother-in-law\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"Peace Corps volunteer, PhD student\",\n      \"relation_to\": [\n        {\n          \"name\": \"speaker\",\n          \"relationship\": \"brother-in-law\"\n        }\n      ]\n    },\n    {\n      \"name\": \"speaker\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"brother-in-law\",\n          \"relationship\": \"sibling's spouse\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My youngest son, Tyler, was diagnosed with leukemia when he was 6 years old in 2017, underwent treatment for two years, and has been in remission since 2019.",
+      "expected": {
+        "name": "Tyler",
+        "relationship": "Youngest son",
+        "medical_condition": "Leukemia",
+        "diagnosis_age": "6 years old",
+        "diagnosis_year": 2017,
+        "treatment_duration": "2 years",
+        "remission_since": 2019
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Tyler",
+            "age": null,
+            "gender": "male",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "unnamed parent",
+                "relationship": "son"
+              }
+            ]
+          },
+          {
+            "name": "unnamed parent",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Tyler",
+                "relationship": "parent"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Tyler\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"unnamed parent\",\n          \"relationship\": \"son\"\n        }\n      ]\n    },\n    {\n      \"name\": \"unnamed parent\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Tyler\",\n          \"relationship\": \"parent\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My great-aunt Martha lived to be 104 years old, was born during World War I in 1917, and witnessed everything from the Great Depression to the smartphone era before passing away in 2021.",
+      "expected": {
+        "name": "Martha",
+        "relationship": "Great-aunt",
+        "age_at_death": "104 years old",
+        "birth_year": 1917,
+        "historical_context": "Born during World War I",
+        "historical_events_witnessed": "Great Depression to smartphone era",
+        "death_year": 2021
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Martha",
+            "age": "104",
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Narrator",
+                "relationship": "great-aunt"
+              }
+            ]
+          },
+          {
+            "name": "Narrator",
+            "age": null,
+            "gender": null,
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Martha",
+                "relationship": "great-niece/great-nephew"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Martha\",\n      \"age\": \"104\",\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Narrator\",\n          \"relationship\": \"great-aunt\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Narrator\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Martha\",\n          \"relationship\": \"great-niece/great-nephew\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "sentence": "My grandfather on my mother's side, Joseph O'Malley, worked as a coal miner in Pennsylvania for 42 years starting in 1952, raised five children with my grandmother Eleanor, and passed away from black lung disease in 2003.",
+      "expected": {
+        "name": "Joseph O'Malley",
+        "relationship": "Maternal grandfather",
+        "occupation": "Coal miner",
+        "location": "Pennsylvania",
+        "career_duration": "42 years",
+        "career_start": 1952,
+        "spouse": "Eleanor",
+        "number_of_children": 5,
+        "cause_of_death": "Black lung disease",
+        "death_year": 2003
+      },
+      "extracted": {
+        "family_members": [
+          {
+            "name": "Joseph O'Malley",
+            "age": null,
+            "gender": "male",
+            "occupation": "coal miner",
+            "relation_to": [
+              {
+                "name": "Eleanor",
+                "relationship": "husband"
+              }
+            ]
+          },
+          {
+            "name": "Eleanor",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Joseph O'Malley",
+                "relationship": "wife"
+              }
+            ]
+          },
+          {
+            "name": "Mother",
+            "age": null,
+            "gender": "female",
+            "occupation": null,
+            "relation_to": [
+              {
+                "name": "Joseph O'Malley",
+                "relationship": "daughter"
+              },
+              {
+                "name": "Eleanor",
+                "relationship": "daughter"
+              }
+            ]
+          }
+        ]
+      },
+      "full_response": "{\n  \"family_members\": [\n    {\n      \"name\": \"Joseph O'Malley\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": \"coal miner\",\n      \"relation_to\": [\n        {\n          \"name\": \"Eleanor\",\n          \"relationship\": \"husband\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Eleanor\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Joseph O'Malley\",\n          \"relationship\": \"wife\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Mother\",\n      \"age\": null,\n      \"gender\": \"female\",\n      \"occupation\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"Joseph O'Malley\",\n          \"relationship\": \"daughter\"\n        },\n        {\n          \"name\": \"Eleanor\",\n          \"relationship\": \"daughter\"\n        }\n      ]\n    }\n  ]\n}"
+    }
+  ],
+  "metrics": {
+    "total_sentences": 20,
+    "successful_extractions": 20,
+    "failed_extractions": 0,
+    "extraction_rates_by_field": {},
+    "field_counts": {
+      "name": 14,
+      "relationship": 19,
+      "occupation": 4,
+      "location": 8,
+      "duration": 2,
+      "retirement_year": 2,
+      "origin": 2,
+      "destination": 1,
+      "immigration_year": 2,
+      "number_of_children": 2,
+      "parental_status": 1,
+      "education": 1,
+      "graduation_year": 1,
+      "name_1": 3,
+      "name_2": 3,
+      "relationship_1": 1,
+      "relationship_2": 1,
+      "event": 2,
+      "date": 1,
+      "medical_condition": 3,
+      "birth_year": 2,
+      "achievement": 2,
+      "time_period": 1,
+      "award": 1,
+      "injury_location": 1,
+      "birth_date": 2,
+      "title": 2,
+      "year": 1,
+      "purpose": 1,
+      "diagnosis_age": 2,
+      "program": 1,
+      "enrollment_year": 1,
+      "business": 1,
+      "status": 1,
+      "military_branch": 1,
+      "service_duration": 1,
+      "marriage_year": 2,
+      "birth_location": 1,
+      "birth_weight": 1,
+      "age_difference": 1,
+      "family_status": 1,
+      "historical_event": 1,
+      "year_of_event": 1,
+      "age_during_event": 1,
+      "relocation_destination": 1,
+      "relocation_year": 1,
+      "birth_country": 1,
+      "adoption_year": 1,
+      "age_at_adoption": 1,
+      "talent": 1,
+      "hometown": 1,
+      "meeting_location": 1,
+      "meeting_year": 1,
+      "field_of_study": 1,
+      "organization": 1,
+      "location_of_service": 1,
+      "service_period": 1,
+      "degree": 1,
+      "university": 1,
+      "diagnosis_year": 1,
+      "treatment_duration": 1,
+      "remission_since": 1,
+      "age_at_death": 1,
+      "historical_context": 1,
+      "historical_events_witnessed": 1,
+      "death_year": 2,
+      "career_duration": 1,
+      "career_start": 1,
+      "spouse": 1,
+      "cause_of_death": 1
+    },
+    "overall_field_extraction_rate": 0.0,
+    "sentences_with_errors": []
+  }
+}

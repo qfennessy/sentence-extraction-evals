@@ -1,0 +1,293 @@
+{
+    "sentences": [
+      {
+        "sentence": "My mother was Frances Powers Fennessy, born in New York in 1927, died in Boston in 1990.",
+        "extracted_information": {
+          "name": "Frances Powers Fennessy",
+          "relationship": "Mother",
+          "birthplace": "New York",
+          "birthdate": 1927,
+          "deathplace": "Boston",
+          "deathdate": 1990
+        }
+      },
+      {
+        "sentence": "My uncle Richard was a pilot in the Vietnam War from 1968 to 1970, came home with PTSD, and eventually became a high school history teacher in Denver until his retirement in 2012.",
+        "extracted_information": {
+          "name": "Richard",
+          "relationship": "Uncle",
+          "military_service": "Pilot in Vietnam War",
+          "service_period": "1968-1970",
+          "medical_condition": "PTSD",
+          "occupation": "High school history teacher",
+          "workplace_location": "Denver",
+          "retirement_year": 2012
+        }
+      },
+      {
+        "sentence": "My paternal grandparents, Harold and Margaret Jenkins, owned a dairy farm in Wisconsin for 47 years before selling it to my cousin Brian in 2005.",
+        "extracted_information": {
+          "name_1": "Harold Jenkins",
+          "name_2": "Margaret Jenkins",
+          "relationship": "Paternal grandparents",
+          "business": "Dairy farm",
+          "business_location": "Wisconsin",
+          "business_duration": "47 years",
+          "business_transfer": "Sold to cousin Brian",
+          "transfer_year": 2005,
+          "other_family_member": "Brian",
+          "other_relationship": "Cousin"
+        }
+      },
+      {
+        "sentence": "My daughter Zoe was born prematurely at 32 weeks on November 5, 2018, weighing only 4 pounds, and spent her first month in the NICU at Mount Sinai Hospital.",
+        "extracted_information": {
+          "name": "Zoe",
+          "relationship": "Daughter",
+          "birth_circumstance": "Premature at 32 weeks",
+          "birth_date": "November 5, 2018",
+          "birth_weight": "4 pounds",
+          "medical_care": "NICU for first month",
+          "hospital": "Mount Sinai Hospital"
+        }
+      },
+      {
+        "sentence": "My husband's great-uncle Alberto emigrated from Sicily to New York in 1912 on the SS Patria, narrowly missing being booked on the Titanic due to a paperwork delay.",
+        "extracted_information": {
+          "name": "Alberto",
+          "relationship": "Husband's great-uncle",
+          "origin": "Sicily",
+          "destination": "New York",
+          "immigration_year": 1912,
+          "vessel_name": "SS Patria",
+          "historical_note": "Narrowly missed being booked on Titanic",
+          "reason": "Paperwork delay"
+        }
+      },
+      {
+        "sentence": "My sister Jennifer was diagnosed with type 1 diabetes when she was just 7 years old in 1998, but that didn't stop her from becoming a marathon runner who completed the Boston Marathon in 2022.",
+        "extracted_information": {
+          "name": "Jennifer",
+          "relationship": "Sister",
+          "medical_condition": "Type 1 diabetes",
+          "diagnosis_age": 7,
+          "diagnosis_year": 1998,
+          "achievement": "Marathon runner",
+          "specific_achievement": "Completed Boston Marathon",
+          "achievement_year": 2022
+        }
+      },
+      {
+        "sentence": "My adopted brother Miguel came to our family from Guatemala in 2008 when he was 6 years old, and he just graduated from Cornell University with honors in Computer Science this past May.",
+        "extracted_information": {
+          "name": "Miguel",
+          "relationship": "Adopted brother",
+          "origin": "Guatemala",
+          "adoption_year": 2008,
+          "age_at_adoption": 6,
+          "education": "Cornell University",
+          "degree": "Computer Science",
+          "graduation_distinction": "With honors",
+          "graduation_date": "May (current year)"
+        }
+      },
+      {
+        "sentence": "My maternal great-grandmother, Elizabeth Parker Wilson, was a suffragette who marched in Washington DC in 1917 and was arrested three times for her activism before women gained the right to vote in 1920.",
+        "extracted_information": {
+          "name": "Elizabeth Parker Wilson",
+          "relationship": "Maternal great-grandmother",
+          "activism": "Suffragette",
+          "activism_location": "Washington DC",
+          "activism_year": 1917,
+          "legal_consequence": "Arrested three times",
+          "historical_context": "Before women's suffrage",
+          "historical_event": "Women gained right to vote",
+          "historical_event_year": 1920
+        }
+      },
+      {
+        "sentence": "My father-in-law Dr. Sanjay Patel immigrated from Mumbai to Toronto in 1982, completed his cardiology residency at McGill University, and has performed over 2,000 heart surgeries during his 35-year career at Toronto General Hospital.",
+        "extracted_information": {
+          "name": "Dr. Sanjay Patel",
+          "relationship": "Father-in-law",
+          "title": "Doctor",
+          "origin": "Mumbai",
+          "destination": "Toronto",
+          "immigration_year": 1982,
+          "specialization": "Cardiology",
+          "education": "Residency at McGill University",
+          "achievement": "Over 2,000 heart surgeries",
+          "career_duration": "35 years",
+          "workplace": "Toronto General Hospital"
+        }
+      },
+      {
+        "sentence": "My cousin Rebecca and her wife Sophia adopted twin boys, Ethan and Noah, from foster care in 2019 when the children were 4 years old after fostering them for nearly two years.",
+        "extracted_information": {
+          "name_1": "Rebecca",
+          "name_2": "Sophia",
+          "relationship_1": "Cousin",
+          "relationship_2": "Cousin's wife",
+          "family_status": "Married same-sex couple",
+          "children_names": ["Ethan", "Noah"],
+          "children_description": "Twin boys",
+          "adoption_type": "From foster care",
+          "adoption_year": 2019,
+          "children_age_at_adoption": 4,
+          "fostering_duration": "Nearly two years"
+        }
+      },
+      {
+        "sentence": "My grandmother Catherine Kelly O'Brien was born on a ship crossing the Atlantic from Ireland to America on March 17, 1935, which is why our family always makes her birthday celebration extra special on St. Patrick's Day.",
+        "extracted_information": {
+          "name": "Catherine Kelly O'Brien",
+          "relationship": "Grandmother",
+          "birth_circumstance": "Born on ship crossing Atlantic",
+          "origin": "Ireland",
+          "destination": "America",
+          "birth_date": "March 17, 1935",
+          "cultural_significance": "St. Patrick's Day",
+          "family_tradition": "Extra special birthday celebration"
+        }
+      },
+      {
+        "sentence": "My stepmother Diane entered our lives in 2010 after my father's second marriage, brought along her two teenagers from her previous marriage (my stepsiblings Jason and Ashley), and has been an incredible support to our blended family ever since.",
+        "extracted_information": {
+          "name": "Diane",
+          "relationship": "Stepmother",
+          "family_change_year": 2010,
+          "family_change_type": "Father's second marriage",
+          "stepchildren_names": ["Jason", "Ashley"],
+          "stepchildren_relationship": "Stepsiblings",
+          "stepchildren_status": "Teenagers in 2010",
+          "stepchildren_origin": "Previous marriage",
+          "family_structure": "Blended family",
+          "character_trait": "Incredible support"
+        }
+      },
+      {
+        "sentence": "My younger brother Daniel was diagnosed with autism spectrum disorder at age 4 in 2005, received early intervention services throughout elementary school, and now at 22 works as a data analyst for a tech company in Seattle.",
+        "extracted_information": {
+          "name": "Daniel",
+          "relationship": "Younger brother",
+          "medical_condition": "Autism spectrum disorder",
+          "diagnosis_age": 4,
+          "diagnosis_year": 2005,
+          "support_services": "Early intervention",
+          "support_duration": "Throughout elementary school",
+          "current_age": 22,
+          "occupation": "Data analyst",
+          "industry": "Tech company",
+          "location": "Seattle"
+        }
+      },
+      {
+        "sentence": "Both my maternal grandparents survived the Holocaust as children, met at a displaced persons camp in Germany in 1946, immigrated to Israel in 1948, and later moved to the United States in 1960 where they raised my mother and her three brothers in Brooklyn.",
+        "extracted_information": {
+          "relationship": "Maternal grandparents",
+          "historical_trauma": "Survived Holocaust as children",
+          "meeting_location": "Displaced persons camp in Germany",
+          "meeting_year": 1946,
+          "immigration_destination_1": "Israel",
+          "immigration_year_1": 1948,
+          "immigration_destination_2": "United States",
+          "immigration_year_2": 1960,
+          "residence": "Brooklyn",
+          "children": ["Mother", "Three brothers (uncles)"],
+          "number_of_children": 4
+        }
+      },
+      {
+        "sentence": "My aunt Josephine earned her PhD in Physics from MIT in 1978 when there were very few women in the field, went on to work for NASA during the Space Shuttle program from 1981 to 2003, and was awarded the Presidential Medal of Freedom in 2010 for her contributions to science.",
+        "extracted_information": {
+          "name": "Josephine",
+          "relationship": "Aunt",
+          "education": "PhD in Physics from MIT",
+          "graduation_year": 1978,
+          "historical_context": "Few women in the field",
+          "employer": "NASA",
+          "work_project": "Space Shuttle program",
+          "employment_period": "1981-2003",
+          "award": "Presidential Medal of Freedom",
+          "award_year": 2010,
+          "award_reason": "Contributions to science"
+        }
+      },
+      {
+        "sentence": "My wife's brother Paul served two tours in Afghanistan with the Marines between 2010 and 2013, returned home with a Purple Heart after being wounded in combat, and now works as a firefighter and PTSD counselor for fellow veterans in Phoenix.",
+        "extracted_information": {
+          "name": "Paul",
+          "relationship": "Wife's brother (brother-in-law)",
+          "military_service": "Two tours in Afghanistan with Marines",
+          "service_period": "2010-2013",
+          "military_award": "Purple Heart",
+          "injury_context": "Wounded in combat",
+          "current_occupation_1": "Firefighter",
+          "current_occupation_2": "PTSD counselor",
+          "service_recipients": "Fellow veterans",
+          "location": "Phoenix"
+        }
+      },
+      {
+        "sentence": "My father lost his parents in a car accident when he was only 12 years old in 1972, was raised by his older sister Marion who was 22 at the time, and that experience inspired him to become a social worker specializing in helping children cope with grief and trauma.",
+        "extracted_information": {
+          "relationship_1": "Father",
+          "family_tragedy": "Lost parents in car accident",
+          "tragedy_year": 1972,
+          "age_at_tragedy": 12,
+          "guardian_name": "Marion",
+          "guardian_relationship": "Older sister (aunt)",
+          "guardian_age": 22,
+          "career_impact": "Inspired to become social worker",
+          "specialization": "Helping children cope with grief and trauma"
+        }
+      },
+      {
+        "sentence": "My son Lucas was born with a congenital heart defect in 2015, underwent three surgeries before his fifth birthday at Boston Children's Hospital, and is now a happy, active 10-year-old who raises money for heart research through an annual 5K run he organizes with his school.",
+        "extracted_information": {
+          "name": "Lucas",
+          "relationship": "Son",
+          "medical_condition": "Congenital heart defect",
+          "birth_year": 2015,
+          "medical_interventions": "Three surgeries before fifth birthday",
+          "medical_facility": "Boston Children's Hospital",
+          "current_age": 10,
+          "current_status": "Happy, active",
+          "philanthropy": "Raises money for heart research",
+          "philanthropy_method": "Annual 5K run",
+          "organization_partners": "School"
+        }
+      },
+      {
+        "sentence": "My husband's family originally came from Poland; his ancestors immigrated to Chicago in 1908, opened a bakery that stayed in the family for three generations until 1997, and passed down traditional pierogi recipes that we still make every Christmas Eve.",
+        "extracted_information": {
+          "relationship": "Husband's family",
+          "origin": "Poland",
+          "immigration_destination": "Chicago",
+          "immigration_year": 1908,
+          "family_business": "Bakery",
+          "business_duration": "Three generations",
+          "business_end_year": 1997,
+          "cultural_tradition": "Traditional pierogi recipes",
+          "tradition_continuation": "Still make every Christmas Eve"
+        }
+      },
+      {
+        "sentence": "My identical twin sister Andrea and I were born two minutes apart on December 31, 1982, grew up inseparable but pursued different careers—she became a corporate attorney in New York while I studied marine biology in Florida—and now we live on opposite coasts but still talk every single day without fail.",
+        "extracted_information": {
+          "name_1": "Andrea",
+          "relationship": "Identical twin sister",
+          "birth_order": "Two minutes apart",
+          "birth_date": "December 31, 1982",
+          "childhood_relationship": "Inseparable",
+          "career_divergence": "Different careers",
+          "sister_occupation": "Corporate attorney",
+          "sister_location": "New York",
+          "self_occupation": "Marine biology",
+          "self_location": "Florida",
+          "current_living_situation": "Opposite coasts",
+          "current_relationship": "Talk every day without fail"
+        }
+      }
+    ]
+  }

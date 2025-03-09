@@ -1,0 +1,234 @@
+{
+    "sentences": [
+      {
+        "sentence": "My father, David Johnson, was a mechanic who worked in Chicago for 35 years before retiring in 2018.",
+        "extracted_information": {
+          "name": "David Johnson",
+          "relationship": "Father",
+          "occupation": "Mechanic",
+          "location": "Chicago",
+          "duration": "35 years",
+          "retirement_year": 2018
+        }
+      },
+      {
+        "sentence": "My grandmother Maria Elena Rodriguez immigrated from Mexico to California in 1965 and raised seven children on her own.",
+        "extracted_information": {
+          "name": "Maria Elena Rodriguez",
+          "relationship": "Grandmother",
+          "origin": "Mexico",
+          "destination": "California",
+          "immigration_year": 1965,
+          "number_of_children": 7,
+          "parental_status": "Single parent"
+        }
+      },
+      {
+        "sentence": "My sister Sarah graduated from Harvard Medical School in 2015 and now practices pediatrics in Seattle.",
+        "extracted_information": {
+          "name": "Sarah",
+          "relationship": "Sister",
+          "education": "Harvard Medical School",
+          "graduation_year": 2015,
+          "occupation": "Pediatrician",
+          "location": "Seattle"
+        }
+      },
+      {
+        "sentence": "My uncle James and aunt Patricia celebrated their 50th wedding anniversary last June at their farm in Iowa.",
+        "extracted_information": {
+          "name_1": "James",
+          "name_2": "Patricia",
+          "relationship_1": "Uncle",
+          "relationship_2": "Aunt",
+          "event": "Wedding anniversary",
+          "duration": "50 years",
+          "date": "Last June",
+          "location": "Farm in Iowa"
+        }
+      },
+      {
+        "sentence": "My cousin Alex was born with cystic fibrosis in 2002 but has become an accomplished swimmer despite his condition.",
+        "extracted_information": {
+          "name": "Alex",
+          "relationship": "Cousin",
+          "medical_condition": "Cystic fibrosis",
+          "birth_year": 2002,
+          "achievement": "Accomplished swimmer"
+        }
+      },
+      {
+        "sentence": "My great-grandfather fought in World War II from 1942-1945 and received a Purple Heart after being wounded at Normandy.",
+        "extracted_information": {
+          "relationship": "Great-grandfather",
+          "event": "World War II",
+          "time_period": "1942-1945",
+          "award": "Purple Heart",
+          "injury_location": "Normandy"
+        }
+      },
+      {
+        "sentence": "My twin brothers, Michael and Matthew, were born on April 15, 1998, and both now work as software engineers in Austin.",
+        "extracted_information": {
+          "name_1": "Michael",
+          "name_2": "Matthew",
+          "relationship": "Twin brothers",
+          "birth_date": "April 15, 1998",
+          "occupation": "Software engineers",
+          "location": "Austin"
+        }
+      },
+      {
+        "sentence": "My mother-in-law, Dr. Elizabeth Chang, founded a nonprofit organization in 2010 that provides medical care to underserved communities in rural Tennessee.",
+        "extracted_information": {
+          "name": "Dr. Elizabeth Chang",
+          "relationship": "Mother-in-law",
+          "title": "Doctor",
+          "achievement": "Founded nonprofit organization",
+          "year": 2010,
+          "purpose": "Medical care for underserved communities",
+          "location": "Rural Tennessee"
+        }
+      },
+      {
+        "sentence": "My son Kevin was diagnosed with autism at age 3 but has thrived since we enrolled him in a specialized education program in 2018.",
+        "extracted_information": {
+          "name": "Kevin",
+          "relationship": "Son",
+          "medical_condition": "Autism",
+          "diagnosis_age": 3,
+          "program": "Specialized education",
+          "enrollment_year": 2018
+        }
+      },
+      {
+        "sentence": "My wife's parents, Robert and Janice Wilson, emigrated from Scotland in 1975 and opened a bakery in Portland that's still operating today.",
+        "extracted_information": {
+          "name_1": "Robert Wilson",
+          "name_2": "Janice Wilson",
+          "relationship": "Wife's parents",
+          "origin": "Scotland",
+          "immigration_year": 1975,
+          "business": "Bakery",
+          "location": "Portland",
+          "status": "Still operating"
+        }
+      },
+      {
+        "sentence": "My stepfather, Colonel Thomas Bradley, served in the Marine Corps for 28 years before retiring in 2005 and marrying my mother in 2007.",
+        "extracted_information": {
+          "name": "Colonel Thomas Bradley",
+          "relationship": "Stepfather",
+          "title": "Colonel",
+          "military_branch": "Marine Corps",
+          "service_duration": "28 years",
+          "retirement_year": 2005,
+          "marriage_year": 2007
+        }
+      },
+      {
+        "sentence": "My daughter Emma was born on February 12, 2019, at Massachusetts General Hospital, weighing 7 pounds and 3 ounces.",
+        "extracted_information": {
+          "name": "Emma",
+          "relationship": "Daughter",
+          "birth_date": "February 12, 2019",
+          "birth_location": "Massachusetts General Hospital",
+          "birth_weight": "7 pounds, 3 ounces"
+        }
+      },
+      {
+        "sentence": "My half-brother from my father's first marriage, Jonathan, is 15 years older than me and lives in Sydney, Australia with his wife and three children.",
+        "extracted_information": {
+          "name": "Jonathan",
+          "relationship": "Half-brother",
+          "age_difference": "15 years older",
+          "location": "Sydney, Australia",
+          "family_status": "Married with three children"
+        }
+      },
+      {
+        "sentence": "My husband's grandmother, Hiroko Tanaka, survived the Hiroshima bombing in 1945 when she was just 8 years old and later moved to Hawaii in 1960.",
+        "extracted_information": {
+          "name": "Hiroko Tanaka",
+          "relationship": "Husband's grandmother",
+          "historical_event": "Hiroshima bombing",
+          "year_of_event": 1945,
+          "age_during_event": "8 years old",
+          "relocation_destination": "Hawaii",
+          "relocation_year": 1960
+        }
+      },
+      {
+        "sentence": "My niece, Olivia Chen Williams, was adopted from China in 2012 when she was 14 months old and has become an amazing pianist.",
+        "extracted_information": {
+          "name": "Olivia Chen Williams",
+          "relationship": "Niece",
+          "birth_country": "China",
+          "adoption_year": 2012,
+          "age_at_adoption": "14 months",
+          "talent": "Pianist"
+        }
+      },
+      {
+        "sentence": "Both my parents grew up in Buffalo, New York, met at Syracuse University in 1985, and got married in 1990 after graduating with degrees in engineering.",
+        "extracted_information": {
+          "relationship": "Parents",
+          "hometown": "Buffalo, New York",
+          "meeting_location": "Syracuse University",
+          "meeting_year": 1985,
+          "marriage_year": 1990,
+          "field_of_study": "Engineering"
+        }
+      },
+      {
+        "sentence": "My brother-in-law served as a Peace Corps volunteer in Kenya from 2008 to 2010 before returning to complete his PhD in Anthropology at UCLA.",
+        "extracted_information": {
+          "relationship": "Brother-in-law",
+          "organization": "Peace Corps",
+          "location_of_service": "Kenya",
+          "service_period": "2008-2010",
+          "degree": "PhD in Anthropology",
+          "university": "UCLA"
+        }
+      },
+      {
+        "sentence": "My youngest son, Tyler, was diagnosed with leukemia when he was 6 years old in 2017, underwent treatment for two years, and has been in remission since 2019.",
+        "extracted_information": {
+          "name": "Tyler",
+          "relationship": "Youngest son",
+          "medical_condition": "Leukemia",
+          "diagnosis_age": "6 years old",
+          "diagnosis_year": 2017,
+          "treatment_duration": "2 years",
+          "remission_since": 2019
+        }
+      },
+      {
+        "sentence": "My great-aunt Martha lived to be 104 years old, was born during World War I in 1917, and witnessed everything from the Great Depression to the smartphone era before passing away in 2021.",
+        "extracted_information": {
+          "name": "Martha",
+          "relationship": "Great-aunt",
+          "age_at_death": "104 years old",
+          "birth_year": 1917,
+          "historical_context": "Born during World War I",
+          "historical_events_witnessed": "Great Depression to smartphone era",
+          "death_year": 2021
+        }
+      },
+      {
+        "sentence": "My grandfather on my mother's side, Joseph O'Malley, worked as a coal miner in Pennsylvania for 42 years starting in 1952, raised five children with my grandmother Eleanor, and passed away from black lung disease in 2003.",
+        "extracted_information": {
+          "name": "Joseph O'Malley",
+          "relationship": "Maternal grandfather",
+          "occupation": "Coal miner",
+          "location": "Pennsylvania",
+          "career_duration": "42 years",
+          "career_start": 1952,
+          "spouse": "Eleanor",
+          "number_of_children": 5,
+          "cause_of_death": "Black lung disease",
+          "death_year": 2003
+        }
+      }
+    ]
+  }
