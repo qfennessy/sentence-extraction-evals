@@ -155,11 +155,20 @@ def calculate_metrics(results: List[Dict]) -> Dict:
         "extraction_rates_by_field": {},
         "field_counts": {},
         "overall_field_extraction_rate": 0,
-        "sentences_with_errors": []
+        "sentences_with_errors": [],
+        "scores": {
+            "by_sentence": [],
+            "min_score": 0.0,
+            "max_score": 0.0,
+            "avg_score": 0.0,
+            "median_score": 0.0,
+            "total_score": 0.0
+        }
     }
     
     total_fields = 0
     total_extracted_fields = 0
+    scores = []
     
     for result in results:
         expected = result["expected"]
@@ -172,21 +181,49 @@ def calculate_metrics(results: List[Dict]) -> Dict:
                 "sentence": result["sentence"],
                 "error": "No fields extracted"
             })
+            
+            # Score is 0 for failed extraction
+            sentence_score = 0.0
+            scores.append(sentence_score)
+            metrics["scores"]["by_sentence"].append({
+                "sentence": result["sentence"][:50] + "..." if len(result["sentence"]) > 50 else result["sentence"],
+                "score": sentence_score,
+                "extracted_fields": 0,
+                "total_fields": len(expected) if isinstance(expected, dict) else 0
+            })
             continue
         
         metrics["successful_extractions"] += 1
+        
+        # Prepare scoring for this sentence
+        sentence_extracted_fields = 0
+        sentence_total_fields = 0
         
         # Compare expected and extracted fields
         for field, expected_value in expected.items():
             # Count this field
             metrics["field_counts"][field] = metrics["field_counts"].get(field, 0) + 1
             total_fields += 1
+            sentence_total_fields += 1
             
             # Check if field was extracted
             if field in extracted:
                 # Count successful extraction
                 metrics["extraction_rates_by_field"][field] = metrics["extraction_rates_by_field"].get(field, 0) + 1
                 total_extracted_fields += 1
+                sentence_extracted_fields += 1
+        
+        # Calculate score for this sentence as a percentage of correctly extracted fields
+        sentence_score = sentence_extracted_fields / sentence_total_fields if sentence_total_fields > 0 else 0.0
+        scores.append(sentence_score)
+        
+        # Store sentence score
+        metrics["scores"]["by_sentence"].append({
+            "sentence": result["sentence"][:50] + "..." if len(result["sentence"]) > 50 else result["sentence"],
+            "score": sentence_score,
+            "extracted_fields": sentence_extracted_fields,
+            "total_fields": sentence_total_fields
+        })
     
     # Calculate extraction rates
     for field, count in metrics["extraction_rates_by_field"].items():
@@ -195,6 +232,21 @@ def calculate_metrics(results: List[Dict]) -> Dict:
     # Calculate overall field extraction rate
     if total_fields > 0:
         metrics["overall_field_extraction_rate"] = total_extracted_fields / total_fields
+    
+    # Calculate score statistics
+    if scores:
+        metrics["scores"]["min_score"] = min(scores)
+        metrics["scores"]["max_score"] = max(scores)
+        metrics["scores"]["avg_score"] = sum(scores) / len(scores)
+        metrics["scores"]["total_score"] = metrics["overall_field_extraction_rate"]
+        
+        # Calculate median score
+        sorted_scores = sorted(scores)
+        mid = len(sorted_scores) // 2
+        if len(sorted_scores) % 2 == 0:
+            metrics["scores"]["median_score"] = (sorted_scores[mid-1] + sorted_scores[mid]) / 2
+        else:
+            metrics["scores"]["median_score"] = sorted_scores[mid]
     
     return metrics
 
@@ -208,16 +260,34 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
     with open(output_file, 'w') as f:
         json.dump(output, f, indent=2)
     
-    # Also save a summary as CSV
+    # Save scores by sentence to CSV
+    if metrics["scores"]["by_sentence"]:
+        scores_df = pd.DataFrame(metrics["scores"]["by_sentence"])
+        scores_csv_file = output_file.replace('.json', '_scores.csv')
+        scores_df.sort_values("score", ascending=False).to_csv(scores_csv_file, index=False)
+    
+    # Save extraction rates by field to CSV
     if metrics["extraction_rates_by_field"]:
-        df = pd.DataFrame({
+        fields_df = pd.DataFrame({
             "Field": list(metrics["extraction_rates_by_field"].keys()),
             "Extraction Rate": list(metrics["extraction_rates_by_field"].values()),
             "Count": [metrics["field_counts"][field] for field in metrics["extraction_rates_by_field"].keys()]
         })
         
+        # Create main summary CSV with both field stats and overall scores
         csv_file = output_file.replace('.json', '_summary.csv')
-        df.sort_values("Extraction Rate", ascending=False).to_csv(csv_file, index=False)
+        fields_df.sort_values("Extraction Rate", ascending=False).to_csv(csv_file, index=False)
+        
+        # Append score summary to the CSV
+        with open(csv_file, 'a') as f:
+            f.write("\n\nOverall Score Statistics\n")
+            f.write(f"Total Score,{metrics['scores']['total_score']:.4f}\n")
+            f.write(f"Average Score,{metrics['scores']['avg_score']:.4f}\n")
+            f.write(f"Median Score,{metrics['scores']['median_score']:.4f}\n")
+            f.write(f"Min Score,{metrics['scores']['min_score']:.4f}\n")
+            f.write(f"Max Score,{metrics['scores']['max_score']:.4f}\n")
+            f.write(f"Successful Extractions,{metrics['successful_extractions']}\n")
+            f.write(f"Failed Extractions,{metrics['failed_extractions']}\n")
 
 def main():
     args = parse_arguments()
@@ -254,6 +324,24 @@ def main():
     print(f"Successful extractions: {metrics['successful_extractions']} ({metrics['successful_extractions']/metrics['total_sentences']*100:.2f}%)")
     print(f"Failed extractions: {metrics['failed_extractions']} ({metrics['failed_extractions']/metrics['total_sentences']*100:.2f}%)")
     print(f"Overall field extraction rate: {metrics['overall_field_extraction_rate']*100:.2f}%")
+    
+    # Print score statistics
+    print("\nScore Statistics:")
+    print(f"  Total score: {metrics['scores']['total_score']:.4f}")
+    print(f"  Average score: {metrics['scores']['avg_score']:.4f}")
+    print(f"  Median score: {metrics['scores']['median_score']:.4f}")
+    print(f"  Min score: {metrics['scores']['min_score']:.4f}")
+    print(f"  Max score: {metrics['scores']['max_score']:.4f}")
+    
+    # Print top 3 and bottom 3 scoring sentences
+    scores_sorted = sorted(metrics["scores"]["by_sentence"], key=lambda x: x["score"], reverse=True)
+    print("\nTop 3 best performing sentences:")
+    for item in scores_sorted[:3]:
+        print(f"  Score: {item['score']:.4f} - \"{item['sentence']}\"")
+    
+    print("\nBottom 3 worst performing sentences:")
+    for item in scores_sorted[-3:]:
+        print(f"  Score: {item['score']:.4f} - \"{item['sentence']}\"")
     
     print("\nTop 5 best extracted fields:")
     fields_sorted = sorted(metrics["extraction_rates_by_field"].items(), key=lambda x: x[1], reverse=True)
