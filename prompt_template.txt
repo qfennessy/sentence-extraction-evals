@@ -1,9 +1,9 @@
-You will extract structured information about family members and relationships from a sentence. Focus only on family-related information, not all biographical details.
+You will extract structured information about family members and relationships from a sentence. Focus on extracting ALL information mentioned in the sentence, including specific dates, locations, and other biographical details.
 
 Here is the sentence:
 {SENTENCE}
 
-Extract all family relationships mentioned in the sentence, and output a JSON object with the following structure:
+Extract all family relationships and biographical details mentioned in the sentence, and output a JSON object with the following structure:
 {
   "family_members": [
     {
@@ -11,6 +11,30 @@ Extract all family relationships mentioned in the sentence, and output a JSON ob
       "age": "age if mentioned, otherwise null",
       "gender": "female/male if known or can be inferred, otherwise null",
       "occupation": "occupation if mentioned, otherwise null",
+      "birth_year": "year of birth if mentioned, otherwise null",
+      "birth_date": "full birth date if mentioned (e.g., 'June 12, 2015'), otherwise null",
+      "location": "where they currently live if mentioned, otherwise null",
+      "birthplace": "place of birth if mentioned, otherwise null",
+      "deathplace": "place of death if mentioned, otherwise null",
+      "death_year": "year of death if mentioned, otherwise null",
+      "age_at_death": "age at death if mentioned, otherwise null",
+      "military_service": "military service details if mentioned, otherwise null",
+      "education_milestone": "education details if mentioned, otherwise null",
+      "graduation_year": "year of graduation if mentioned, otherwise null",
+      "languages": "languages spoken if mentioned, otherwise null",
+      "languages_count": "number of languages spoken if mentioned, otherwise null",
+      "children_count": "number of children if mentioned, otherwise null",
+      "children_names": "names of children if mentioned as an array, otherwise null",
+      "skills": "any skills mentioned, otherwise null",
+      "sports": "sports played if mentioned, otherwise null",
+      "origin": "country/place of origin if mentioned, otherwise null",
+      "immigration_year": "year of immigration if mentioned, otherwise null",
+      "meeting_place": "place where they met someone if mentioned, otherwise null",
+      "meeting_year": "year when they met someone if mentioned, otherwise null",
+      "moved_to": "location they moved to if mentioned, otherwise null",
+      "move_year": "year they moved somewhere if mentioned, otherwise null",
+      "family_status": "marital status if mentioned, otherwise null", 
+      "work_duration": "how long they've worked somewhere if mentioned, otherwise null",
       "relation_to": [
         {
           "name": "related person's name or descriptor (e.g., 'narrator', 'speaker' for first-person references)",
@@ -28,6 +52,7 @@ IMPORTANT GUIDELINES:
    - For unnamed family members, use clear descriptive identifiers (e.g., "father", "mother", "grandmother")
    - When multiple unnamed children are mentioned (e.g., "seven children"), name them "child1", "child2", etc.
    - For deceased family members, still create entries as they are part of the family structure
+   - ALWAYS extract the correct name of family members when mentioned (e.g., "My brother James" → name is "James")
 
 2. Relationship Chains and Family Structure:
    - When extracting from first-person perspective ("my father"), create entries for all parties
@@ -36,6 +61,7 @@ IMPORTANT GUIDELINES:
    - For married couples, ensure both husband-wife relationships are captured
    - For maternal/paternal relatives, include the relevant parent in the relationship chain
    - When someone has multiple relationships (e.g., "brother-in-law"), capture all relations
+   - ALWAYS set the "relationship" field for every person (e.g., "Father", "Sister", "Brother-in-law")
 
 3. Special Relationship Types:
    - Use "twin" specifically for twins (either identical or fraternal)
@@ -63,6 +89,21 @@ IMPORTANT GUIDELINES:
    - Maintain sibling relationships between all siblings/step-siblings/half-siblings
    - For multi-generational families, ensure all relationships are properly connected
 
+6. Biographical Details - CRITICAL:
+   - ALWAYS extract birth dates and years when mentioned (e.g., "born in 1965" → birth_year: "1965")
+   - ALWAYS extract locations when mentioned (e.g., "lives in Chicago" → location: "Chicago")
+   - ALWAYS extract meeting details when mentioned (e.g., "met in college in 1980" → meeting_place: "college", meeting_year: "1980")
+   - ALWAYS extract work information (e.g., "worked as a mechanic for 35 years" → work_duration: "35 years")
+   - ALWAYS extract language information (e.g., "speaks three languages" → languages_count: "3")
+   - ALWAYS extract children information (e.g., "two children named Alex and Emma" → children_count: "2", children_names: ["Alex", "Emma"])
+   - Include both specific dates (birth_date) and years (birth_year) when available
+   - Extract ALL demographic information mentioned in the sentence
+
+7. Multiple Family Members:
+   - When multiple family members are mentioned (e.g., "My brother James has two children"), create entries for ALL of them
+   - For children, include their relationship to parents AND to each other (siblings)
+   - Always infer family structure even when not explicitly stated
+
 Example 1 (First-person perspective):
 For the sentence "My father David worked as a mechanic in Chicago for 35 years", the output would be:
 {
@@ -72,6 +113,30 @@ For the sentence "My father David worked as a mechanic in Chicago for 35 years",
       "age": null,
       "gender": "male",
       "occupation": "mechanic",
+      "birth_year": null,
+      "birth_date": null,
+      "location": "Chicago",
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null, 
+      "family_status": null,
+      "work_duration": "35 years",
       "relation_to": [
         {
           "name": "narrator",
@@ -84,6 +149,30 @@ For the sentence "My father David worked as a mechanic in Chicago for 35 years",
       "age": null,
       "gender": null,
       "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
       "relation_to": [
         {
           "name": "David", 
@@ -103,6 +192,30 @@ For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland 
       "age": null,
       "gender": "male",
       "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": "Scotland",
+      "immigration_year": "1975",
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
       "relation_to": [
         {
           "name": "Janice",
@@ -123,6 +236,30 @@ For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland 
       "age": null,
       "gender": "female",
       "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": "Scotland",
+      "immigration_year": "1975",
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
       "relation_to": [
         {
           "name": "Robert",
@@ -143,6 +280,30 @@ For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland 
       "age": null,
       "gender": "female",
       "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": "Scotland",
+      "immigration_year": "1975",
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
       "relation_to": [
         {
           "name": "Robert",
@@ -167,6 +328,30 @@ For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland 
       "age": null,
       "gender": "male",
       "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": "Scotland",
+      "immigration_year": "1975",
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
       "relation_to": [
         {
           "name": "Robert",
@@ -187,6 +372,30 @@ For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland 
       "age": null,
       "gender": null,
       "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
       "relation_to": [
         {
           "name": "wife",
@@ -199,6 +408,300 @@ For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland 
         {
           "name": "Janice",
           "relationship": "son-in-law"
+        }
+      ]
+    }
+  ]
+}
+
+Example 3 (Focus on challenging patterns):
+For the sentence "My brother James has two children named Alex and Emma.", the output would be:
+{
+  "family_members": [
+    {
+      "name": "James",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": "2",
+      "children_names": ["Alex", "Emma"],
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "brother"
+        },
+        {
+          "name": "Alex",
+          "relationship": "father"
+        },
+        {
+          "name": "Emma",
+          "relationship": "father"
+        }
+      ]
+    },
+    {
+      "name": "Alex",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "James",
+          "relationship": "child"
+        },
+        {
+          "name": "Emma",
+          "relationship": "sibling"
+        }
+      ]
+    },
+    {
+      "name": "Emma",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "James",
+          "relationship": "child"
+        },
+        {
+          "name": "Alex",
+          "relationship": "sibling"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "James",
+          "relationship": "sibling"
+        }
+      ]
+    }
+  ]
+}
+
+Example 4 (Additional challenging pattern):
+For the sentence "My parents met in college in 1980.", the output would be:
+{
+  "family_members": [
+    {
+      "name": "father",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": "college",
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": "college",
+      "meeting_year": "1980",
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "mother",
+          "relationship": "husband"
+        },
+        {
+          "name": "narrator",
+          "relationship": "father"
+        }
+      ]
+    },
+    {
+      "name": "mother",
+      "age": null,
+      "gender": "female",
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": "college",
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": "college",
+      "meeting_year": "1980",
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "father",
+          "relationship": "wife"
+        },
+        {
+          "name": "narrator",
+          "relationship": "mother"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "father",
+          "relationship": "child"
+        },
+        {
+          "name": "mother",
+          "relationship": "child"
         }
       ]
     }
