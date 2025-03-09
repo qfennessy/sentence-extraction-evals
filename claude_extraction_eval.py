@@ -4,30 +4,36 @@ This script evaluates Claude's ability to extract family details from sentences.
 It takes a prompt template file and a JSON evaluation dataset as inputs.
 
 Usage:
-python claude_extraction_eval.py --prompt-file prompt_template.txt --eval-data eval_data.json --api-key your_api_key --output-file results.json
+python claude_extraction_eval.py --prompt-file prompt_template.txt --eval-data eval_data.json
 """
 
-import argparse
 import json
 import os
 import time
 import anthropic
 import pandas as pd
+import click
 from typing import Dict, List, Any, Optional
 from tqdm import tqdm
 
-def parse_arguments():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description="Evaluate Claude's extraction capabilities")
-    parser.add_argument("--prompt-file", required=True, help="Path to the prompt template file")
-    parser.add_argument("--eval-data", required=True, help="Path to the evaluation data JSON file")
-    parser.add_argument("--api-key", required=False, help="Anthropic API key (or set via ANTHROPIC_API_KEY env var)")
-    parser.add_argument("--model", default="claude-3-5-sonnet-20240620", help="Claude model to use")
-    parser.add_argument("--output-file", default="extraction_results.json", help="Output file for results")
-    parser.add_argument("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
-    parser.add_argument("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
-    
-    return parser.parse_args()
+# Available Claude models
+CLAUDE_MODELS = {
+    "opus": "claude-3-opus-20240229",
+    "sonnet": "claude-3-5-sonnet-20240620",
+    "haiku": "claude-3-haiku-20240307"
+}
+
+@click.command()
+@click.option("--prompt-file", required=True, type=click.Path(exists=True), help="Path to the prompt template file")
+@click.option("--eval-data", required=True, type=click.Path(exists=True), help="Path to the evaluation data JSON file")
+@click.option("--api-key", help="Anthropic API key (or set via ANTHROPIC_API_KEY env var)")
+@click.option("--model", type=click.Choice(["opus", "sonnet", "haiku"], case_sensitive=False), default="sonnet", 
+              help="Claude model to use (opus, sonnet, haiku)")
+@click.option("--output-file", default="extraction_results.json", help="Output file for results")
+@click.option("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
+@click.option("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
+@click.option("--temperature", type=float, default=0.0, help="Temperature for Claude responses (0.0-1.0)")
+def main(prompt_file, eval_data, api_key, model, output_file, batch_size, max_sentences, temperature):
 
 def load_data(prompt_file: str, eval_data_file: str, max_sentences: Optional[int] = None) -> tuple:
     """Load the prompt template and evaluation data."""
@@ -90,7 +96,7 @@ def extract_json_from_response(response: str) -> Dict:
         return {}
 
 def evaluate_extraction(client, prompt_template: str, sentences: List[Dict], 
-                       model: str, batch_size: int = 5) -> List[Dict]:
+                       model: str, batch_size: int = 5, temperature: float = 0.0) -> List[Dict]:
     """Evaluate Claude's extraction capabilities on the given sentences."""
     results = []
     
@@ -110,7 +116,7 @@ def evaluate_extraction(client, prompt_template: str, sentences: List[Dict],
                 response = client.messages.create(
                     model=model,
                     max_tokens=4000,
-                    temperature=0,
+                    temperature=temperature,
                     system="You extract structured information from text about family members.",
                     messages=[{"role": "user", "content": prompt}]
                 )
@@ -587,88 +593,104 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
                     f.write(f"    Extracted: {error['extracted']}\n\n")
                 f.write(f"{'-'*50}\n\n")
 
-def main():
-    args = parse_arguments()
-    
+@click.command()
+@click.option("--prompt-file", required=True, type=click.Path(exists=True), help="Path to the prompt template file")
+@click.option("--eval-data", required=True, type=click.Path(exists=True), help="Path to the evaluation data JSON file")
+@click.option("--api-key", help="Anthropic API key (or set via ANTHROPIC_API_KEY env var)")
+@click.option("--model", type=click.Choice(["opus", "sonnet", "haiku"], case_sensitive=False), default="sonnet", 
+              help="Claude model to use (opus, sonnet, haiku)")
+@click.option("--output-file", default="extraction_results.json", help="Output file for results")
+@click.option("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
+@click.option("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
+@click.option("--temperature", type=float, default=0.0, help="Temperature for Claude responses (0.0-1.0)")
+def main(prompt_file, eval_data, api_key, model, output_file, batch_size, max_sentences, temperature):
+    """Evaluate Claude's ability to extract family details from sentences."""
     # Get API key from args or environment
-    api_key = args.api_key or os.environ.get("ANTHROPIC_API_KEY")
+    api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
-        raise ValueError("API key must be provided via --api-key or ANTHROPIC_API_KEY environment variable")
+        raise click.UsageError("API key must be provided via --api-key or ANTHROPIC_API_KEY environment variable")
+    
+    # Get the proper model identifier
+    model_id = CLAUDE_MODELS.get(model.lower())
+    if not model_id:
+        raise click.UsageError(f"Unknown model '{model}'. Choose from: opus, sonnet, haiku")
     
     # Initialize Anthropic client
     client = anthropic.Anthropic(api_key=api_key)
     
     # Load data
-    prompt_template, sentences = load_data(args.prompt_file, args.eval_data, args.max_sentences)
+    prompt_template, sentences = load_data(prompt_file, eval_data, max_sentences)
     
-    print(f"Loaded {len(sentences)} sentences for evaluation")
-    print(f"Using model: {args.model}")
+    click.echo(f"Loaded {len(sentences)} sentences for evaluation")
+    click.echo(f"Using model: {model} ({model_id})")
+    click.echo(f"Temperature: {temperature}")
     
     # Evaluate extraction
     results = evaluate_extraction(
         client, 
         prompt_template, 
         sentences, 
-        args.model, 
-        args.batch_size
+        model_id, 
+        batch_size,
+        temperature
     )
     
     # Calculate metrics
     metrics = calculate_metrics(results)
     
     # Print summary
-    print("\nEvaluation Summary:")
-    print(f"Total sentences: {metrics['total_sentences']}")
-    print(f"Successful extractions: {metrics['successful_extractions']} ({metrics['successful_extractions']/metrics['total_sentences']*100:.2f}%)")
-    print(f"Failed extractions: {metrics['failed_extractions']} ({metrics['failed_extractions']/metrics['total_sentences']*100:.2f}%)")
+    click.echo("\nEvaluation Summary:")
+    click.echo(f"Total sentences: {metrics['total_sentences']}")
+    click.echo(f"Successful extractions: {metrics['successful_extractions']} ({metrics['successful_extractions']/metrics['total_sentences']*100:.2f}%)")
+    click.echo(f"Failed extractions: {metrics['failed_extractions']} ({metrics['failed_extractions']/metrics['total_sentences']*100:.2f}%)")
     
     # Print detailed score statistics
-    print("\nDetailed Score Statistics:")
-    print(f"  Value accuracy (total score): {metrics.get('overall_value_accuracy', 0)*100:.2f}%")
-    print(f"  Field extraction rate: {metrics['overall_field_extraction_rate']*100:.2f}%")
-    print(f"  Average sentence score: {metrics['scores']['avg_score']*100:.2f}%")
-    print(f"  Median sentence score: {metrics['scores']['median_score']*100:.2f}%")
-    print(f"  Min sentence score: {metrics['scores']['min_score']*100:.2f}%")
-    print(f"  Max sentence score: {metrics['scores']['max_score']*100:.2f}%")
+    click.echo("\nDetailed Score Statistics:")
+    click.echo(f"  Value accuracy (total score): {metrics.get('overall_value_accuracy', 0)*100:.2f}%")
+    click.echo(f"  Field extraction rate: {metrics['overall_field_extraction_rate']*100:.2f}%")
+    click.echo(f"  Average sentence score: {metrics['scores']['avg_score']*100:.2f}%")
+    click.echo(f"  Median sentence score: {metrics['scores']['median_score']*100:.2f}%")
+    click.echo(f"  Min sentence score: {metrics['scores']['min_score']*100:.2f}%")
+    click.echo(f"  Max sentence score: {metrics['scores']['max_score']*100:.2f}%")
     
     # Print field accuracy (content correctness)
     if metrics.get("field_accuracy"):
-        print("\nTop 5 most accurate fields (content correctness):")
+        click.echo("\nTop 5 most accurate fields (content correctness):")
         accuracy_sorted = sorted(metrics["field_accuracy"].items(), key=lambda x: x[1], reverse=True)
         for field, accuracy in accuracy_sorted[:5]:
             count = metrics["field_counts"].get(field, 0)
-            print(f"  {field}: {accuracy*100:.2f}% correct ({count} occurrences)")
+            click.echo(f"  {field}: {accuracy*100:.2f}% correct ({count} occurrences)")
         
         if len(accuracy_sorted) > 5:
-            print("\nBottom 5 least accurate fields (content correctness):")
+            click.echo("\nBottom 5 least accurate fields (content correctness):")
             for field, accuracy in accuracy_sorted[-5:]:
                 count = metrics["field_counts"].get(field, 0)
-                print(f"  {field}: {accuracy*100:.2f}% correct ({count} occurrences)")
+                click.echo(f"  {field}: {accuracy*100:.2f}% correct ({count} occurrences)")
     
     # Print top 3 and bottom 3 scoring sentences
     scores_sorted = sorted(metrics["scores"]["by_sentence"], key=lambda x: x["score"], reverse=True)
-    print("\nTop 3 best performing sentences:")
+    click.echo("\nTop 3 best performing sentences:")
     for item in scores_sorted[:3]:
         correct = item.get("correct_values", 0)
         total = item.get("total_values", 1)
-        print(f"  Score: {item['score']*100:.2f}% ({correct}/{total} correct values) - \"{item['sentence']}\"")
+        click.echo(f"  Score: {item['score']*100:.2f}% ({correct}/{total} correct values) - \"{item['sentence']}\"")
     
-    print("\nBottom 3 worst performing sentences:")
+    click.echo("\nBottom 3 worst performing sentences:")
     for item in scores_sorted[-3:]:
         correct = item.get("correct_values", 0)
         total = item.get("total_values", 1)
-        print(f"  Score: {item['score']*100:.2f}% ({correct}/{total} correct values) - \"{item['sentence']}\"")
+        click.echo(f"  Score: {item['score']*100:.2f}% ({correct}/{total} correct values) - \"{item['sentence']}\"")
     
     # Print field presence rates (for backward compatibility)
-    print("\nTop 5 most frequently extracted fields (presence only):")
+    click.echo("\nTop 5 most frequently extracted fields (presence only):")
     fields_sorted = sorted(metrics["extraction_rates_by_field"].items(), key=lambda x: x[1], reverse=True)
     for field, rate in fields_sorted[:5]:
-        print(f"  {field}: {rate*100:.2f}% present ({metrics['field_counts'][field]} occurrences)")
+        click.echo(f"  {field}: {rate*100:.2f}% present ({metrics['field_counts'][field]} occurrences)")
     
     if len(fields_sorted) > 5:
-        print("\nBottom 5 least frequently extracted fields (presence only):")
+        click.echo("\nBottom 5 least frequently extracted fields (presence only):")
         for field, rate in fields_sorted[-5:]:
-            print(f"  {field}: {rate*100:.2f}% present ({metrics['field_counts'][field]} occurrences)")
+            click.echo(f"  {field}: {rate*100:.2f}% present ({metrics['field_counts'][field]} occurrences)")
     
     # Print error summary
     if metrics.get("error_details"):
@@ -679,15 +701,15 @@ def main():
                 status = error["status"]
                 error_types[status] = error_types.get(status, 0) + 1
         
-        print("\nError Summary:")
-        print(f"  Total errors found: {error_count}")
-        print("  Error types:")
+        click.echo("\nError Summary:")
+        click.echo(f"  Total errors found: {error_count}")
+        click.echo("  Error types:")
         for status, count in sorted(error_types.items(), key=lambda x: x[1], reverse=True):
-            print(f"    {status}: {count} ({count/error_count*100:.1f}%)")
+            click.echo(f"    {status}: {count} ({count/error_count*100:.1f}%)")
     
     # Save results
-    save_results(results, metrics, args.output_file)
-    print(f"\nDetailed results saved to {args.output_file}")
+    save_results(results, metrics, output_file)
+    click.echo(f"\nDetailed results saved to {output_file}")
 
 if __name__ == "__main__":
     main()
