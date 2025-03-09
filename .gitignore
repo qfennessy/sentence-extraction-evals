@@ -16,6 +16,7 @@ domain_context_results_*/
 cot_test_results/
 simple_cot_test_results/
 complex_cot_test_results/
+structure_preference_results/
 extraction_results.json
 extraction_results_*.csv
 extraction_results_*.txt

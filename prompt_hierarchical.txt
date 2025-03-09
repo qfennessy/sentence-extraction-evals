@@ -1,0 +1,159 @@
+# PRIMARY TASK
+You will extract structured information about family members and relationships from a sentence. Your primary task is to identify ALL information in the sentence - every person, relationship, and biographical detail must be extracted with complete accuracy.
+
+## INPUT SENTENCE
+Here is the sentence:
+{SENTENCE}
+
+## OUTPUT FORMAT
+Extract all family relationships and biographical details mentioned in the sentence, and output a JSON object with the following structure:
+{
+  "family_members": [
+    {
+      "name": "person's name (use actual name if provided, a descriptive placeholder if unnamed)",
+      "age": "age if mentioned, otherwise null",
+      "gender": "female/male if known or can be inferred, otherwise null",
+      "occupation": "occupation if mentioned, otherwise null",
+      "birth_year": "year of birth if mentioned, otherwise null",
+      "birth_date": "full birth date if mentioned (e.g., 'June 12, 2015'), otherwise null",
+      "location": "where they currently live if mentioned, otherwise null",
+      "birthplace": "place of birth if mentioned, otherwise null",
+      "deathplace": "place of death if mentioned, otherwise null",
+      "death_year": "year of death if mentioned, otherwise null",
+      "age_at_death": "age at death if mentioned, otherwise null",
+      "military_service": "military service details if mentioned, otherwise null",
+      "education_milestone": "education details if mentioned, otherwise null",
+      "graduation_year": "year of graduation if mentioned, otherwise null",
+      "languages": "languages spoken if mentioned, otherwise null",
+      "languages_count": "number of languages spoken if mentioned, otherwise null",
+      "children_count": "number of children if mentioned, otherwise null",
+      "children_names": "names of children if mentioned as an array, otherwise null",
+      "skills": "any skills mentioned, otherwise null",
+      "sports": "sports played if mentioned, otherwise null",
+      "origin": "country/place of origin if mentioned, otherwise null",
+      "immigration_year": "year of immigration if mentioned, otherwise null",
+      "meeting_place": "place where they met someone if mentioned, otherwise null",
+      "meeting_year": "year when they met someone if mentioned, otherwise null",
+      "moved_to": "location they moved to if mentioned, otherwise null",
+      "move_year": "year they moved somewhere if mentioned, otherwise null",
+      "family_status": "marital status if mentioned, otherwise null", 
+      "work_duration": "how long they've worked somewhere if mentioned, otherwise null",
+      "medical_condition": "any medical condition or diagnosis mentioned, otherwise null",
+      "diagnosis_age": "age at diagnosis if mentioned, otherwise null",
+      "diagnosis_year": "year of diagnosis if mentioned, otherwise null",
+      "achievement": "notable achievement mentioned, otherwise null",
+      "specific_achievement": "specific details about achievements, otherwise null",
+      "achievement_year": "year of achievement if mentioned, otherwise null",
+      "adoption_year": "year of adoption if mentioned, otherwise null",
+      "age_at_adoption": "age at adoption if mentioned, otherwise null",
+      "degree": "specific degree or field of study mentioned, otherwise null",
+      "graduation_distinction": "honors or distinction in graduation, otherwise null",
+      "graduation_date": "specific graduation date if mentioned, otherwise null",
+      "title": "professional or honorary title if mentioned, otherwise null",
+      "specialization": "professional specialization if mentioned, otherwise null",
+      "career_duration": "length of career if mentioned, otherwise null",
+      "workplace": "specific workplace mentioned, otherwise null",
+      "vessel_name": "name of ship or vehicle in travel, otherwise null",
+      "historical_note": "notable historical context, otherwise null",
+      "reason": "reason for events or decisions, otherwise null",
+      "birth_circumstance": "circumstances of birth if mentioned, otherwise null",
+      "birth_weight": "weight at birth if mentioned, otherwise null",
+      "medical_care": "medical care received if mentioned, otherwise null",
+      "hospital": "hospital or medical facility mentioned, otherwise null",
+      "activism": "activism or cause participation mentioned, otherwise null",
+      "activism_location": "location of activism if mentioned, otherwise null",
+      "activism_year": "year of activism if mentioned, otherwise null",
+      "legal_consequence": "legal issues or consequences mentioned, otherwise null",
+      "historical_context": "broader historical context mentioned, otherwise null",
+      "historical_event": "specific historical event mentioned, otherwise null",
+      "historical_event_year": "year of historical event if mentioned, otherwise null",
+      "children_description": "description of children (e.g., 'twin boys'), otherwise null",
+      "adoption_type": "type or source of adoption if mentioned, otherwise null",
+      "fostering_duration": "length of time fostering if mentioned, otherwise null",
+      "business": "business or company mentioned, otherwise null",
+      "business_location": "location of business if mentioned, otherwise null",
+      "business_duration": "how long business operated, otherwise null",
+      "business_transfer": "details about business transfer, otherwise null",
+      "transfer_year": "year of business transfer, otherwise null",
+      "service_period": "period of military or other service, otherwise null",
+      "workplace_location": "location of workplace, otherwise null",
+      "retirement_year": "year of retirement if mentioned, otherwise null",
+      "relation_to": [
+        {
+          "name": "related person's name or descriptor (e.g., 'narrator', 'speaker' for first-person references)",
+          "relationship": "how they are related (e.g., 'son', 'daughter', 'brother', 'sister', 'mother', etc.)"
+        }
+      ]
+    }
+  ]
+}
+
+# CRITICAL GUIDELINES
+
+## 1. CORE EXTRACTION PRINCIPLES
+   ### 1.1 Completeness
+   - Extract EVERYTHING - every detail in the sentence must be represented in your output
+   - When in doubt, include the information in the appropriate field
+   - For complex sentences with multiple details, carefully parse every clause
+   
+   ### 1.2 Accuracy
+   - Ensure all extracted information precisely matches what is stated in the text
+   - Do not make assumptions beyond what is directly stated or clearly implied
+   - Pay special attention to dates, numbers, and proper names
+
+## 2. NAMES AND IDENTIFIERS
+   ### 2.1 Person References
+   - For first-person narrators, always use "narrator" as the name
+   - For unnamed family members, use descriptive identifiers (e.g., "father", "mother", "grandmother")
+   - For deceased family members, still create complete entries
+   
+   ### 2.2 Name Extraction
+   - ALWAYS extract the correct name when mentioned (e.g., "My brother James" → name is "James")
+   - For multiple unnamed people (e.g., "paternal grandparents"), create separate entries for each person with appropriate names
+
+## 3. RELATIONSHIP REPRESENTATION
+   ### 3.1 Perspective
+   - FROM PERSPECTIVE: In first-person narratives, accurately represent relationships from the narrator's perspective
+   - EXACTLY AS STATED: Use the exact relationship mentioned in the text (e.g., "Maternal great-grandmother" not just "Great-grandmother")
+   
+   ### 3.2 Multiple Relationships
+   - FOR MULTIPLE PEOPLE: When "grandparents", "parents", etc. are mentioned, create individual entries for each person
+   - RECIPROCAL RELATIONSHIPS: Always include all reciprocal relationships (if A is parent to B, B is child to A)
+   - COMPOUND RELATIONSHIPS: For relationships like "brother-in-law", capture all relationships accurately
+   
+   ### 3.3 Relationship Accuracy
+   - AVOID INCORRECT INFERENCES: Don't invert relationships (e.g., if "mother" is mentioned, her relationship is "mother" not "daughter")
+
+## 4. BIOGRAPHICAL DETAILS
+   ### 4.1 Temporal Information
+   - DATES: Extract all years precisely (birth_year, death_year, immigration_year, etc.)
+   
+   ### 4.2 Medical Information
+   - MEDICAL: Include all medical conditions, diagnoses, ages of diagnosis, treatments
+   
+   ### 4.3 Geographical Information
+   - LOCATIONS: Capture all locations (birthplace, deathplace, locations of events)
+   
+   ### 4.4 Achievement & Education
+   - ACHIEVEMENTS: Note all accomplishments, awards, distinctions
+   - EDUCATION: Extract educational institutions, degrees, graduation years
+   
+   ### 4.5 Professional Information
+   - WORK: Include occupation, workplace, work duration, retirement
+   - MILITARY: Note service branches, periods, ranks, awards
+   
+   ### 4.6 Additional Context
+   - TRAVEL: Capture immigration details, destinations, vessel names
+   - EVENTS: Include historical events, activism, incidents
+
+## 5. COMPLEX FAMILY STRUCTURES
+   ### 5.1 Multiple Family Members
+   - For multiple family members, create entries for ALL individuals mentioned
+   - For couples, include both spouses with appropriate relationships
+   
+   ### 5.2 Relationships Network
+   - For parent-child relationships, connect all relevant individuals
+   - For extended families, maintain all relationship connections
+   - For adoptive/blended families, represent all relationships accurately
+
+Only return the JSON object, with no other text.

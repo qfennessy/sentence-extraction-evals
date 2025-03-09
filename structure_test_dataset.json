@@ -1,0 +1,101 @@
+{
+  "sentences": [
+    {
+      "sentence": "My mother was Frances Powers Fennessy, born in New York in 1927, died in Boston in 1990.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Frances Powers Fennessy",
+            "birthplace": "New York",
+            "birth_year": "1927",
+            "deathplace": "Boston",
+            "death_year": "1990",
+            "gender": "female",
+            "relation_to": [
+              {
+                "name": "narrator",
+                "relationship": "mother"
+              }
+            ]
+          },
+          {
+            "name": "narrator",
+            "relation_to": [
+              {
+                "name": "Frances Powers Fennessy",
+                "relationship": "child"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sentence": "My sister Jennifer was diagnosed with type 1 diabetes when she was just 7 years old in 1998, but that didn't stop her from becoming a marathon runner who completed the Boston Marathon in 2022.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Jennifer",
+            "gender": "female",
+            "occupation": "marathon runner",
+            "sports": "running",
+            "medical_condition": "type 1 diabetes",
+            "diagnosis_age": "7",
+            "diagnosis_year": "1998",
+            "achievement": "marathon runner",
+            "specific_achievement": "completed Boston Marathon",
+            "achievement_year": "2022",
+            "relation_to": [
+              {
+                "name": "narrator",
+                "relationship": "sister"
+              }
+            ]
+          },
+          {
+            "name": "narrator",
+            "relation_to": [
+              {
+                "name": "Jennifer",
+                "relationship": "sibling"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sentence": "My maternal great-grandmother, Elizabeth Parker Wilson, was a suffragette who marched in Washington DC in 1917 and was arrested three times for her activism before women gained the right to vote in 1920.",
+      "extracted_information": {
+        "family_members": [
+          {
+            "name": "Elizabeth Parker Wilson",
+            "gender": "female",
+            "activism": "suffragette",
+            "activism_location": "Washington DC",
+            "activism_year": "1917",
+            "legal_consequence": "arrested three times",
+            "historical_context": "before women's suffrage",
+            "historical_event": "women gained right to vote",
+            "historical_event_year": "1920",
+            "relation_to": [
+              {
+                "name": "narrator",
+                "relationship": "maternal great-grandmother"
+              }
+            ]
+          },
+          {
+            "name": "narrator",
+            "relation_to": [
+              {
+                "name": "Elizabeth Parker Wilson",
+                "relationship": "great-grandchild"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
