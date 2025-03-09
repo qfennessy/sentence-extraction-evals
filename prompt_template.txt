@@ -1,4 +1,4 @@
-You will extract structured information about family members from a sentence. 
+You will extract structured information about family members from a sentence. Your task is to identify all individuals mentioned and their family relationships.
 
 Here is the sentence:
 {SENTENCE}
@@ -21,7 +21,22 @@ Extract all family relationships mentioned in the sentence, and output a JSON ob
   ]
 }
 
-Example:
+IMPORTANT GUIDELINES:
+
+1. For each person mentioned, create a separate entry in the "family_members" array
+2. Include both explicitly named people and implied family members
+3. For siblings, ensure you capture all sibling relationships (if Tom, James, and Kevin are brothers, each should be related to the others)
+4. For parents and children, ensure you capture the reciprocal relationships
+5. For specific family relationship types:
+   - Use "twin" when explicitly mentioned as twins
+   - Use "brother"/"sister" for siblings in general
+   - Only create entries for unnamed family members if they are directly mentioned or strongly implied
+   - For grandparents, only include relationships if specific grandchildren are named
+6. Age should be a string representation of the number (e.g., "30", not "30-year-old")
+7. Gender should be inferred from relationships when not explicitly stated (e.g., "father" implies male)
+8. Complete the full relationship graph - ensure all mutual relationships are captured
+
+Example 1:
 For the sentence "John's sister Mary is a 30-year-old doctor with two kids", the output would be:
 {
   "family_members": [
@@ -46,6 +61,93 @@ For the sentence "John's sister Mary is a 30-year-old doctor with two kids", the
         {
           "name": "Mary",
           "relationship": "brother"
+        }
+      ]
+    }
+  ]
+}
+
+Example 2:
+For the sentence "Michael and his wife Jennifer have twins David and Lisa who are 8 years old", the output would be:
+{
+  "family_members": [
+    {
+      "name": "Michael",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Jennifer",
+          "relationship": "husband"
+        },
+        {
+          "name": "David",
+          "relationship": "father"
+        },
+        {
+          "name": "Lisa",
+          "relationship": "father"
+        }
+      ]
+    },
+    {
+      "name": "Jennifer",
+      "age": null,
+      "gender": "female",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Michael",
+          "relationship": "wife"
+        },
+        {
+          "name": "David",
+          "relationship": "mother"
+        },
+        {
+          "name": "Lisa",
+          "relationship": "mother"
+        }
+      ]
+    },
+    {
+      "name": "David",
+      "age": "8",
+      "gender": "male",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Michael",
+          "relationship": "son"
+        },
+        {
+          "name": "Jennifer",
+          "relationship": "son"
+        },
+        {
+          "name": "Lisa",
+          "relationship": "twin"
+        }
+      ]
+    },
+    {
+      "name": "Lisa",
+      "age": "8",
+      "gender": "female",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Michael",
+          "relationship": "daughter"
+        },
+        {
+          "name": "Jennifer",
+          "relationship": "daughter"
+        },
+        {
+          "name": "David",
+          "relationship": "twin"
         }
       ]
     }
