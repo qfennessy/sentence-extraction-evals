@@ -1,4 +1,4 @@
-You will extract structured information about family members from a sentence. Your task is to identify all individuals mentioned and their family relationships.
+You will extract structured information about family members and relationships from a sentence. Focus only on family-related information, not all biographical details.
 
 Here is the sentence:
 {SENTENCE}
@@ -7,14 +7,14 @@ Extract all family relationships mentioned in the sentence, and output a JSON ob
 {
   "family_members": [
     {
-      "name": "person's name",
+      "name": "person's name (use actual name if provided, a descriptive placeholder if unnamed)",
       "age": "age if mentioned, otherwise null",
-      "gender": "gender if mentioned, otherwise null",
+      "gender": "female/male if known or can be inferred, otherwise null",
       "occupation": "occupation if mentioned, otherwise null",
       "relation_to": [
         {
-          "name": "related person's name",
-          "relationship": "how they are related (e.g., 'son', 'daughter', 'brother', 'sister', 'mother', 'father', etc.)"
+          "name": "related person's name or descriptor (e.g., 'narrator', 'speaker' for first-person references)",
+          "relationship": "how they are related (e.g., 'son', 'daughter', 'brother', 'sister', 'mother', etc.)"
         }
       ]
     }
@@ -23,18 +23,28 @@ Extract all family relationships mentioned in the sentence, and output a JSON ob
 
 IMPORTANT GUIDELINES:
 
-1. For each person mentioned, create a separate entry in the "family_members" array
-2. Include both explicitly named people and implied family members
-3. For siblings, ensure you capture all sibling relationships (if Tom, James, and Kevin are brothers, each should be related to the others)
-4. For parents and children, ensure you capture the reciprocal relationships
-5. For specific family relationship types:
-   - Use "twin" when explicitly mentioned as twins
-   - Use "brother"/"sister" for siblings in general
-   - Only create entries for unnamed family members if they are directly mentioned or strongly implied
-   - For grandparents, only include relationships if specific grandchildren are named
-6. Age should be a string representation of the number (e.g., "30", not "30-year-old")
-7. Gender should be inferred from relationships when not explicitly stated (e.g., "father" implies male)
-8. Complete the full relationship graph - ensure all mutual relationships are captured
+1. For first-person narrators, use "narrator" or "speaker" as the name
+2. When extracting relationships from first-person perspective:
+   - For "my father" → create an entry for father related to "narrator"
+   - For "my wife's mother" → create entries for all three people in this relationship chain
+3. For unnamed people, use descriptive placeholders like "narrator", "father", "mother-in-law"
+4. Handle special relationships correctly:
+   - Use "twin" specifically when twins are mentioned
+   - Use "half-brother/half-sister" for half-siblings
+   - Use "stepfather/stepmother" for step-relationships
+   - Use appropriate in-law relationships (father-in-law, sister-in-law, etc.)
+5. Only create entries for family members actually mentioned in the text:
+   - If "grandmother" is mentioned without specific grandchildren, only create an entry for the grandmother
+   - Don't create entries for children unless they're specifically mentioned
+6. For multiple siblings/children:
+   - Only create separate entries if individuals are named or specifically counted
+   - For "seven children" without names, create a single entry for each child with appropriate numbering
+7. Complete relationship chains - make sure relationships work in both directions:
+   - If A is parent to B, B should be child to A
+   - If A is husband to B, B should be wife to A
+8. Properly handle gender-specific relationships:
+   - Ensure brother/sister, husband/wife, etc. match the gender when inferrable
+   - Use "spouse" or "sibling" only when gender cannot be determined
 
 Example 1:
 For the sentence "John's sister Mary is a 30-year-old doctor with two kids", the output would be:
@@ -68,86 +78,101 @@ For the sentence "John's sister Mary is a 30-year-old doctor with two kids", the
 }
 
 Example 2:
-For the sentence "Michael and his wife Jennifer have twins David and Lisa who are 8 years old", the output would be:
+For the sentence "My father David worked as a mechanic in Chicago for 35 years", the output would be:
 {
   "family_members": [
     {
-      "name": "Michael",
+      "name": "David",
+      "age": null,
+      "gender": "male",
+      "occupation": "mechanic",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "father"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "David", 
+          "relationship": "child"
+        }
+      ]
+    }
+  ]
+}
+
+Example 3:
+For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland in 1975", the output would be:
+{
+  "family_members": [
+    {
+      "name": "Robert",
       "age": null,
       "gender": "male",
       "occupation": null,
       "relation_to": [
         {
-          "name": "Jennifer",
+          "name": "Janice",
           "relationship": "husband"
         },
         {
-          "name": "David",
-          "relationship": "father"
-        },
-        {
-          "name": "Lisa",
+          "name": "wife",
           "relationship": "father"
         }
       ]
     },
     {
-      "name": "Jennifer",
+      "name": "Janice",
       "age": null,
       "gender": "female",
       "occupation": null,
       "relation_to": [
         {
-          "name": "Michael",
+          "name": "Robert",
           "relationship": "wife"
         },
         {
-          "name": "David",
-          "relationship": "mother"
-        },
-        {
-          "name": "Lisa",
+          "name": "wife",
           "relationship": "mother"
         }
       ]
     },
     {
-      "name": "David",
-      "age": "8",
-      "gender": "male",
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Michael",
-          "relationship": "son"
-        },
-        {
-          "name": "Jennifer",
-          "relationship": "son"
-        },
-        {
-          "name": "Lisa",
-          "relationship": "twin"
-        }
-      ]
-    },
-    {
-      "name": "Lisa",
-      "age": "8",
+      "name": "wife",
+      "age": null,
       "gender": "female",
       "occupation": null,
       "relation_to": [
         {
-          "name": "Michael",
+          "name": "Robert",
           "relationship": "daughter"
         },
         {
-          "name": "Jennifer",
+          "name": "Janice",
           "relationship": "daughter"
         },
         {
-          "name": "David",
-          "relationship": "twin"
+          "name": "narrator",
+          "relationship": "wife"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "wife",
+          "relationship": "husband"
         }
       ]
     }
