@@ -24,3 +24,5 @@ tqdm==4.67.1
 typing_extensions==4.12.2
 tzdata==2025.1
 deepseek-chat>=0.1.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
