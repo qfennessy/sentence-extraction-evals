@@ -3,6 +3,27 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+eval-output/
+comparative_cv_results/
+cross_validation_results/
+cv_test_results/
+mini_cv_results/
+*_cv_results/
+*_test_results/
+*_test_results_*/
+*_results_*/
+domain_context_results_*/
+cot_test_results/
+simple_cot_test_results/
+complex_cot_test_results/
+extraction_results.json
+extraction_results_*.csv
+extraction_results_*.txt
+tiny_test_dataset.json
+test_domain_context_dataset.json
+prompt_with_context.txt
+prompt_without_context.txt
+
 # C extensions
 *.so
 
