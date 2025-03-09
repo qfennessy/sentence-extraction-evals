@@ -27,15 +27,18 @@ IMPORTANT GUIDELINES:
    - For first-person narrators, always use "narrator" as the name
    - For unnamed family members, use clear descriptive identifiers (e.g., "father", "mother", "grandmother")
    - When multiple unnamed children are mentioned (e.g., "seven children"), name them "child1", "child2", etc.
+   - For historical ancestors, use "ancestors" as a placeholder
 
 2. Relationship Chains and Family Structure:
    - When extracting from first-person perspective ("my father"), create entries for all parties
    - For multi-step relationships ("my wife's parents"), create entries for all people in the chain
    - Always include reciprocal relationships (if A is parent to B, B is child to A)
    - For married couples, ensure both husband-wife relationships are captured
+   - For maternal/paternal relatives, include the relevant parent in the relationship chain
 
 3. Special Relationship Types:
-   - Use "twin" specifically for twins (also include "brother"/"sister" relationships to siblings)
+   - Use "twin" specifically for twins (either identical or fraternal)
+   - Use "adoptive" prefix for adoption relationships (e.g., "adoptive mother", "adoptive son")
    - Use "half-brother"/"half-sister" for half-siblings
    - Use "stepfather"/"stepmother" for step-relationships
    - Use "-in-law" suffix for in-law relationships (mother-in-law, brother-in-law, etc.)
@@ -43,100 +46,52 @@ IMPORTANT GUIDELINES:
    - For aunts/uncles, use "aunt"/"uncle" when gender is known, "aunt/uncle" when not
    
 4. Age and Gender:
-   - Only include age when it's explicitly mentioned (e.g., "8 years old", "was 6")
+   - Only include current age when explicitly mentioned (e.g., "is 22 years old", "now 10")
+   - Don't include past ages (e.g., "when he was 6") unless it's their current age
    - Infer gender from relationships and pronouns when possible
    - Use gender-appropriate relationship terms (brother/sister, husband/wife)
    - Use gender-neutral terms (child, sibling, spouse) when gender is unknown
 
-5. Edge Cases:
-   - For "when they were X years old", only include as age if it's their current age
-   - Only create entries for family members who are explicitly mentioned
-   - Don't create entries for hypothetical/future family members
+5. Complex Family Structures:
+   - For blended families, ensure step-relationships and biological relationships are both captured
+   - For same-sex couples, correctly represent the spousal relationship
+   - For adoptive families, use "adoptive" prefix for relationships
+   - Handle extended family (great-grandparents, cousins, etc.) appropriately
+   - Maintain sibling relationships between all siblings/step-siblings
 
-Example 1 (Simple relationship):
-For the sentence "My sister Sarah graduated from Harvard and now practices medicine in Boston", the output would be:
+Example 1 (Extended family relationships):
+For the sentence "My paternal grandfather Harold worked as a mechanic before retiring in 1995", the output would be:
 {
   "family_members": [
     {
-      "name": "Sarah",
-      "age": null,
-      "gender": "female",
-      "occupation": "doctor",
-      "relation_to": [
-        {
-          "name": "narrator",
-          "relationship": "sister"
-        }
-      ]
-    },
-    {
-      "name": "narrator",
-      "age": null,
-      "gender": null,
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Sarah",
-          "relationship": "sibling"
-        }
-      ]
-    }
-  ]
-}
-
-Example 2 (Extended family):
-For the sentence "My grandfather on my mother's side, Joseph, worked as a coal miner and raised five children with my grandmother Eleanor", the output would be:
-{
-  "family_members": [
-    {
-      "name": "Joseph",
+      "name": "Harold",
       "age": null,
       "gender": "male",
-      "occupation": "coal miner",
+      "occupation": "mechanic",
       "relation_to": [
         {
           "name": "narrator",
           "relationship": "grandfather"
         },
         {
-          "name": "mother",
+          "name": "father",
           "relationship": "father"
-        },
-        {
-          "name": "Eleanor",
-          "relationship": "husband"
         }
       ]
     },
     {
-      "name": "Eleanor",
+      "name": "father",
       "age": null,
-      "gender": "female",
+      "gender": "male",
       "occupation": null,
       "relation_to": [
         {
-          "name": "narrator",
-          "relationship": "grandmother"
+          "name": "Harold",
+          "relationship": "son"
         },
         {
-          "name": "Joseph",
-          "relationship": "wife"
-        }
-      ]
-    },
-    {
-      "name": "mother",
-      "age": null,
-      "gender": "female",
-      "occupation": null,
-      "relation_to": [
-        {
           "name": "narrator",
-          "relationship": "mother"
-        },
-        {
-          "name": "Joseph",
-          "relationship": "daughter"
+          "relationship": "father"
         }
       ]
     },
@@ -147,96 +102,115 @@ For the sentence "My grandfather on my mother's side, Joseph, worked as a coal m
       "occupation": null,
       "relation_to": [
         {
-          "name": "Joseph",
+          "name": "Harold",
           "relationship": "grandchild"
         },
         {
-          "name": "Eleanor",
-          "relationship": "grandchild" 
+          "name": "father",
+          "relationship": "child"
+        }
+      ]
+    }
+  ]
+}
+
+Example 2 (Adoption and twins):
+For the sentence "My cousin Rebecca and her wife adopted twin boys, Ethan and Noah, in 2019", the output would be:
+{
+  "family_members": [
+    {
+      "name": "Rebecca",
+      "age": null,
+      "gender": "female",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "cousin"
         },
         {
-          "name": "mother",
-          "relationship": "child"
+          "name": "wife",
+          "relationship": "wife"
+        },
+        {
+          "name": "Ethan",
+          "relationship": "adoptive mother"
+        },
+        {
+          "name": "Noah",
+          "relationship": "adoptive mother"
         }
       ]
     },
     {
-      "name": "child1",
+      "name": "wife",
+      "age": null,
+      "gender": "female",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Rebecca",
+          "relationship": "wife"
+        },
+        {
+          "name": "Ethan",
+          "relationship": "adoptive mother"
+        },
+        {
+          "name": "Noah",
+          "relationship": "adoptive mother"
+        }
+      ]
+    },
+    {
+      "name": "Ethan",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Noah",
+          "relationship": "twin"
+        },
+        {
+          "name": "Rebecca",
+          "relationship": "adoptive son"
+        },
+        {
+          "name": "wife",
+          "relationship": "adoptive son"
+        }
+      ]
+    },
+    {
+      "name": "Noah",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Ethan",
+          "relationship": "twin"
+        },
+        {
+          "name": "Rebecca",
+          "relationship": "adoptive son"
+        },
+        {
+          "name": "wife",
+          "relationship": "adoptive son"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
       "age": null,
       "gender": null,
       "occupation": null,
       "relation_to": [
         {
-          "name": "Joseph",
-          "relationship": "child"
-        },
-        {
-          "name": "Eleanor",
-          "relationship": "child"
-        }
-      ]
-    },
-    {
-      "name": "child2",
-      "age": null,
-      "gender": null, 
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Joseph",
-          "relationship": "child"
-        },
-        {
-          "name": "Eleanor",
-          "relationship": "child"
-        }
-      ]
-    },
-    {
-      "name": "child3",
-      "age": null,
-      "gender": null,
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Joseph",
-          "relationship": "child"
-        },
-        {
-          "name": "Eleanor",
-          "relationship": "child"
-        }
-      ]
-    },
-    {
-      "name": "child4",
-      "age": null,
-      "gender": null,
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Joseph",
-          "relationship": "child"
-        },
-        {
-          "name": "Eleanor",
-          "relationship": "child"
-        }
-      ]
-    },
-    {
-      "name": "child5",
-      "age": null,
-      "gender": null,
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Joseph",
-          "relationship": "child"
-        },
-        {
-          "name": "Eleanor",
-          "relationship": "child"
+          "name": "Rebecca",
+          "relationship": "cousin"
         }
       ]
     }
