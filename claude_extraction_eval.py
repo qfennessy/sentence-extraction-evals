@@ -531,7 +531,7 @@ def create_output_directory(model_name, prompt_file_path):
     
     return output_dir
 
-def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str, runtime_seconds: float):
+def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str, runtime_seconds: float, prompt_file_path: str = None):
     """
     Save the evaluation results and metrics to files in the specified directory.
     
@@ -542,6 +542,7 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
         model_name: Name of the Claude model used
         eval_data_path: Path to the evaluation data file used
         runtime_seconds: Total execution time in seconds
+        prompt_file_path: Path to the prompt template file (optional)
     """
     # Format runtime as human-readable
     runtime_formatted = str(datetime.timedelta(seconds=int(runtime_seconds)))
@@ -654,7 +655,11 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
         f.write("- `scores.csv`: Detailed per-sentence scores\n")
         f.write("- `field_accuracy.csv`: Accuracy metrics for each field\n")
         f.write("- `errors.txt`: Detailed analysis of extraction errors\n")
-        f.write(f"- `{Path(prompt_file_path).name}`: Prompt template used in this evaluation\n")
+        
+        # List prompt file if available
+        for file in os.listdir(output_dir):
+            if file.endswith(".txt"):
+                f.write(f"- `{file}`: Prompt template used in this evaluation\n")
     
     return output_file
 
@@ -793,7 +798,7 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
         click.echo(f"  Processing rate: {rate:.2f} sentences per minute")
     
     # Save results
-    output_file = save_results(results, metrics, output_dir, model, eval_data, runtime_seconds)
+    output_file = save_results(results, metrics, output_dir, model, eval_data, runtime_seconds, prompt_file)
     click.echo(f"\nDetailed results saved to {output_dir}")
 
 if __name__ == "__main__":
