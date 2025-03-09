@@ -531,7 +531,7 @@ def create_output_directory(model_name, prompt_file_path):
     
     return output_dir
 
-def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str):
+def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str, runtime_seconds: float):
     """
     Save the evaluation results and metrics to files in the specified directory.
     
@@ -541,14 +541,20 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
         output_dir: Directory where results should be saved
         model_name: Name of the Claude model used
         eval_data_path: Path to the evaluation data file used
+        runtime_seconds: Total execution time in seconds
     """
+    # Format runtime as human-readable
+    runtime_formatted = str(datetime.timedelta(seconds=int(runtime_seconds)))
+    
     # Create metadata file with evaluation parameters
     metadata = {
         "timestamp": datetime.datetime.now().isoformat(),
         "model": model_name,
         "eval_data": str(eval_data_path),
         "sentence_count": metrics["total_sentences"],
-        "overall_accuracy": metrics.get("overall_value_accuracy", 0)
+        "overall_accuracy": metrics.get("overall_value_accuracy", 0),
+        "runtime_seconds": runtime_seconds,
+        "runtime_formatted": runtime_formatted
     }
     
     with open(output_dir / "metadata.json", 'w') as f:
@@ -631,7 +637,16 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
         f.write(f"- **Model:** {model_name}\n")
         f.write(f"- **Test data:** {Path(eval_data_path).name}\n")
         f.write(f"- **Sentences evaluated:** {metrics['total_sentences']}\n")
-        f.write(f"- **Overall accuracy:** {metrics.get('overall_value_accuracy', 0)*100:.2f}%\n\n")
+        f.write(f"- **Overall accuracy:** {metrics.get('overall_value_accuracy', 0)*100:.2f}%\n")
+        f.write(f"- **Runtime:** {runtime_formatted} (HH:MM:SS)\n\n")
+        
+        success_rate = metrics['successful_extractions'] / metrics['total_sentences'] * 100
+        f.write(f"## Summary\n\n")
+        f.write(f"- **Extraction success rate:** {success_rate:.2f}%\n")
+        f.write(f"- **Value accuracy:** {metrics.get('overall_value_accuracy', 0)*100:.2f}%\n")
+        f.write(f"- **Field extraction rate:** {metrics['overall_field_extraction_rate']*100:.2f}%\n")
+        f.write(f"- **Average score:** {metrics['scores']['avg_score']*100:.2f}%\n")
+        f.write(f"- **Processing time per sentence:** {runtime_seconds/metrics['total_sentences']:.2f} seconds\n\n")
         
         f.write("## Files\n\n")
         f.write("- `extraction_results.json`: Complete evaluation results and metrics\n")
@@ -654,6 +669,9 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
 @click.option("--temperature", type=float, default=0.0, help="Temperature for Claude responses (0.0-1.0)")
 def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temperature):
     """Evaluate Claude's ability to extract family details from sentences."""
+    # Start timing the evaluation
+    start_time = time.time()
+    
     # Get API key from args or environment
     api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
@@ -690,6 +708,10 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
     
     # Calculate metrics
     metrics = calculate_metrics(results)
+    
+    # Calculate total runtime
+    end_time = time.time()
+    runtime_seconds = end_time - start_time
     
     # Print summary
     click.echo("\nEvaluation Summary:")
@@ -760,8 +782,18 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
         for status, count in sorted(error_types.items(), key=lambda x: x[1], reverse=True):
             click.echo(f"    {status}: {count} ({count/error_count*100:.1f}%)")
     
+    # Print runtime information
+    runtime_formatted = str(datetime.timedelta(seconds=int(runtime_seconds)))
+    click.echo(f"\nRuntime Statistics:")
+    click.echo(f"  Total runtime: {runtime_formatted}")
+    click.echo(f"  Average time per sentence: {runtime_seconds/metrics['total_sentences']:.2f} seconds")
+    sentence_count = metrics['total_sentences']
+    if sentence_count > 0:
+        rate = sentence_count / runtime_seconds * 60 if runtime_seconds > 0 else 0
+        click.echo(f"  Processing rate: {rate:.2f} sentences per minute")
+    
     # Save results
-    output_file = save_results(results, metrics, output_dir, model, eval_data)
+    output_file = save_results(results, metrics, output_dir, model, eval_data, runtime_seconds)
     click.echo(f"\nDetailed results saved to {output_dir}")
 
 if __name__ == "__main__":
