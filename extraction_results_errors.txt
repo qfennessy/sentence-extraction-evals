@@ -1,0 +1,775 @@
+Detailed Error Analysis
+==================================================
+
+Sentence 1: My mother was Frances Powers Fennessy, born in New York in 1927, died in Boston in 1990.
+
+  Error 1: relationship - missing
+    Expected: Mother
+    Extracted: None
+
+  Error 2: birthplace - missing
+    Expected: New York
+    Extracted: None
+
+  Error 3: birthdate - missing
+    Expected: 1927
+    Extracted: None
+
+  Error 4: deathplace - missing
+    Expected: Boston
+    Extracted: None
+
+  Error 5: deathdate - missing
+    Expected: 1990
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 2: My uncle Richard was a pilot in the Vietnam War from 1968 to 1970, came home with PTSD, and eventual...
+
+  Error 1: relationship - missing
+    Expected: Uncle
+    Extracted: None
+
+  Error 2: military_service - missing
+    Expected: Pilot in Vietnam War
+    Extracted: None
+
+  Error 3: service_period - missing
+    Expected: 1968-1970
+    Extracted: None
+
+  Error 4: medical_condition - missing
+    Expected: PTSD
+    Extracted: None
+
+  Error 5: workplace_location - missing
+    Expected: Denver
+    Extracted: None
+
+  Error 6: retirement_year - missing
+    Expected: 2012
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 3: My paternal grandparents, Harold and Margaret Jenkins, owned a dairy farm in Wisconsin for 47 years ...
+
+  Error 1: name_1 - missing
+    Expected: Harold Jenkins
+    Extracted: None
+
+  Error 2: name_2 - missing
+    Expected: Margaret Jenkins
+    Extracted: None
+
+  Error 3: relationship - mismatch
+    Expected: Paternal grandparents
+    Extracted: Child
+
+  Error 4: business - missing
+    Expected: Dairy farm
+    Extracted: None
+
+  Error 5: business_location - missing
+    Expected: Wisconsin
+    Extracted: None
+
+  Error 6: business_duration - missing
+    Expected: 47 years
+    Extracted: None
+
+  Error 7: business_transfer - missing
+    Expected: Sold to cousin Brian
+    Extracted: None
+
+  Error 8: transfer_year - missing
+    Expected: 2005
+    Extracted: None
+
+  Error 9: other_family_member - missing
+    Expected: Brian
+    Extracted: None
+
+  Error 10: other_relationship - missing
+    Expected: Cousin
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 4: My daughter Zoe was born prematurely at 32 weeks on November 5, 2018, weighing only 4 pounds, and sp...
+
+  Error 1: relationship - missing
+    Expected: Daughter
+    Extracted: None
+
+  Error 2: birth_circumstance - missing
+    Expected: Premature at 32 weeks
+    Extracted: None
+
+  Error 3: birth_date - missing
+    Expected: November 5, 2018
+    Extracted: None
+
+  Error 4: birth_weight - missing
+    Expected: 4 pounds
+    Extracted: None
+
+  Error 5: medical_care - missing
+    Expected: NICU for first month
+    Extracted: None
+
+  Error 6: hospital - missing
+    Expected: Mount Sinai Hospital
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 5: My husband's great-uncle Alberto emigrated from Sicily to New York in 1912 on the SS Patria, narrowl...
+
+  Error 1: name - mismatch
+    Expected: Alberto
+    Extracted: husband
+
+  Error 2: relationship - missing
+    Expected: Husband's great-uncle
+    Extracted: None
+
+  Error 3: origin - missing
+    Expected: Sicily
+    Extracted: None
+
+  Error 4: destination - missing
+    Expected: New York
+    Extracted: None
+
+  Error 5: immigration_year - missing
+    Expected: 1912
+    Extracted: None
+
+  Error 6: vessel_name - missing
+    Expected: SS Patria
+    Extracted: None
+
+  Error 7: historical_note - missing
+    Expected: Narrowly missed being booked on Titanic
+    Extracted: None
+
+  Error 8: reason - missing
+    Expected: Paperwork delay
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 6: My sister Jennifer was diagnosed with type 1 diabetes when she was just 7 years old in 1998, but tha...
+
+  Error 1: relationship - missing
+    Expected: Sister
+    Extracted: None
+
+  Error 2: medical_condition - missing
+    Expected: Type 1 diabetes
+    Extracted: None
+
+  Error 3: diagnosis_age - missing
+    Expected: 7
+    Extracted: None
+
+  Error 4: diagnosis_year - missing
+    Expected: 1998
+    Extracted: None
+
+  Error 5: achievement - missing
+    Expected: Marathon runner
+    Extracted: None
+
+  Error 6: specific_achievement - missing
+    Expected: Completed Boston Marathon
+    Extracted: None
+
+  Error 7: achievement_year - missing
+    Expected: 2022
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 7: My adopted brother Miguel came to our family from Guatemala in 2008 when he was 6 years old, and he ...
+
+  Error 1: relationship - missing
+    Expected: Adopted brother
+    Extracted: None
+
+  Error 2: origin - missing
+    Expected: Guatemala
+    Extracted: None
+
+  Error 3: adoption_year - missing
+    Expected: 2008
+    Extracted: None
+
+  Error 4: age_at_adoption - missing
+    Expected: 6
+    Extracted: None
+
+  Error 5: education - missing
+    Expected: Cornell University
+    Extracted: None
+
+  Error 6: degree - missing
+    Expected: Computer Science
+    Extracted: None
+
+  Error 7: graduation_distinction - missing
+    Expected: With honors
+    Extracted: None
+
+  Error 8: graduation_date - missing
+    Expected: May (current year)
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 8: My maternal great-grandmother, Elizabeth Parker Wilson, was a suffragette who marched in Washington ...
+
+  Error 1: name - mismatch
+    Expected: Elizabeth Parker Wilson
+    Extracted: grandmother
+
+  Error 2: relationship - mismatch
+    Expected: Maternal great-grandmother
+    Extracted: Child
+
+  Error 3: activism - missing
+    Expected: Suffragette
+    Extracted: None
+
+  Error 4: activism_location - missing
+    Expected: Washington DC
+    Extracted: None
+
+  Error 5: activism_year - missing
+    Expected: 1917
+    Extracted: None
+
+  Error 6: legal_consequence - missing
+    Expected: Arrested three times
+    Extracted: None
+
+  Error 7: historical_context - missing
+    Expected: Before women's suffrage
+    Extracted: None
+
+  Error 8: historical_event - missing
+    Expected: Women gained right to vote
+    Extracted: None
+
+  Error 9: historical_event_year - missing
+    Expected: 1920
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 9: My father-in-law Dr. Sanjay Patel immigrated from Mumbai to Toronto in 1982, completed his cardiolog...
+
+  Error 1: relationship - missing
+    Expected: Father-in-law
+    Extracted: None
+
+  Error 2: title - missing
+    Expected: Doctor
+    Extracted: None
+
+  Error 3: origin - missing
+    Expected: Mumbai
+    Extracted: None
+
+  Error 4: destination - missing
+    Expected: Toronto
+    Extracted: None
+
+  Error 5: immigration_year - missing
+    Expected: 1982
+    Extracted: None
+
+  Error 6: specialization - missing
+    Expected: Cardiology
+    Extracted: None
+
+  Error 7: education - missing
+    Expected: Residency at McGill University
+    Extracted: None
+
+  Error 8: achievement - missing
+    Expected: Over 2,000 heart surgeries
+    Extracted: None
+
+  Error 9: career_duration - missing
+    Expected: 35 years
+    Extracted: None
+
+  Error 10: workplace - missing
+    Expected: Toronto General Hospital
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 10: My cousin Rebecca and her wife Sophia adopted twin boys, Ethan and Noah, from foster care in 2019 wh...
+
+  Error 1: name_1 - missing
+    Expected: Rebecca
+    Extracted: None
+
+  Error 2: name_2 - missing
+    Expected: Sophia
+    Extracted: None
+
+  Error 3: relationship_1 - missing
+    Expected: Cousin
+    Extracted: None
+
+  Error 4: relationship_2 - missing
+    Expected: Cousin's wife
+    Extracted: None
+
+  Error 5: family_status - missing
+    Expected: Married same-sex couple
+    Extracted: None
+
+  Error 6: children_names - missing
+    Expected: ['Ethan', 'Noah']
+    Extracted: None
+
+  Error 7: children_description - missing
+    Expected: Twin boys
+    Extracted: None
+
+  Error 8: adoption_type - missing
+    Expected: From foster care
+    Extracted: None
+
+  Error 9: adoption_year - missing
+    Expected: 2019
+    Extracted: None
+
+  Error 10: children_age_at_adoption - missing
+    Expected: 4
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 11: My grandmother Catherine Kelly O'Brien was born on a ship crossing the Atlantic from Ireland to Amer...
+
+  Error 1: relationship - missing
+    Expected: Grandmother
+    Extracted: None
+
+  Error 2: birth_circumstance - missing
+    Expected: Born on ship crossing Atlantic
+    Extracted: None
+
+  Error 3: origin - missing
+    Expected: Ireland
+    Extracted: None
+
+  Error 4: destination - missing
+    Expected: America
+    Extracted: None
+
+  Error 5: birth_date - missing
+    Expected: March 17, 1935
+    Extracted: None
+
+  Error 6: cultural_significance - missing
+    Expected: St. Patrick's Day
+    Extracted: None
+
+  Error 7: family_tradition - missing
+    Expected: Extra special birthday celebration
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 12: My stepmother Diane entered our lives in 2010 after my father's second marriage, brought along her t...
+
+  Error 1: name - mismatch
+    Expected: Diane
+    Extracted: Ashley
+
+  Error 2: relationship - mismatch
+    Expected: Stepmother
+    Extracted: Sibling
+
+  Error 3: family_change_year - missing
+    Expected: 2010
+    Extracted: None
+
+  Error 4: family_change_type - missing
+    Expected: Father's second marriage
+    Extracted: None
+
+  Error 5: stepchildren_names - missing
+    Expected: ['Jason', 'Ashley']
+    Extracted: None
+
+  Error 6: stepchildren_relationship - missing
+    Expected: Stepsiblings
+    Extracted: None
+
+  Error 7: stepchildren_status - missing
+    Expected: Teenagers in 2010
+    Extracted: None
+
+  Error 8: stepchildren_origin - missing
+    Expected: Previous marriage
+    Extracted: None
+
+  Error 9: family_structure - missing
+    Expected: Blended family
+    Extracted: None
+
+  Error 10: character_trait - missing
+    Expected: Incredible support
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 13: My younger brother Daniel was diagnosed with autism spectrum disorder at age 4 in 2005, received ear...
+
+  Error 1: relationship - missing
+    Expected: Younger brother
+    Extracted: None
+
+  Error 2: medical_condition - missing
+    Expected: Autism spectrum disorder
+    Extracted: None
+
+  Error 3: diagnosis_age - missing
+    Expected: 4
+    Extracted: None
+
+  Error 4: diagnosis_year - missing
+    Expected: 2005
+    Extracted: None
+
+  Error 5: support_services - missing
+    Expected: Early intervention
+    Extracted: None
+
+  Error 6: support_duration - missing
+    Expected: Throughout elementary school
+    Extracted: None
+
+  Error 7: current_age - missing
+    Expected: 22
+    Extracted: None
+
+  Error 8: industry - missing
+    Expected: Tech company
+    Extracted: None
+
+  Error 9: location - missing
+    Expected: Seattle
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 14: Both my maternal grandparents survived the Holocaust as children, met at a displaced persons camp in...
+
+  Error 1: relationship - mismatch
+    Expected: Maternal grandparents
+    Extracted: Sibling
+
+  Error 2: historical_trauma - missing
+    Expected: Survived Holocaust as children
+    Extracted: None
+
+  Error 3: meeting_location - missing
+    Expected: Displaced persons camp in Germany
+    Extracted: None
+
+  Error 4: meeting_year - missing
+    Expected: 1946
+    Extracted: None
+
+  Error 5: immigration_destination_1 - missing
+    Expected: Israel
+    Extracted: None
+
+  Error 6: immigration_year_1 - missing
+    Expected: 1948
+    Extracted: None
+
+  Error 7: immigration_destination_2 - missing
+    Expected: United States
+    Extracted: None
+
+  Error 8: immigration_year_2 - missing
+    Expected: 1960
+    Extracted: None
+
+  Error 9: residence - missing
+    Expected: Brooklyn
+    Extracted: None
+
+  Error 10: children - missing
+    Expected: ['Mother', 'Three brothers (uncles)']
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 15: My aunt Josephine earned her PhD in Physics from MIT in 1978 when there were very few women in the f...
+
+  Error 1: relationship - missing
+    Expected: Aunt
+    Extracted: None
+
+  Error 2: education - missing
+    Expected: PhD in Physics from MIT
+    Extracted: None
+
+  Error 3: graduation_year - missing
+    Expected: 1978
+    Extracted: None
+
+  Error 4: historical_context - missing
+    Expected: Few women in the field
+    Extracted: None
+
+  Error 5: employer - missing
+    Expected: NASA
+    Extracted: None
+
+  Error 6: work_project - missing
+    Expected: Space Shuttle program
+    Extracted: None
+
+  Error 7: employment_period - missing
+    Expected: 1981-2003
+    Extracted: None
+
+  Error 8: award - missing
+    Expected: Presidential Medal of Freedom
+    Extracted: None
+
+  Error 9: award_year - missing
+    Expected: 2010
+    Extracted: None
+
+  Error 10: award_reason - missing
+    Expected: Contributions to science
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 16: My wife's brother Paul served two tours in Afghanistan with the Marines between 2010 and 2013, retur...
+
+  Error 1: name - mismatch
+    Expected: Paul
+    Extracted: wife
+
+  Error 2: relationship - mismatch
+    Expected: Wife's brother (brother-in-law)
+    Extracted: Sibling
+
+  Error 3: military_service - missing
+    Expected: Two tours in Afghanistan with Marines
+    Extracted: None
+
+  Error 4: service_period - missing
+    Expected: 2010-2013
+    Extracted: None
+
+  Error 5: military_award - missing
+    Expected: Purple Heart
+    Extracted: None
+
+  Error 6: injury_context - missing
+    Expected: Wounded in combat
+    Extracted: None
+
+  Error 7: current_occupation_1 - missing
+    Expected: Firefighter
+    Extracted: None
+
+  Error 8: current_occupation_2 - missing
+    Expected: PTSD counselor
+    Extracted: None
+
+  Error 9: service_recipients - missing
+    Expected: Fellow veterans
+    Extracted: None
+
+  Error 10: location - missing
+    Expected: Phoenix
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 17: My father lost his parents in a car accident when he was only 12 years old in 1972, was raised by hi...
+
+  Error 1: relationship_1 - missing
+    Expected: Father
+    Extracted: None
+
+  Error 2: family_tragedy - missing
+    Expected: Lost parents in car accident
+    Extracted: None
+
+  Error 3: tragedy_year - missing
+    Expected: 1972
+    Extracted: None
+
+  Error 4: age_at_tragedy - missing
+    Expected: 12
+    Extracted: None
+
+  Error 5: guardian_name - missing
+    Expected: Marion
+    Extracted: None
+
+  Error 6: guardian_relationship - missing
+    Expected: Older sister (aunt)
+    Extracted: None
+
+  Error 7: guardian_age - missing
+    Expected: 22
+    Extracted: None
+
+  Error 8: career_impact - missing
+    Expected: Inspired to become social worker
+    Extracted: None
+
+  Error 9: specialization - missing
+    Expected: Helping children cope with grief and trauma
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 18: My son Lucas was born with a congenital heart defect in 2015, underwent three surgeries before his f...
+
+  Error 1: relationship - missing
+    Expected: Son
+    Extracted: None
+
+  Error 2: medical_condition - missing
+    Expected: Congenital heart defect
+    Extracted: None
+
+  Error 3: birth_year - missing
+    Expected: 2015
+    Extracted: None
+
+  Error 4: medical_interventions - missing
+    Expected: Three surgeries before fifth birthday
+    Extracted: None
+
+  Error 5: medical_facility - missing
+    Expected: Boston Children's Hospital
+    Extracted: None
+
+  Error 6: current_age - missing
+    Expected: 10
+    Extracted: None
+
+  Error 7: current_status - missing
+    Expected: Happy, active
+    Extracted: None
+
+  Error 8: philanthropy - missing
+    Expected: Raises money for heart research
+    Extracted: None
+
+  Error 9: philanthropy_method - missing
+    Expected: Annual 5K run
+    Extracted: None
+
+  Error 10: organization_partners - missing
+    Expected: School
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 19: My husband's family originally came from Poland; his ancestors immigrated to Chicago in 1908, opened...
+
+  Error 1: relationship - missing
+    Expected: Husband's family
+    Extracted: None
+
+  Error 2: origin - missing
+    Expected: Poland
+    Extracted: None
+
+  Error 3: immigration_destination - missing
+    Expected: Chicago
+    Extracted: None
+
+  Error 4: immigration_year - missing
+    Expected: 1908
+    Extracted: None
+
+  Error 5: family_business - missing
+    Expected: Bakery
+    Extracted: None
+
+  Error 6: business_duration - missing
+    Expected: Three generations
+    Extracted: None
+
+  Error 7: business_end_year - missing
+    Expected: 1997
+    Extracted: None
+
+  Error 8: cultural_tradition - missing
+    Expected: Traditional pierogi recipes
+    Extracted: None
+
+  Error 9: tradition_continuation - missing
+    Expected: Still make every Christmas Eve
+    Extracted: None
+
+--------------------------------------------------
+
+Sentence 20: My identical twin sister Andrea and I were born two minutes apart on December 31, 1982, grew up inse...
+
+  Error 1: name_1 - missing
+    Expected: Andrea
+    Extracted: None
+
+  Error 2: relationship - missing
+    Expected: Identical twin sister
+    Extracted: None
+
+  Error 3: birth_order - missing
+    Expected: Two minutes apart
+    Extracted: None
+
+  Error 4: birth_date - missing
+    Expected: December 31, 1982
+    Extracted: None
+
+  Error 5: childhood_relationship - missing
+    Expected: Inseparable
+    Extracted: None
+
+  Error 6: career_divergence - missing
+    Expected: Different careers
+    Extracted: None
+
+  Error 7: sister_occupation - missing
+    Expected: Corporate attorney
+    Extracted: None
+
+  Error 8: sister_location - missing
+    Expected: New York
+    Extracted: None
+
+  Error 9: self_occupation - missing
+    Expected: Marine biology
+    Extracted: None
+
+  Error 10: self_location - missing
+    Expected: Florida
+    Extracted: None
+
+--------------------------------------------------
+

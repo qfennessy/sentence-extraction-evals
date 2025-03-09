@@ -1,0 +1,171 @@
+{
+  "sentences": [
+    {
+      "sentence": "My father John was born in 1965.",
+      "extracted_information": {
+        "name": "John",
+        "relationship": "Father",
+        "birth_year": 1965
+      }
+    },
+    {
+      "sentence": "My sister Emily lives in Chicago.",
+      "extracted_information": {
+        "name": "Emily",
+        "relationship": "Sister",
+        "location": "Chicago"
+      }
+    },
+    {
+      "sentence": "My grandmother Mary died in 2010 at age 85.",
+      "extracted_information": {
+        "name": "Mary",
+        "relationship": "Grandmother",
+        "death_year": 2010,
+        "age_at_death": 85
+      }
+    },
+    {
+      "sentence": "My uncle Robert is a doctor in Boston.",
+      "extracted_information": {
+        "name": "Robert",
+        "relationship": "Uncle",
+        "occupation": "Doctor",
+        "location": "Boston"
+      }
+    },
+    {
+      "sentence": "My cousin Sarah graduated from college in 2022.",
+      "extracted_information": {
+        "name": "Sarah",
+        "relationship": "Cousin",
+        "education_milestone": "Graduated from college",
+        "graduation_year": 2022
+      }
+    },
+    {
+      "sentence": "My mother Jane worked as a teacher for 30 years.",
+      "extracted_information": {
+        "name": "Jane",
+        "relationship": "Mother",
+        "occupation": "Teacher",
+        "work_duration": "30 years"
+      }
+    },
+    {
+      "sentence": "My brother James has two children named Alex and Emma.",
+      "extracted_information": {
+        "name": "James",
+        "relationship": "Brother",
+        "children_count": 2,
+        "children_names": ["Alex", "Emma"]
+      }
+    },
+    {
+      "sentence": "My grandfather William fought in World War II.",
+      "extracted_information": {
+        "name": "William",
+        "relationship": "Grandfather",
+        "military_service": "World War II"
+      }
+    },
+    {
+      "sentence": "My daughter Anna was born on June 12, 2015.",
+      "extracted_information": {
+        "name": "Anna",
+        "relationship": "Daughter",
+        "birth_date": "June 12, 2015"
+      }
+    },
+    {
+      "sentence": "My husband Michael works as an engineer.",
+      "extracted_information": {
+        "name": "Michael",
+        "relationship": "Husband",
+        "occupation": "Engineer"
+      }
+    },
+    {
+      "sentence": "My aunt Patricia moved to France in 1995.",
+      "extracted_information": {
+        "name": "Patricia",
+        "relationship": "Aunt",
+        "moved_to": "France",
+        "move_year": 1995
+      }
+    },
+    {
+      "sentence": "My son David plays baseball and soccer.",
+      "extracted_information": {
+        "name": "David",
+        "relationship": "Son",
+        "sports": ["Baseball", "Soccer"]
+      }
+    },
+    {
+      "sentence": "My parents met in college in 1980.",
+      "extracted_information": {
+        "relationship": "Parents",
+        "meeting_place": "College",
+        "meeting_year": 1980
+      }
+    },
+    {
+      "sentence": "My grandmother Helen makes the best apple pie.",
+      "extracted_information": {
+        "name": "Helen",
+        "relationship": "Grandmother",
+        "skill": "Makes the best apple pie"
+      }
+    },
+    {
+      "sentence": "My brother-in-law Steven is a pilot.",
+      "extracted_information": {
+        "name": "Steven",
+        "relationship": "Brother-in-law",
+        "occupation": "Pilot"
+      }
+    },
+    {
+      "sentence": "My nephew Thomas was born in 2019.",
+      "extracted_information": {
+        "name": "Thomas",
+        "relationship": "Nephew",
+        "birth_year": 2019
+      }
+    },
+    {
+      "sentence": "My sister-in-law Nicole lives in Seattle with her husband.",
+      "extracted_information": {
+        "name": "Nicole",
+        "relationship": "Sister-in-law",
+        "location": "Seattle",
+        "family_status": "Married"
+      }
+    },
+    {
+      "sentence": "My mother speaks three languages: English, Spanish, and French.",
+      "extracted_information": {
+        "relationship": "Mother",
+        "languages": ["English", "Spanish", "French"],
+        "languages_count": 3
+      }
+    },
+    {
+      "sentence": "My great-grandfather Joseph immigrated from Italy in 1930.",
+      "extracted_information": {
+        "name": "Joseph",
+        "relationship": "Great-grandfather",
+        "origin": "Italy",
+        "immigration_year": 1930
+      }
+    },
+    {
+      "sentence": "My twin brothers were born on May 5, 2010.",
+      "extracted_information": {
+        "relationship": "Twin brothers",
+        "birth_date": "May 5, 2010"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+sentence,score,correct_values,total_values,extracted_fields,total_fields,error_count
+My uncle Richard was a pilot in the Vietnam War fr...,0.25,2,8,0,8,6
+My younger brother Daniel was diagnosed with autis...,0.18181818181818182,2,11,0,11,9
+"My mother was Frances Powers Fennessy, born in New...",0.16666666666666666,1,6,0,6,5
+My daughter Zoe was born prematurely at 32 weeks o...,0.14285714285714285,1,7,0,7,6
+My sister Jennifer was diagnosed with type 1 diabe...,0.125,1,8,0,8,7
+My grandmother Catherine Kelly O'Brien was born on...,0.125,1,8,0,8,7
+My adopted brother Miguel came to our family from ...,0.1111111111111111,1,9,0,9,8
+My father-in-law Dr. Sanjay Patel immigrated from ...,0.09090909090909091,1,11,0,11,10
+My aunt Josephine earned her PhD in Physics from M...,0.09090909090909091,1,11,0,11,10
+My son Lucas was born with a congenital heart defe...,0.09090909090909091,1,11,0,11,10
+"My maternal great-grandmother, Elizabeth Parker Wi...",0.0,0,9,0,9,9
+My cousin Rebecca and her wife Sophia adopted twin...,0.0,0,11,0,11,11
+My husband's great-uncle Alberto emigrated from Si...,0.0,0,8,0,8,8
+My stepmother Diane entered our lives in 2010 afte...,0.0,0,10,0,10,10
+"My paternal grandparents, Harold and Margaret Jenk...",0.0,0,10,0,10,10
+Both my maternal grandparents survived the Holocau...,0.0,0,11,0,11,11
+My wife's brother Paul served two tours in Afghani...,0.0,0,10,0,10,10
+My father lost his parents in a car accident when ...,0.0,0,9,0,9,9
+My husband's family originally came from Poland; h...,0.0,0,9,0,9,9
+My identical twin sister Andrea and I were born tw...,0.0,0,12,0,12,12

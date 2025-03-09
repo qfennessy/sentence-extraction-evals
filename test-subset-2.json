@@ -1,0 +1,77 @@
+{
+    "sentences": [
+      {
+        "sentence": "My sister Jennifer was diagnosed with type 1 diabetes when she was just 7 years old in 1998, but that didn't stop her from becoming a marathon runner who completed the Boston Marathon in 2022.",
+        "extracted_information": {
+          "name": "Jennifer",
+          "relationship": "Sister",
+          "medical_condition": "Type 1 diabetes",
+          "diagnosis_age": 7,
+          "diagnosis_year": 1998,
+          "achievement": "Marathon runner",
+          "specific_achievement": "Completed Boston Marathon",
+          "achievement_year": 2022
+        }
+      },
+      {
+        "sentence": "My adopted brother Miguel came to our family from Guatemala in 2008 when he was 6 years old, and he just graduated from Cornell University with honors in Computer Science this past May.",
+        "extracted_information": {
+          "name": "Miguel",
+          "relationship": "Adopted brother",
+          "origin": "Guatemala",
+          "adoption_year": 2008,
+          "age_at_adoption": 6,
+          "education": "Cornell University",
+          "degree": "Computer Science",
+          "graduation_distinction": "With honors",
+          "graduation_date": "May (current year)"
+        }
+      },
+      {
+        "sentence": "My maternal great-grandmother, Elizabeth Parker Wilson, was a suffragette who marched in Washington DC in 1917 and was arrested three times for her activism before women gained the right to vote in 1920.",
+        "extracted_information": {
+          "name": "Elizabeth Parker Wilson",
+          "relationship": "Maternal great-grandmother",
+          "activism": "Suffragette",
+          "activism_location": "Washington DC",
+          "activism_year": 1917,
+          "legal_consequence": "Arrested three times",
+          "historical_context": "Before women's suffrage",
+          "historical_event": "Women gained right to vote",
+          "historical_event_year": 1920
+        }
+      },
+      {
+        "sentence": "My father-in-law Dr. Sanjay Patel immigrated from Mumbai to Toronto in 1982, completed his cardiology residency at McGill University, and has performed over 2,000 heart surgeries during his 35-year career at Toronto General Hospital.",
+        "extracted_information": {
+          "name": "Dr. Sanjay Patel",
+          "relationship": "Father-in-law",
+          "title": "Doctor",
+          "origin": "Mumbai",
+          "destination": "Toronto",
+          "immigration_year": 1982,
+          "specialization": "Cardiology",
+          "education": "Residency at McGill University",
+          "achievement": "Over 2,000 heart surgeries",
+          "career_duration": "35 years",
+          "workplace": "Toronto General Hospital"
+        }
+      },
+      {
+        "sentence": "My cousin Rebecca and her wife Sophia adopted twin boys, Ethan and Noah, from foster care in 2019 when the children were 4 years old after fostering them for nearly two years.",
+        "extracted_information": {
+          "name_1": "Rebecca",
+          "name_2": "Sophia",
+          "relationship_1": "Cousin",
+          "relationship_2": "Cousin's wife",
+          "family_status": "Married same-sex couple",
+          "children_names": ["Ethan", "Noah"],
+          "children_description": "Twin boys",
+          "adoption_type": "From foster care",
+          "adoption_year": 2019,
+          "children_age_at_adoption": 4,
+          "fostering_duration": "Nearly two years"
+        }
+      }
+    ]
+}
