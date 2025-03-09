@@ -27,7 +27,7 @@ IMPORTANT GUIDELINES:
    - For first-person narrators, always use "narrator" as the name
    - For unnamed family members, use clear descriptive identifiers (e.g., "father", "mother", "grandmother")
    - When multiple unnamed children are mentioned (e.g., "seven children"), name them "child1", "child2", etc.
-   - For historical ancestors, use "ancestors" as a placeholder
+   - For deceased family members, still create entries as they are part of the family structure
 
 2. Relationship Chains and Family Structure:
    - When extracting from first-person perspective ("my father"), create entries for all parties
@@ -35,6 +35,7 @@ IMPORTANT GUIDELINES:
    - Always include reciprocal relationships (if A is parent to B, B is child to A)
    - For married couples, ensure both husband-wife relationships are captured
    - For maternal/paternal relatives, include the relevant parent in the relationship chain
+   - When someone has multiple relationships (e.g., "brother-in-law"), capture all relations
 
 3. Special Relationship Types:
    - Use "twin" specifically for twins (either identical or fraternal)
@@ -44,9 +45,11 @@ IMPORTANT GUIDELINES:
    - Use "-in-law" suffix for in-law relationships (mother-in-law, brother-in-law, etc.)
    - For nieces/nephews, use "niece"/"nephew" when gender is known, "niece/nephew" when not
    - For aunts/uncles, use "aunt"/"uncle" when gender is known, "aunt/uncle" when not
+   - For godparents, use "godfather"/"godmother" and "godchild" relationships
+   - For other special relations like "alias" (for a person using another identity), include this
    
 4. Age and Gender:
-   - Only include current age when explicitly mentioned (e.g., "is 22 years old", "now 10")
+   - Only include current age when explicitly mentioned (e.g., "is 92 years old", "now 10")
    - Don't include past ages (e.g., "when he was 6") unless it's their current age
    - Infer gender from relationships and pronouns when possible
    - Use gender-appropriate relationship terms (brother/sister, husband/wife)
@@ -57,38 +60,19 @@ IMPORTANT GUIDELINES:
    - For same-sex couples, correctly represent the spousal relationship
    - For adoptive families, use "adoptive" prefix for relationships
    - Handle extended family (great-grandparents, cousins, etc.) appropriately
-   - Maintain sibling relationships between all siblings/step-siblings
+   - Maintain sibling relationships between all siblings/step-siblings/half-siblings
+   - For multi-generational families, ensure all relationships are properly connected
 
-Example 1 (Extended family relationships):
-For the sentence "My paternal grandfather Harold worked as a mechanic before retiring in 1995", the output would be:
+Example 1 (First-person perspective):
+For the sentence "My father David worked as a mechanic in Chicago for 35 years", the output would be:
 {
   "family_members": [
     {
-      "name": "Harold",
+      "name": "David",
       "age": null,
       "gender": "male",
       "occupation": "mechanic",
       "relation_to": [
-        {
-          "name": "narrator",
-          "relationship": "grandfather"
-        },
-        {
-          "name": "father",
-          "relationship": "father"
-        }
-      ]
-    },
-    {
-      "name": "father",
-      "age": null,
-      "gender": "male",
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Harold",
-          "relationship": "son"
-        },
         {
           "name": "narrator",
           "relationship": "father"
@@ -102,11 +86,7 @@ For the sentence "My paternal grandfather Harold worked as a mechanic before ret
       "occupation": null,
       "relation_to": [
         {
-          "name": "Harold",
-          "relationship": "grandchild"
-        },
-        {
-          "name": "father",
+          "name": "David", 
           "relationship": "child"
         }
       ]
@@ -114,31 +94,47 @@ For the sentence "My paternal grandfather Harold worked as a mechanic before ret
   ]
 }
 
-Example 2 (Adoption and twins):
-For the sentence "My cousin Rebecca and her wife adopted twin boys, Ethan and Noah, in 2019", the output would be:
+Example 2 (Complex family structure):
+For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland in 1975 with her younger brother Thomas", the output would be:
 {
   "family_members": [
     {
-      "name": "Rebecca",
+      "name": "Robert",
+      "age": null,
+      "gender": "male",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Janice",
+          "relationship": "husband"
+        },
+        {
+          "name": "wife",
+          "relationship": "father"
+        },
+        {
+          "name": "Thomas",
+          "relationship": "father"
+        }
+      ]
+    },
+    {
+      "name": "Janice",
       "age": null,
       "gender": "female",
       "occupation": null,
       "relation_to": [
         {
-          "name": "narrator",
-          "relationship": "cousin"
-        },
-        {
-          "name": "wife",
+          "name": "Robert",
           "relationship": "wife"
         },
         {
-          "name": "Ethan",
-          "relationship": "adoptive mother"
+          "name": "wife",
+          "relationship": "mother"
         },
         {
-          "name": "Noah",
-          "relationship": "adoptive mother"
+          "name": "Thomas",
+          "relationship": "mother"
         }
       ]
     },
@@ -149,56 +145,40 @@ For the sentence "My cousin Rebecca and her wife adopted twin boys, Ethan and No
       "occupation": null,
       "relation_to": [
         {
-          "name": "Rebecca",
+          "name": "Robert",
+          "relationship": "daughter"
+        },
+        {
+          "name": "Janice",
+          "relationship": "daughter"
+        },
+        {
+          "name": "narrator",
           "relationship": "wife"
         },
         {
-          "name": "Ethan",
-          "relationship": "adoptive mother"
-        },
-        {
-          "name": "Noah",
-          "relationship": "adoptive mother"
+          "name": "Thomas",
+          "relationship": "sister"
         }
       ]
     },
     {
-      "name": "Ethan",
+      "name": "Thomas",
       "age": null,
       "gender": "male",
       "occupation": null,
       "relation_to": [
         {
-          "name": "Noah",
-          "relationship": "twin"
+          "name": "Robert",
+          "relationship": "son"
         },
         {
-          "name": "Rebecca",
-          "relationship": "adoptive son"
-        },
-        {
-          "name": "wife",
-          "relationship": "adoptive son"
-        }
-      ]
-    },
-    {
-      "name": "Noah",
-      "age": null,
-      "gender": "male",
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Ethan",
-          "relationship": "twin"
-        },
-        {
-          "name": "Rebecca",
-          "relationship": "adoptive son"
+          "name": "Janice",
+          "relationship": "son"
         },
         {
           "name": "wife",
-          "relationship": "adoptive son"
+          "relationship": "brother"
         }
       ]
     },
@@ -209,8 +189,16 @@ For the sentence "My cousin Rebecca and her wife adopted twin boys, Ethan and No
       "occupation": null,
       "relation_to": [
         {
-          "name": "Rebecca",
-          "relationship": "cousin"
+          "name": "wife",
+          "relationship": "husband"
+        },
+        {
+          "name": "Robert",
+          "relationship": "son-in-law"
+        },
+        {
+          "name": "Janice",
+          "relationship": "son-in-law"
         }
       ]
     }
