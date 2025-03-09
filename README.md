@@ -1,160 +1,134 @@
-# Claude Family Information Extraction Evaluation
+# Family Information Extraction Evaluation Framework
 
-This project evaluates Claude's ability to extract structured family information from natural language sentences.
+A comprehensive framework for evaluating LLMs' ability to extract structured family information from natural language sentences.
 
 ## Overview
 
-The evaluation script tests Claude's capabilities in extracting details such as:
-- Family member names
-- Family relationships
-- Ages
-- Genders
-- Occupations
+This framework evaluates how well language models can extract structured information about family members and relationships from text. It supports:
+
+- Multiple model providers (Anthropic, OpenAI, Google, DeepSeek)
+- Comprehensive evaluation metrics
+- Cross-validation of prompt variations
+- Systematic comparison across model sizes
+
+The system extracts details including:
+- Family member names and relationships
+- Biographical information (age, occupation, birthplace, etc.)
+- Life events and achievements
+- Complex family structures
 
 ## Installation
 
-Clone this repository and install the required dependencies:
-
 ```bash
-git clone https://github.com/yourusername/sentence-extraction-evals.git
-cd sentence-extraction-evals
-pip install anthropic pandas tqdm
+pip install -r requirements.txt
 ```
 
-## Setup
+## Simple Evaluation
 
-Before running the evaluation, you need:
-
-1. An Anthropic API key
-2. A prompt template file
-3. A JSON evaluation dataset
-
-### API Key
-
-Set your Anthropic API key as an environment variable:
+To run a basic evaluation:
 
 ```bash
-export ANTHROPIC_API_KEY=your_api_key_here
+python claude_extraction_eval.py --model sonnet --prompt-file prompt_template.txt --eval-data test-family-sentences-evals.json
 ```
 
-Alternatively, you can pass it directly using the `--api-key` argument.
+Options:
+- `--model`: Model to use (sonnet, opus, haiku, gpt4o, gpt4, gpt35, pro, ultra, coder, chat)
+- `--prompt-file`: Path to the prompt template
+- `--eval-data`: Path to the evaluation data
+- `--max-sentences`: Maximum number of sentences to evaluate
+- `--temperature`: Temperature for model responses (0.0-1.0)
 
-### Prompt Template
+## Cross-Validation Framework
 
-Create a prompt template file (see `prompt_template.txt` for an example) that instructs Claude how to extract family information. The template should include a placeholder `{SENTENCE}` that will be replaced with each test sentence.
+### Purpose
+The cross-validation framework enables systematic comparison of:
+- Different models (varying in size and provider)
+- Different prompt variations
+- Performance across multiple datasets with varying complexity
 
-### Evaluation Dataset
+### Usage
 
-Prepare a JSON file with the following structure:
+Basic cross-validation:
+
+```bash
+python cross_validation.py --datasets test-family-sentences-evals.json --model-group claude --prompt-variations prompt_template.txt prompt_variation1.txt --folds 5
+```
+
+To compare across different complexities:
+
+```bash
+python cross_validation.py --datasets very-simple-family-sentences-evals.json family-sentences-evals.json complex-family-sentences-evals.json --models sonnet gpt4o --prompt-variations prompt_template.txt --max-sentences 10
+```
+
+Options:
+- `--datasets`: One or more datasets to evaluate
+- `--model-group`: Predefined group of models (claude, openai, gemini, deepseek, all_small, all_medium, all_large)
+- `--models`: Specific models to evaluate
+- `--prompt-variations`: Different prompt templates to compare
+- `--folds`: Number of folds for cross-validation
+- `--max-sentences`: Maximum sentences to evaluate per fold
+- `--output-dir`: Directory to store results
+
+### Results
+
+The framework produces:
+- Detailed CSV reports with statistical metrics
+- Visualizations comparing performance
+- HTML reports for easy interpretation
+- Full results in JSON for further analysis
+
+## Dataset Format
+
+Evaluation datasets follow this structure:
 
 ```json
 {
   "sentences": [
     {
-      "sentence": "John's sister Mary is a 30-year-old doctor with two kids.",
+      "sentence": "My father David worked as a mechanic in Chicago for 35 years.",
       "extracted_information": {
-        "family_members": [
-          {
-            "name": "Mary",
-            "age": "30",
-            "gender": "female",
-            "occupation": "doctor",
-            "relation_to": [
-              {
-                "name": "John",
-                "relationship": "sister"
-              }
-            ]
-          },
-          {
-            "name": "John",
-            "age": null,
-            "gender": "male",
-            "occupation": null,
-            "relation_to": [
-              {
-                "name": "Mary",
-                "relationship": "brother"
-              }
-            ]
-          }
-        ]
+        "name": "David",
+        "relationship": "Father",
+        "occupation": "mechanic",
+        "location": "Chicago",
+        "work_duration": "35 years"
       }
-    },
-    // More test sentences...
+    }
   ]
 }
 ```
 
-## Usage
+For complex datasets, a nested structure with `family_members` is supported.
 
-Run the evaluation script:
+## Available Datasets
 
-```bash
-python claude_extraction_eval.py --prompt-file prompt_template.txt --eval-data evaluation_data.json
-```
+The repository includes several datasets with varying complexity:
 
-### Command Line Options
+- **very-simple-family-sentences-evals.json**: Basic sentences with single relationships
+- **family-sentences-evals.json**: Medium complexity with multiple attributes
+- **test-family-sentences-evals.json**: Test set with more complex relationships
+- **complex-family-sentences-evals.json**: Highly complex sentences with intricate family structures
 
-- `--prompt-file`: Path to the prompt template file (required)
-- `--eval-data`: Path to the evaluation data JSON file (required)
-- `--api-key`: Anthropic API key (optional if set as environment variable)
-- `--model`: Claude model to use (default: "claude-3-5-sonnet-20240620")
-- `--output-file`: Output file for results (default: "extraction_results.json")
-- `--batch-size`: Number of sentences to evaluate in each batch (default: 5)
-- `--max-sentences`: Maximum number of sentences to evaluate (default: all)
+## Prompt Engineering
+
+The system uses a prompt template that includes a `{SENTENCE}` placeholder. The current template emphasizes:
+
+1. Structured extraction of all family members
+2. Correct relationship representation
+3. Complete biographical details
+4. Handling of complex family structures
+
+See `prompt_template.txt` for the current implementation.
 
 ## Output
 
-The script generates:
+Evaluation results are stored in timestamped directories under `eval-output/` and include:
 
-1. A detailed JSON file with all extraction results
-2. A CSV summary of extraction performance by field
-3. A console output with key metrics
-
-### Example Console Output
-
-```
-Loaded 50 sentences for evaluation
-Using model: claude-3-5-sonnet-20240620
-Processing batch 1: 100%|██████████| 5/5 [00:15<00:00, 3.12s/it]
-...
-
-Evaluation Summary:
-Total sentences: 50
-Successful extractions: 48 (96.00%)
-Failed extractions: 2 (4.00%)
-Overall field extraction rate: 94.25%
-
-Top 5 best extracted fields:
-  name: 98.75% (80 occurrences)
-  relation_to: 97.50% (40 occurrences)
-  gender: 95.00% (60 occurrences)
-  age: 92.31% (39 occurrences)
-  occupation: 87.50% (32 occurrences)
-
-Bottom 5 worst extracted fields:
-  occupation: 87.50% (32 occurrences)
-  age: 92.31% (39 occurrences)
-  gender: 95.00% (60 occurrences)
-  relation_to: 97.50% (40 occurrences)
-  name: 98.75% (80 occurrences)
-
-Detailed results saved to extraction_results.json
-```
-
-## Troubleshooting
-
-Common issues:
-
-1. **API Key Problems**: Ensure your API key is correct and has sufficient permissions.
-2. **Rate Limiting**: If you encounter rate limiting, try increasing the batch size and adding longer delays.
-3. **JSON Parsing Errors**: If Claude's responses cannot be parsed, check your prompt template to ensure it clearly instructs Claude to return only a valid JSON object.
+- Extraction results (JSON)
+- Field accuracy metrics (CSV)
+- Error analysis (TXT)
+- Prompt improvement suggestions
 
 ## License
 
-[Include license information here]
-
-## Contact
-
-[Your contact information or how to submit issues]
+See LICENSE file for details.
