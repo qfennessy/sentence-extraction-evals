@@ -389,7 +389,15 @@ def calculate_metrics(results: List[Dict]) -> Dict:
             "total_score": 0.0
         },
         "field_accuracy": {},
-        "error_details": []
+        "error_details": [],
+        "prompt_refinement": {
+            "most_challenging_sentences": [],
+            "common_error_patterns": {},
+            "misunderstood_fields": [],
+            "format_issues": 0,
+            "hallucinated_fields": set(),
+            "missing_required_fields": set()
+        }
     }
     
     total_fields = 0
@@ -511,6 +519,129 @@ def calculate_metrics(results: List[Dict]) -> Dict:
             metrics["scores"]["median_score"] = (sorted_scores[mid-1] + sorted_scores[mid]) / 2
         else:
             metrics["scores"]["median_score"] = sorted_scores[mid]
+    
+    # Calculate prompt refinement information
+    
+    # 1. Find the most challenging sentences (lowest scores)
+    sentence_scores = [(i, result["sentence"], item["score"]) 
+                      for i, (result, item) in enumerate(zip(results, metrics["scores"]["by_sentence"]))]
+    
+    # Sort by score in ascending order and take the 5 worst-performing sentences
+    worst_sentences = sorted(sentence_scores, key=lambda x: x[2])[:5]
+    for idx, sentence, score in worst_sentences:
+        # Get error details for this sentence
+        sentence_errors = []
+        if metrics["error_details"]:
+            for error_item in metrics["error_details"]:
+                if error_item["sentence"].startswith(sentence[:50]):
+                    sentence_errors = error_item["errors"]
+                    break
+        
+        metrics["prompt_refinement"]["most_challenging_sentences"].append({
+            "index": idx,
+            "sentence": sentence,
+            "score": score,
+            "errors": len(sentence_errors) if sentence_errors else 0,
+            "error_types": [e["status"] for e in sentence_errors] if sentence_errors else []
+        })
+    
+    # 2. Identify common error patterns
+    error_patterns = {}
+    for item in metrics["error_details"]:
+        for error in item["errors"]:
+            pattern = f"{error['path']}:{error['status']}"
+            if pattern not in error_patterns:
+                error_patterns[pattern] = {
+                    "path": error['path'],
+                    "status": error['status'],
+                    "count": 0,
+                    "examples": []
+                }
+            
+            error_patterns[pattern]["count"] += 1
+            if len(error_patterns[pattern]["examples"]) < 3:  # Limit to 3 examples
+                example = {
+                    "expected": error["expected"],
+                    "extracted": error["extracted"],
+                    "sentence_fragment": item["sentence"][:50] + "..."
+                }
+                error_patterns[pattern]["examples"].append(example)
+    
+    # Sort by count and take top patterns
+    metrics["prompt_refinement"]["common_error_patterns"] = {
+        k: v for k, v in sorted(
+            error_patterns.items(), 
+            key=lambda item: item[1]["count"], 
+            reverse=True
+        )[:10]  # Top 10 patterns
+    }
+    
+    # 3. Find misunderstood fields (fields with format issues or systematic errors)
+    field_errors = {}
+    format_issues = 0
+    
+    for item in metrics["error_details"]:
+        for error in item["errors"]:
+            # Extract field name from path
+            if "." in error["path"]:
+                field = error["path"].split(".")[0]
+            elif "[" in error["path"]:
+                field = error["path"].split("[")[0]
+            else:
+                field = error["path"]
+            
+            # Count field errors
+            if field not in field_errors:
+                field_errors[field] = {
+                    "total": 0,
+                    "missing": 0,
+                    "mismatch": 0,
+                    "partial_match": 0,
+                    "format_issue": 0
+                }
+            
+            field_errors[field]["total"] += 1
+            field_errors[field][error["status"]] = field_errors[field].get(error["status"], 0) + 1
+            
+            # Check for format issues (None or wrong type)
+            if error["status"] == "mismatch" and (error["extracted"] is None or 
+                                                 type(error["extracted"]) != type(error["expected"])):
+                field_errors[field]["format_issue"] += 1
+                format_issues += 1
+                
+            # Track hallucinated fields (fields not in expected but in extracted)
+            if "hallucinated" in error:
+                metrics["prompt_refinement"]["hallucinated_fields"].add(field)
+            
+            # Track missing required fields
+            if error["status"] == "missing" and error["expected"] is not None:
+                metrics["prompt_refinement"]["missing_required_fields"].add(field)
+    
+    # Calculate format issues
+    metrics["prompt_refinement"]["format_issues"] = format_issues
+    
+    # Find fields with a high ratio of format issues or missing values
+    problem_fields = []
+    for field, stats in field_errors.items():
+        total_count = metrics["field_counts"].get(field, 0)
+        if total_count > 0:
+            missing_rate = stats.get("missing", 0) / total_count
+            format_issue_rate = stats.get("format_issue", 0) / total_count
+            
+            if missing_rate > 0.5 or format_issue_rate > 0.2:
+                problem_fields.append({
+                    "field": field,
+                    "total_occurrences": total_count,
+                    "missing_rate": missing_rate,
+                    "format_issue_rate": format_issue_rate,
+                    "examples": []
+                })
+    
+    metrics["prompt_refinement"]["misunderstood_fields"] = problem_fields
+    
+    # Convert sets to lists for JSON serialization
+    metrics["prompt_refinement"]["hallucinated_fields"] = list(metrics["prompt_refinement"]["hallucinated_fields"])
+    metrics["prompt_refinement"]["missing_required_fields"] = list(metrics["prompt_refinement"]["missing_required_fields"])
     
     return metrics
 
@@ -649,17 +780,199 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
         f.write(f"- **Average score:** {metrics['scores']['avg_score']*100:.2f}%\n")
         f.write(f"- **Processing time per sentence:** {runtime_seconds/metrics['total_sentences']:.2f} seconds\n\n")
         
+        # Add prompt refinement recommendations
+        f.write("## Prompt Refinement Recommendations\n\n")
+        
+        # Format issues
+        if metrics.get("prompt_refinement", {}).get("format_issues", 0) > 0:
+            f.write(f"- **Format issues:** {metrics['prompt_refinement']['format_issues']} detected\n")
+            f.write("  - ⚠️ Consider improving output structure examples in the prompt\n")
+            f.write("  - Add more explicit formatting instructions\n")
+        
+        # Missing fields
+        missing_fields = metrics.get("prompt_refinement", {}).get("missing_required_fields", [])
+        if missing_fields:
+            f.write(f"- **Missing fields:** {', '.join(missing_fields[:5])}" + 
+                   (f" and {len(missing_fields)-5} more" if len(missing_fields) > 5 else "") + "\n")
+            f.write("  - Emphasize these fields in the prompt\n")
+            f.write("  - Add clarification about when these fields should be included\n")
+        
+        # Challenging sentences
+        challenging = metrics.get("prompt_refinement", {}).get("most_challenging_sentences", [])
+        if challenging:
+            f.write("- **Most challenging sentences:**\n")
+            for i, sentence in enumerate(challenging[:3]):
+                f.write(f"  {i+1}. \"{sentence['sentence'][:100]}...\"\n")
+                f.write(f"     - Score: {sentence['score']*100:.2f}%, Errors: {sentence['errors']}\n")
+            f.write("  - Add similar examples to the prompt\n")
+            f.write("  - Add specific instructions for handling these patterns\n")
+        
+        # Common error patterns
+        common_patterns = list(metrics.get("prompt_refinement", {}).get("common_error_patterns", {}).values())
+        if common_patterns:
+            f.write("- **Common error patterns:**\n")
+            for i, pattern in enumerate(common_patterns[:3]):
+                f.write(f"  {i+1}. {pattern['status']} in `{pattern['path']}` ({pattern['count']} occurrences)\n")
+                if pattern['examples']:
+                    example = pattern['examples'][0]
+                    f.write(f"     - Expected: `{str(example['expected'])[:50]}`\n")
+                    f.write(f"     - Extracted: `{str(example['extracted'])[:50]}`\n")
+            f.write("  - Address these specific errors in the prompt\n")
+        
+        # Misunderstood fields
+        misunderstood = metrics.get("prompt_refinement", {}).get("misunderstood_fields", [])
+        if misunderstood:
+            f.write("- **Fields needing clarification:**\n")
+            for i, field in enumerate(misunderstood[:3]):
+                f.write(f"  {i+1}. `{field['field']}` (missing: {field['missing_rate']*100:.1f}%, format issues: {field['format_issue_rate']*100:.1f}%)\n")
+            f.write("  - Provide clearer structure and examples for these fields\n")
+        
+        # Hallucinated fields
+        hallucinated = metrics.get("prompt_refinement", {}).get("hallucinated_fields", [])
+        if hallucinated:
+            f.write(f"- **Hallucinated fields:** {', '.join(hallucinated[:5])}\n")
+            f.write("  - Add explicit guidance about what fields to include and not include\n\n")
+        
         f.write("## Files\n\n")
         f.write("- `extraction_results.json`: Complete evaluation results and metrics\n")
         f.write("- `summary.csv`: Field extraction rates and overall statistics\n")
         f.write("- `scores.csv`: Detailed per-sentence scores\n")
         f.write("- `field_accuracy.csv`: Accuracy metrics for each field\n")
         f.write("- `errors.txt`: Detailed analysis of extraction errors\n")
+        f.write("- `prompt_improvements.md`: Generated suggestions for prompt improvements\n")
         
         # List prompt file if available
         for file in os.listdir(output_dir):
             if file.endswith(".txt"):
                 f.write(f"- `{file}`: Prompt template used in this evaluation\n")
+    
+    # Create a dedicated prompt improvement file
+    with open(output_dir / "prompt_improvements.md", 'w') as f:
+        f.write("# Prompt Improvement Recommendations\n\n")
+        
+        # Overall assessment
+        score = metrics.get("overall_value_accuracy", 0) * 100
+        if score < 20:
+            assessment = "major improvements needed"
+        elif score < 50:
+            assessment = "significant improvements needed"
+        elif score < 80:
+            assessment = "moderate improvements needed"
+        else:
+            assessment = "minor improvements needed"
+            
+        f.write(f"## Overall Assessment\n\n")
+        f.write(f"Based on an evaluation with {metrics['total_sentences']} sentences using {model_name}, ")
+        f.write(f"the current prompt achieves {score:.2f}% accuracy with {assessment}.\n\n")
+        
+        # Specific recommendations
+        f.write("## Specific Recommendations\n\n")
+        
+        # 1. Structure and format issues
+        f.write("### 1. Output Structure and Format\n\n")
+        
+        format_issues = metrics.get("prompt_refinement", {}).get("format_issues", 0)
+        if format_issues > 0:
+            f.write("⚠️ **Format issues detected**\n\n")
+            f.write("- **Problem**: The model is struggling with the correct output format\n")
+            f.write("- **Recommendation**: Make output structure examples more prominent and explicit\n")
+            f.write("- Consider using a step-by-step approach for constructing the output\n")
+            f.write("- Provide a complete example with all possible fields\n")
+        else:
+            f.write("✅ **Output format is generally correct**\n\n")
+            f.write("- The model understands the basic structure\n")
+            f.write("- Consider further improving with more explicit formatting guidelines\n")
+        
+        # 2. Missing fields
+        f.write("\n### 2. Missing or Incorrect Fields\n\n")
+        
+        missing_fields = metrics.get("prompt_refinement", {}).get("missing_required_fields", [])
+        if missing_fields:
+            f.write(f"⚠️ **Consistently missing fields: {', '.join(missing_fields)}**\n\n")
+            f.write("- **Problem**: The model is not extracting these fields reliably\n")
+            f.write("- **Recommendation**: Emphasize these fields in the prompt\n")
+            f.write("- Provide specific examples that demonstrate how to extract these fields\n")
+            f.write("- Clarify when these fields should be included even if not explicitly stated\n\n")
+        
+        # 3. Challenging sentences
+        f.write("\n### 3. Challenging Sentence Patterns\n\n")
+        
+        challenging = metrics.get("prompt_refinement", {}).get("most_challenging_sentences", [])
+        if challenging:
+            f.write("The following sentences were particularly difficult for the model:\n\n")
+            for i, sentence in enumerate(challenging[:5]):
+                f.write(f"**{i+1}. \"{sentence['sentence']}\"**\n")
+                f.write(f"- Score: {sentence['score']*100:.2f}%\n")
+                f.write(f"- Error types: {', '.join(sentence['error_types']) if sentence['error_types'] else 'N/A'}\n\n")
+            
+            f.write("**Recommendations:**\n\n")
+            f.write("- Add examples similar to these challenging sentences\n")
+            f.write("- Include specific instructions for handling these patterns\n")
+            f.write("- Consider breaking down complex sentences in examples\n\n")
+        
+        # 4. Error patterns
+        f.write("\n### 4. Common Error Patterns\n\n")
+        
+        common_patterns = list(metrics.get("prompt_refinement", {}).get("common_error_patterns", {}).values())
+        if common_patterns:
+            f.write("The following error patterns occurred frequently:\n\n")
+            for i, pattern in enumerate(common_patterns[:5]):
+                f.write(f"**{i+1}. {pattern['status']} in `{pattern['path']}` ({pattern['count']} occurrences)**\n\n")
+                if pattern['examples']:
+                    for j, example in enumerate(pattern['examples'][:2]):
+                        f.write(f"Example {j+1}:\n")
+                        f.write(f"- From: \"{example['sentence_fragment']}\"\n")
+                        f.write(f"- Expected: `{str(example['expected'])}`\n")
+                        f.write(f"- Extracted: `{str(example['extracted'])}`\n\n")
+            
+            f.write("**Recommendations:**\n\n")
+            f.write("- Add specific examples addressing these error patterns\n")
+            f.write("- Provide clearer guidelines for handling these cases\n\n")
+        
+        # 5. Suggested prompt modifications
+        f.write("\n### 5. Suggested Prompt Modifications\n\n")
+        
+        # Add specific suggestions based on analysis
+        suggestions = []
+        
+        # Format issues
+        if format_issues > 0:
+            suggestions.append("Add a clear, complete example of the expected JSON structure")
+            
+        # Missing fields  
+        if missing_fields:
+            suggestions.append(f"Emphasize fields that are often missed: {', '.join(missing_fields[:3])}")
+            
+        # Challenging patterns
+        complex_sentence_patterns = [
+            "complex family relationships",
+            "multiple family members",
+            "implicit relationships",
+            "temporal information"
+        ]
+        suggestions.append(f"Add examples for handling {complex_sentence_patterns[0]} and {complex_sentence_patterns[1]}")
+        
+        # Add the suggestions
+        for i, suggestion in enumerate(suggestions):
+            f.write(f"{i+1}. {suggestion}\n")
+            
+        f.write("\n**Consider adding these sections to your prompt:**\n\n")
+        f.write("```\n")
+        f.write("IMPORTANT: Always include all family members mentioned or implied in the sentence.\n")
+        f.write("For each family member, include the following fields even if you have to infer them:\n")
+        f.write("- name (use descriptive placeholder if unnamed)\n")
+        f.write("- gender (infer from context if possible)\n")
+        f.write("- relationships (always include reciprocal relationships)\n")
+        f.write("```\n\n")
+        
+        # 6. Testing recommendations
+        f.write("\n### 6. Testing Recommendations\n\n")
+        f.write("After making changes to the prompt, test with these challenging sentences:\n\n")
+        
+        for i, sentence in enumerate(challenging[:3]):
+            f.write(f"{i+1}. \"{sentence['sentence']}\"\n")
+            
+        f.write("\nFocus on whether the updated prompt improves extraction of missing fields and handles complex relationships correctly.\n")
     
     return output_file
 
@@ -800,6 +1113,41 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
     # Save results
     output_file = save_results(results, metrics, output_dir, model, eval_data, runtime_seconds, prompt_file)
     click.echo(f"\nDetailed results saved to {output_dir}")
+    
+    # Print prompt refinement recommendations
+    click.echo("\nPrompt Refinement Recommendations:")
+    
+    # Format issues
+    if metrics.get("prompt_refinement", {}).get("format_issues", 0) > 0:
+        click.echo(f"  • Found {metrics['prompt_refinement']['format_issues']} format issues - review output structure examples in prompt")
+    
+    # Missing fields
+    missing_fields = metrics.get("prompt_refinement", {}).get("missing_required_fields", [])
+    if missing_fields:
+        click.echo(f"  • Consistently missing fields: {', '.join(missing_fields[:3])}" + 
+                  (f" and {len(missing_fields)-3} more" if len(missing_fields) > 3 else ""))
+    
+    # Challenging sentences
+    if metrics.get("prompt_refinement", {}).get("most_challenging_sentences"):
+        worst_sentence = metrics["prompt_refinement"]["most_challenging_sentences"][0]
+        if worst_sentence:
+            click.echo(f"  • Add examples similar to challenging sentence: \"{worst_sentence['sentence'][:60]}...\"")
+    
+    # Common error patterns
+    common_patterns = list(metrics.get("prompt_refinement", {}).get("common_error_patterns", {}).values())
+    if common_patterns:
+        top_pattern = common_patterns[0]
+        if top_pattern:
+            click.echo(f"  • Most common error: {top_pattern['status']} in {top_pattern['path']} ({top_pattern['count']} occurrences)")
+            
+    # Misunderstood fields
+    misunderstood = metrics.get("prompt_refinement", {}).get("misunderstood_fields", [])
+    if misunderstood:
+        fields = [f["field"] for f in misunderstood[:2]]
+        if fields:
+            click.echo(f"  • Clarify structure for fields: {', '.join(fields)}")
+    
+    click.echo("\nSee output files for detailed guidance on prompt improvements")
 
 if __name__ == "__main__":
     main()
