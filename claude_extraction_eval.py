@@ -10,11 +10,14 @@ python claude_extraction_eval.py --prompt-file prompt_template.txt --eval-data e
 import json
 import os
 import time
+import shutil
+import datetime
 import anthropic
 import pandas as pd
 import click
 from typing import Dict, List, Any, Optional
 from tqdm import tqdm
+from pathlib import Path
 
 # Available Claude models
 CLAUDE_MODELS = {
@@ -22,18 +25,6 @@ CLAUDE_MODELS = {
     "sonnet": "claude-3-5-sonnet-20240620",
     "haiku": "claude-3-haiku-20240307"
 }
-
-@click.command()
-@click.option("--prompt-file", required=True, type=click.Path(exists=True), help="Path to the prompt template file")
-@click.option("--eval-data", required=True, type=click.Path(exists=True), help="Path to the evaluation data JSON file")
-@click.option("--api-key", help="Anthropic API key (or set via ANTHROPIC_API_KEY env var)")
-@click.option("--model", type=click.Choice(["opus", "sonnet", "haiku"], case_sensitive=False), default="sonnet", 
-              help="Claude model to use (opus, sonnet, haiku)")
-@click.option("--output-file", default="extraction_results.json", help="Output file for results")
-@click.option("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
-@click.option("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
-@click.option("--temperature", type=float, default=0.0, help="Temperature for Claude responses (0.0-1.0)")
-def main(prompt_file, eval_data, api_key, model, output_file, batch_size, max_sentences, temperature):
 
 def load_data(prompt_file: str, eval_data_file: str, max_sentences: Optional[int] = None) -> tuple:
     """Load the prompt template and evaluation data."""
@@ -523,20 +514,60 @@ def calculate_metrics(results: List[Dict]) -> Dict:
     
     return metrics
 
-def save_results(results: List[Dict], metrics: Dict, output_file: str):
-    """Save the evaluation results and metrics to a file."""
+def create_output_directory(model_name, prompt_file_path):
+    """Create a timestamped output directory and return its path."""
+    # Create base output directory if it doesn't exist
+    output_base = Path("eval-output")
+    output_base.mkdir(exist_ok=True)
+    
+    # Create timestamped subdirectory
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    output_dir = output_base / f"eval-{model_name}-{timestamp}"
+    output_dir.mkdir(exist_ok=True)
+    
+    # Copy the prompt file to the output directory
+    prompt_dest = output_dir / Path(prompt_file_path).name
+    shutil.copy2(prompt_file_path, prompt_dest)
+    
+    return output_dir
+
+def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_name: str, eval_data_path: str):
+    """
+    Save the evaluation results and metrics to files in the specified directory.
+    
+    Args:
+        results: The evaluation results
+        metrics: The calculated metrics
+        output_dir: Directory where results should be saved
+        model_name: Name of the Claude model used
+        eval_data_path: Path to the evaluation data file used
+    """
+    # Create metadata file with evaluation parameters
+    metadata = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "model": model_name,
+        "eval_data": str(eval_data_path),
+        "sentence_count": metrics["total_sentences"],
+        "overall_accuracy": metrics.get("overall_value_accuracy", 0)
+    }
+    
+    with open(output_dir / "metadata.json", 'w') as f:
+        json.dump(metadata, f, indent=2)
+    
+    # Save main results file
     output = {
         "results": results,
         "metrics": metrics
     }
     
+    output_file = output_dir / "extraction_results.json"
     with open(output_file, 'w') as f:
         json.dump(output, f, indent=2)
     
     # Save scores by sentence to CSV with detailed metrics
     if metrics["scores"]["by_sentence"]:
         scores_df = pd.DataFrame(metrics["scores"]["by_sentence"])
-        scores_csv_file = output_file.replace('.json', '_scores.csv')
+        scores_csv_file = output_dir / "scores.csv"
         scores_df.sort_values("score", ascending=False).to_csv(scores_csv_file, index=False)
     
     # Save field accuracy to CSV (more detailed than just presence/absence)
@@ -553,7 +584,7 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
             })
         
         field_accuracy_df = pd.DataFrame(field_accuracy_data)
-        accuracy_csv_file = output_file.replace('.json', '_field_accuracy.csv')
+        accuracy_csv_file = output_dir / "field_accuracy.csv"
         field_accuracy_df.sort_values("Content Accuracy", ascending=False).to_csv(accuracy_csv_file, index=False)
     
     # Save extraction rates by field to CSV (simple presence/absence)
@@ -565,7 +596,7 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
         })
         
         # Create main summary CSV with both field stats and overall scores
-        csv_file = output_file.replace('.json', '_summary.csv')
+        csv_file = output_dir / "summary.csv"
         fields_df.sort_values("Extraction Rate", ascending=False).to_csv(csv_file, index=False)
         
         # Append detailed score summary to the CSV
@@ -582,7 +613,7 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
             
     # Save detailed error examples to a text file for analysis
     if metrics.get("error_details"):
-        error_file = output_file.replace('.json', '_errors.txt')
+        error_file = output_dir / "errors.txt"
         with open(error_file, 'w') as f:
             f.write(f"Detailed Error Analysis\n{'='*50}\n\n")
             for i, error_item in enumerate(metrics["error_details"]):
@@ -592,6 +623,25 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
                     f.write(f"    Expected: {error['expected']}\n")
                     f.write(f"    Extracted: {error['extracted']}\n\n")
                 f.write(f"{'-'*50}\n\n")
+    
+    # Create a simple README file with evaluation overview
+    with open(output_dir / "README.md", 'w') as f:
+        f.write(f"# Extraction Evaluation Results\n\n")
+        f.write(f"- **Date:** {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"- **Model:** {model_name}\n")
+        f.write(f"- **Test data:** {Path(eval_data_path).name}\n")
+        f.write(f"- **Sentences evaluated:** {metrics['total_sentences']}\n")
+        f.write(f"- **Overall accuracy:** {metrics.get('overall_value_accuracy', 0)*100:.2f}%\n\n")
+        
+        f.write("## Files\n\n")
+        f.write("- `extraction_results.json`: Complete evaluation results and metrics\n")
+        f.write("- `summary.csv`: Field extraction rates and overall statistics\n")
+        f.write("- `scores.csv`: Detailed per-sentence scores\n")
+        f.write("- `field_accuracy.csv`: Accuracy metrics for each field\n")
+        f.write("- `errors.txt`: Detailed analysis of extraction errors\n")
+        f.write(f"- `{Path(prompt_file_path).name}`: Prompt template used in this evaluation\n")
+    
+    return output_file
 
 @click.command()
 @click.option("--prompt-file", required=True, type=click.Path(exists=True), help="Path to the prompt template file")
@@ -599,11 +649,10 @@ def save_results(results: List[Dict], metrics: Dict, output_file: str):
 @click.option("--api-key", help="Anthropic API key (or set via ANTHROPIC_API_KEY env var)")
 @click.option("--model", type=click.Choice(["opus", "sonnet", "haiku"], case_sensitive=False), default="sonnet", 
               help="Claude model to use (opus, sonnet, haiku)")
-@click.option("--output-file", default="extraction_results.json", help="Output file for results")
 @click.option("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
 @click.option("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
 @click.option("--temperature", type=float, default=0.0, help="Temperature for Claude responses (0.0-1.0)")
-def main(prompt_file, eval_data, api_key, model, output_file, batch_size, max_sentences, temperature):
+def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temperature):
     """Evaluate Claude's ability to extract family details from sentences."""
     # Get API key from args or environment
     api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
@@ -621,9 +670,13 @@ def main(prompt_file, eval_data, api_key, model, output_file, batch_size, max_se
     # Load data
     prompt_template, sentences = load_data(prompt_file, eval_data, max_sentences)
     
+    # Create output directory
+    output_dir = create_output_directory(model, prompt_file)
+    
     click.echo(f"Loaded {len(sentences)} sentences for evaluation")
     click.echo(f"Using model: {model} ({model_id})")
     click.echo(f"Temperature: {temperature}")
+    click.echo(f"Output directory: {output_dir}")
     
     # Evaluate extraction
     results = evaluate_extraction(
@@ -708,8 +761,8 @@ def main(prompt_file, eval_data, api_key, model, output_file, batch_size, max_se
             click.echo(f"    {status}: {count} ({count/error_count*100:.1f}%)")
     
     # Save results
-    save_results(results, metrics, output_file)
-    click.echo(f"\nDetailed results saved to {output_file}")
+    output_file = save_results(results, metrics, output_dir, model, eval_data)
+    click.echo(f"\nDetailed results saved to {output_dir}")
 
 if __name__ == "__main__":
     main()
