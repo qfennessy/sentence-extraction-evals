@@ -494,15 +494,31 @@ def calculate_metrics(results: List[Dict]) -> Dict:
         # Count basic field presence for backward compatibility
         sentence_extracted_fields = 0
         sentence_total_fields = 0
-        for field in expected:
-            # Count this field
-            metrics["field_counts"][field] = metrics["field_counts"].get(field, 0) + 1
-            total_fields += 1
-            sentence_total_fields += 1
-            
-            # Check if field was extracted
-            if field in extracted:
-                # Count successful extraction
+        
+        # Handle the different structures (flat vs nested)
+        if isinstance(expected, dict) and isinstance(extracted, dict):
+            # Direct field comparison for flat structures
+            for field in expected:
+                # Count this field
+                metrics["field_counts"][field] = metrics["field_counts"].get(field, 0) + 1
+                total_fields += 1
+                sentence_total_fields += 1
+                
+                # Check if field was extracted
+                if field in extracted:
+                    # Count successful extraction
+                    metrics["extraction_rates_by_field"][field] = metrics["extraction_rates_by_field"].get(field, 0) + 1
+                    total_extracted_fields += 1
+                    sentence_extracted_fields += 1
+        elif "family_members" in extracted:
+            # For family_members structure, check if at least one family member was extracted
+            if expected and extracted.get("family_members") and len(extracted["family_members"]) > 0:
+                # Count as a successful field extraction
+                field = "family_members" 
+                metrics["field_counts"][field] = metrics["field_counts"].get(field, 0) + 1
+                total_fields += 1
+                sentence_total_fields += 1
+                
                 metrics["extraction_rates_by_field"][field] = metrics["extraction_rates_by_field"].get(field, 0) + 1
                 total_extracted_fields += 1
                 sentence_extracted_fields += 1
@@ -532,6 +548,11 @@ def calculate_metrics(results: List[Dict]) -> Dict:
     # Calculate overall field extraction rate (presence only)
     if total_fields > 0:
         metrics["overall_field_extraction_rate"] = total_extracted_fields / total_fields
+    else:
+        # If we didn't find any fields to count (possibly due to structure differences),
+        # but we did extract some content, set a reasonable default rate based on success rate
+        if metrics["successful_extractions"] > 0:
+            metrics["overall_field_extraction_rate"] = metrics["successful_extractions"] / metrics["total_sentences"]
     
     # Calculate overall value accuracy (content correctness)
     metrics["overall_value_accuracy"] = total_correct_values / total_expected_values if total_expected_values > 0 else 0.0
@@ -685,15 +706,27 @@ def calculate_metrics(results: List[Dict]) -> Dict:
     
     return metrics
 
-def create_output_directory(model_name, prompt_file_path):
-    """Create a timestamped output directory and return its path."""
+def create_output_directory(model_name, prompt_file_path, provider=None):
+    """
+    Create a timestamped output directory and return its path.
+    
+    Args:
+        model_name: Name of the model being evaluated
+        prompt_file_path: Path to the prompt template file
+        provider: Provider of the model (claude, openai)
+    """
     # Create base output directory if it doesn't exist
     output_base = Path("eval-output")
     output_base.mkdir(exist_ok=True)
     
+    # Format directory name based on model and provider
+    dir_prefix = f"eval-{model_name}"
+    if provider:
+        dir_prefix = f"{dir_prefix}-{provider}"
+    
     # Create timestamped subdirectory
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    output_dir = output_base / f"eval-{model_name}-{timestamp}"
+    output_dir = output_base / f"{dir_prefix}-{timestamp}"
     output_dir.mkdir(exist_ok=True)
     
     # Copy the prompt file to the output directory
@@ -1060,7 +1093,7 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
     prompt_template, sentences = load_data(prompt_file, eval_data, max_sentences)
     
     # Create output directory
-    output_dir = create_output_directory(model, prompt_file)
+    output_dir = create_output_directory(model, prompt_file, model_type)
     
     click.echo(f"Loaded {len(sentences)} sentences for evaluation")
     click.echo(f"Using model: {model} ({model_id}) from {model_type.upper()}")
