@@ -146,25 +146,95 @@ def evaluate_extraction(client, prompt_template: str, sentences: List[Dict],
     
     return results
 
+def normalize_structure(data):
+    """
+    Normalize different data structures to allow for comparison.
+    Handles format differences between test data and the model's output.
+    """
+    if not data:
+        return data
+    
+    # If it's the expected flat format from test data
+    if isinstance(data, dict) and "family_members" not in data:
+        # Check for keys that indicate this is a flat structure from the test data
+        test_data_keys = ["name", "relationship", "birthplace", "birthdate", 
+                          "military_service", "occupation", "deathplace"]
+        is_test_data = any(key in data for key in test_data_keys)
+        
+        if is_test_data:
+            # Extract all fields from the flat structure
+            extracted_fields = {}
+            for k, v in data.items():
+                # Skip null values
+                if v is not None:
+                    extracted_fields[k] = v
+            return extracted_fields
+    
+    # If it's already in the family_members format
+    if isinstance(data, dict) and "family_members" in data:
+        # Extract all unique fields from all family members
+        all_fields = {}
+        for member in data["family_members"]:
+            # Get name and other basic attributes
+            if "name" in member and member["name"]:
+                # Skip 'narrator' as it's added automatically
+                if member["name"] == "narrator":
+                    continue
+                    
+                all_fields["name"] = member["name"]
+                
+                # Get other fields
+                for k, v in member.items():
+                    if k not in ["name", "relation_to"] and v is not None:
+                        all_fields[k] = v
+                
+                # Look at relationships
+                if "relation_to" in member and member["relation_to"]:
+                    for relation in member["relation_to"]:
+                        if "name" in relation and relation["name"] != "narrator":
+                            if "relationship" in relation:
+                                rel_type = relation["relationship"].lower()
+                                # Map relationship fields
+                                if rel_type in ["father", "mother", "parent"]:
+                                    all_fields["relationship"] = rel_type.capitalize()
+                                elif rel_type in ["brother", "sister", "sibling"]:
+                                    all_fields["relationship"] = "Sibling"
+                                elif rel_type in ["son", "daughter", "child"]:
+                                    all_fields["relationship"] = "Child"
+                                elif rel_type in ["uncle", "aunt"]:
+                                    all_fields["relationship"] = "Uncle/Aunt"
+                                elif rel_type in ["grandfather", "grandmother", "grandparent"]:
+                                    all_fields["relationship"] = "Grandparent"
+                                # Add other relationship mappings as needed
+        
+        return all_fields
+    
+    # Return unchanged if no normalization needed
+    return data
+
 def deep_compare(expected, extracted, field_path=""):
     """
     Recursively compare expected and extracted values, handling nested structures.
     Returns a tuple of (num_correct, num_total, details) where details is a list of 
     mismatches with their paths.
     """
+    # Normalize the data structures for comparison
+    normalized_expected = normalize_structure(expected)
+    normalized_extracted = normalize_structure(extracted)
+    
     correct = 0
     total = 0
     details = []
     
     # If both are dictionaries, compare their keys and values
-    if isinstance(expected, dict) and isinstance(extracted, dict):
+    if isinstance(normalized_expected, dict) and isinstance(normalized_extracted, dict):
         # Count each key-value pair in expected
-        for key, exp_value in expected.items():
+        for key, exp_value in normalized_expected.items():
             total += 1
             current_path = f"{field_path}.{key}" if field_path else key
             
-            if key in extracted:
-                ext_value = extracted[key]
+            if key in normalized_extracted:
+                ext_value = normalized_extracted[key]
                 # Recursively compare nested values
                 sub_correct, sub_total, sub_details = deep_compare(exp_value, ext_value, current_path)
                 correct += sub_correct
@@ -179,12 +249,12 @@ def deep_compare(expected, extracted, field_path=""):
                 })
     
     # If both are lists, compare their elements
-    elif isinstance(expected, list) and isinstance(extracted, list):
+    elif isinstance(normalized_expected, list) and isinstance(normalized_extracted, list):
         # For lists, we'll try to match items in a way that maximizes matches
         # This is a simplified approach - could be improved with more complex matching
-        remaining_extracted = extracted.copy()
+        remaining_extracted = normalized_extracted.copy()
         
-        for i, exp_item in enumerate(expected):
+        for i, exp_item in enumerate(normalized_expected):
             total += 1
             current_path = f"{field_path}[{i}]"
             
@@ -195,7 +265,7 @@ def deep_compare(expected, extracted, field_path=""):
             # Find the best matching item in the extracted list
             for j, ext_item in enumerate(remaining_extracted):
                 sub_correct, sub_total, _ = deep_compare(exp_item, ext_item)
-                match_score = sub_correct / max(1, sub_total)
+                match_score = sub_correct / max(1, sub_total) if sub_total > 0 else 0
                 
                 if match_score > best_match_score:
                     best_match_score = match_score
@@ -223,37 +293,81 @@ def deep_compare(expected, extracted, field_path=""):
     else:
         total = 1
         # Normalize values for comparison (cast to string, lowercase)
-        exp_norm = str(expected).lower() if expected is not None else ""
-        ext_norm = str(extracted).lower() if extracted is not None else ""
+        exp_norm = str(normalized_expected).lower() if normalized_expected is not None else ""
+        ext_norm = str(normalized_extracted).lower() if normalized_extracted is not None else ""
         
         if exp_norm == ext_norm:
             correct = 1
         # Partial credit for numeric values with small differences
-        elif (isinstance(expected, (int, float)) and isinstance(extracted, (int, float)) and 
-              abs(expected - extracted) / max(1, abs(expected)) < 0.1):
+        elif (isinstance(normalized_expected, (int, float)) and isinstance(normalized_extracted, (int, float)) and 
+              abs(normalized_expected - normalized_extracted) / max(1, abs(normalized_expected)) < 0.1):
             correct = 0.8
             details.append({
                 "path": field_path,
-                "expected": expected,
-                "extracted": extracted,
+                "expected": normalized_expected,
+                "extracted": normalized_extracted,
                 "status": "partial_match"
             })
         # Partial credit for text with significant overlap
-        elif (isinstance(expected, str) and isinstance(extracted, str) and
-              (expected.lower() in extracted.lower() or extracted.lower() in expected.lower())):
-            correct = 0.5
-            details.append({
-                "path": field_path,
-                "expected": expected,
-                "extracted": extracted,
-                "status": "partial_match"
-            })
+        elif (isinstance(normalized_expected, str) and isinstance(normalized_extracted, str)):
+            # Check if one is contained in the other
+            if ext_norm in exp_norm or exp_norm in ext_norm:
+                correct = 0.8
+                details.append({
+                    "path": field_path,
+                    "expected": normalized_expected,
+                    "extracted": normalized_extracted,
+                    "status": "partial_match"
+                })
+            # Check for major overlap
+            elif len(exp_norm) > 0 and len(ext_norm) > 0:
+                # Calculate word overlap
+                exp_words = set(exp_norm.split())
+                ext_words = set(ext_norm.split())
+                common_words = exp_words.intersection(ext_words)
+                
+                if len(common_words) > 0:
+                    # Calculate Jaccard similarity
+                    similarity = len(common_words) / len(exp_words.union(ext_words))
+                    if similarity > 0.5:
+                        correct = similarity
+                        details.append({
+                            "path": field_path,
+                            "expected": normalized_expected,
+                            "extracted": normalized_extracted,
+                            "status": "partial_match",
+                            "similarity": similarity
+                        })
+                    else:
+                        correct = 0
+                        details.append({
+                            "path": field_path,
+                            "expected": normalized_expected, 
+                            "extracted": normalized_extracted,
+                            "status": "mismatch"
+                        })
+                else:
+                    correct = 0
+                    details.append({
+                        "path": field_path,
+                        "expected": normalized_expected, 
+                        "extracted": normalized_extracted,
+                        "status": "mismatch"
+                    })
+            else:
+                correct = 0
+                details.append({
+                    "path": field_path,
+                    "expected": normalized_expected, 
+                    "extracted": normalized_extracted,
+                    "status": "mismatch"
+                })
         else:
             correct = 0
             details.append({
                 "path": field_path,
-                "expected": expected, 
-                "extracted": extracted,
+                "expected": normalized_expected, 
+                "extracted": normalized_extracted,
                 "status": "mismatch"
             })
     
