@@ -23,73 +23,120 @@ Extract all family relationships mentioned in the sentence, and output a JSON ob
 
 IMPORTANT GUIDELINES:
 
-1. For first-person narrators, use "narrator" or "speaker" as the name
-2. When extracting relationships from first-person perspective:
-   - For "my father" → create an entry for father related to "narrator"
-   - For "my wife's mother" → create entries for all three people in this relationship chain
-3. For unnamed people, use descriptive placeholders like "narrator", "father", "mother-in-law"
-4. Handle special relationships correctly:
-   - Use "twin" specifically when twins are mentioned
-   - Use "half-brother/half-sister" for half-siblings
-   - Use "stepfather/stepmother" for step-relationships
-   - Use appropriate in-law relationships (father-in-law, sister-in-law, etc.)
-5. Only create entries for family members actually mentioned in the text:
-   - If "grandmother" is mentioned without specific grandchildren, only create an entry for the grandmother
-   - Don't create entries for children unless they're specifically mentioned
-6. For multiple siblings/children:
-   - Only create separate entries if individuals are named or specifically counted
-   - For "seven children" without names, create a single entry for each child with appropriate numbering
-7. Complete relationship chains - make sure relationships work in both directions:
-   - If A is parent to B, B should be child to A
-   - If A is husband to B, B should be wife to A
-8. Properly handle gender-specific relationships:
-   - Ensure brother/sister, husband/wife, etc. match the gender when inferrable
-   - Use "spouse" or "sibling" only when gender cannot be determined
+1. Names and Identifiers:
+   - For first-person narrators, always use "narrator" as the name
+   - For unnamed family members, use clear descriptive identifiers (e.g., "father", "mother", "grandmother")
+   - When multiple unnamed children are mentioned (e.g., "seven children"), name them "child1", "child2", etc.
 
-Example 1:
-For the sentence "John's sister Mary is a 30-year-old doctor with two kids", the output would be:
+2. Relationship Chains and Family Structure:
+   - When extracting from first-person perspective ("my father"), create entries for all parties
+   - For multi-step relationships ("my wife's parents"), create entries for all people in the chain
+   - Always include reciprocal relationships (if A is parent to B, B is child to A)
+   - For married couples, ensure both husband-wife relationships are captured
+
+3. Special Relationship Types:
+   - Use "twin" specifically for twins (also include "brother"/"sister" relationships to siblings)
+   - Use "half-brother"/"half-sister" for half-siblings
+   - Use "stepfather"/"stepmother" for step-relationships
+   - Use "-in-law" suffix for in-law relationships (mother-in-law, brother-in-law, etc.)
+   - For nieces/nephews, use "niece"/"nephew" when gender is known, "niece/nephew" when not
+   - For aunts/uncles, use "aunt"/"uncle" when gender is known, "aunt/uncle" when not
+   
+4. Age and Gender:
+   - Only include age when it's explicitly mentioned (e.g., "8 years old", "was 6")
+   - Infer gender from relationships and pronouns when possible
+   - Use gender-appropriate relationship terms (brother/sister, husband/wife)
+   - Use gender-neutral terms (child, sibling, spouse) when gender is unknown
+
+5. Edge Cases:
+   - For "when they were X years old", only include as age if it's their current age
+   - Only create entries for family members who are explicitly mentioned
+   - Don't create entries for hypothetical/future family members
+
+Example 1 (Simple relationship):
+For the sentence "My sister Sarah graduated from Harvard and now practices medicine in Boston", the output would be:
 {
   "family_members": [
     {
-      "name": "Mary",
-      "age": "30",
+      "name": "Sarah",
+      "age": null,
       "gender": "female",
       "occupation": "doctor",
       "relation_to": [
         {
-          "name": "John",
+          "name": "narrator",
           "relationship": "sister"
         }
       ]
     },
     {
-      "name": "John",
+      "name": "narrator",
       "age": null,
-      "gender": "male",
+      "gender": null,
       "occupation": null,
       "relation_to": [
         {
-          "name": "Mary",
-          "relationship": "brother"
+          "name": "Sarah",
+          "relationship": "sibling"
         }
       ]
     }
   ]
 }
 
-Example 2:
-For the sentence "My father David worked as a mechanic in Chicago for 35 years", the output would be:
+Example 2 (Extended family):
+For the sentence "My grandfather on my mother's side, Joseph, worked as a coal miner and raised five children with my grandmother Eleanor", the output would be:
 {
   "family_members": [
     {
-      "name": "David",
+      "name": "Joseph",
       "age": null,
       "gender": "male",
-      "occupation": "mechanic",
+      "occupation": "coal miner",
       "relation_to": [
         {
           "name": "narrator",
+          "relationship": "grandfather"
+        },
+        {
+          "name": "mother",
           "relationship": "father"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "husband"
+        }
+      ]
+    },
+    {
+      "name": "Eleanor",
+      "age": null,
+      "gender": "female",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "grandmother"
+        },
+        {
+          "name": "Joseph",
+          "relationship": "wife"
+        }
+      ]
+    },
+    {
+      "name": "mother",
+      "age": null,
+      "gender": "female",
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "mother"
+        },
+        {
+          "name": "Joseph",
+          "relationship": "daughter"
         }
       ]
     },
@@ -100,79 +147,96 @@ For the sentence "My father David worked as a mechanic in Chicago for 35 years",
       "occupation": null,
       "relation_to": [
         {
-          "name": "David", 
+          "name": "Joseph",
+          "relationship": "grandchild"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "grandchild" 
+        },
+        {
+          "name": "mother",
           "relationship": "child"
         }
       ]
-    }
-  ]
-}
-
-Example 3:
-For the sentence "My wife's parents, Robert and Janice, emigrated from Scotland in 1975", the output would be:
-{
-  "family_members": [
-    {
-      "name": "Robert",
-      "age": null,
-      "gender": "male",
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Janice",
-          "relationship": "husband"
-        },
-        {
-          "name": "wife",
-          "relationship": "father"
-        }
-      ]
     },
     {
-      "name": "Janice",
-      "age": null,
-      "gender": "female",
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Robert",
-          "relationship": "wife"
-        },
-        {
-          "name": "wife",
-          "relationship": "mother"
-        }
-      ]
-    },
-    {
-      "name": "wife",
-      "age": null,
-      "gender": "female",
-      "occupation": null,
-      "relation_to": [
-        {
-          "name": "Robert",
-          "relationship": "daughter"
-        },
-        {
-          "name": "Janice",
-          "relationship": "daughter"
-        },
-        {
-          "name": "narrator",
-          "relationship": "wife"
-        }
-      ]
-    },
-    {
-      "name": "narrator",
+      "name": "child1",
       "age": null,
       "gender": null,
       "occupation": null,
       "relation_to": [
         {
-          "name": "wife",
-          "relationship": "husband"
+          "name": "Joseph",
+          "relationship": "child"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "child"
+        }
+      ]
+    },
+    {
+      "name": "child2",
+      "age": null,
+      "gender": null, 
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Joseph",
+          "relationship": "child"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "child"
+        }
+      ]
+    },
+    {
+      "name": "child3",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Joseph",
+          "relationship": "child"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "child"
+        }
+      ]
+    },
+    {
+      "name": "child4",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Joseph",
+          "relationship": "child"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "child"
+        }
+      ]
+    },
+    {
+      "name": "child5",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "relation_to": [
+        {
+          "name": "Joseph",
+          "relationship": "child"
+        },
+        {
+          "name": "Eleanor",
+          "relationship": "child"
         }
       ]
     }
