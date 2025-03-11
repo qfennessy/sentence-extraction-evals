@@ -1,0 +1,26 @@
+{
+    "sentences": [
+      {
+        "sentence": "My great-grandfather fought in World War II from 1942-1945 and received a Purple Heart after being wounded at Normandy.",
+        "extracted_information": {
+          "relationship": "Great-grandfather",
+          "event": "World War II",
+          "time_period": "1942-1945",
+          "award": "Purple Heart",
+          "injury_location": "Normandy"
+        }
+      },
+      {
+        "sentence": "My uncle Richard was a pilot in the Vietnam War from 1968 to 1970, came home with PTSD, and eventually became a high school history teacher.",
+        "extracted_information": {
+          "name": "Richard",
+          "relationship": "Uncle",
+          "occupation": "Pilot",
+          "military_service": "Vietnam War",
+          "service_period": "1968-1970",
+          "medical_condition": "PTSD",
+          "later_occupation": "High school history teacher"
+        }
+      }
+    ]
+}
