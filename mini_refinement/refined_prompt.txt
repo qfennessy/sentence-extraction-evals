@@ -27,6 +27,122 @@ When extracting temporal information, ensure you properly identify:
 Example: When a sentence like "worked in Chicago for 35 years before retiring in 2018" appears, capture both the duration ("35 years") and the significant event year ("2018").
 
 
+## Education domain information extraction
+
+When extracting education information, carefully identify:
+- Institution names (e.g., "Stanford University", "Technical College of Denver")
+- Degree types (e.g., "Bachelor's degree", "Ph.D.", "associate's degree", "certificate")
+- Fields of study (e.g., "Computer Science", "Biology", "Early Childhood Education")
+- Academic achievements (e.g., "valedictorian", "summa cum laude", "thesis with distinction")
+- Teaching positions (e.g., "professor", "adjunct instructor", "department chair")
+- Specializations (e.g., "educational psychology", "curriculum development")
+- Academic metrics (e.g., "4.0 GPA", "top 5% of class", "scored 99th percentile")
+- Publication statistics (e.g., "published 35 papers", "h-index of 28", "5 textbooks")
+- Student impact (e.g., "taught over 3,000 students", "mentored 25 doctoral candidates")
+- Research funding (e.g., "secured $1.5 million grant", "manages $500,000 annual research budget")
+- Program outcomes (e.g., "95% job placement rate", "doubled enrollment in 3 years")
+
+Example: In "My sister Emma graduated with a Master's in Educational Psychology from UCLA in 2018 and now teaches special education at Lincoln Elementary School."
+- The "education_milestone" field should be: "UCLA"
+- The "degree" field should be: "Educational Psychology"
+- The "graduation_year" field should be: "2018"
+- The "occupation" field should be: "special education teacher"
+- The "workplace" field should be: "Lincoln Elementary School"
+
+
+## Medical information extraction
+
+When extracting medical information, carefully identify:
+- Specific conditions and diagnoses (e.g., "type 2 diabetes", "depression", "rheumatoid arthritis")
+- Treatment approaches (e.g., "surgery", "physical therapy", "counseling")
+- Medical specialties (e.g., "oncology", "pediatrics", "orthopedics")
+- Medical roles (e.g., "surgeon", "registered nurse", "medical researcher")
+- Research areas (e.g., "infectious disease research", "cancer treatment")
+- Medical facilities (e.g., "Mayo Clinic", "Johns Hopkins Hospital")
+- Quantitative medical results (e.g., "reduced symptoms by 60%", "improved survival rates by 25%")
+- Treatment durations (e.g., "6 months of chemotherapy", "8 weeks of physical therapy")
+- Patient statistics (e.g., "treated over 1,000 patients", "conducted 500 surgeries")
+
+Example: In "My mother was diagnosed with breast cancer in 2015, underwent chemotherapy at Memorial Sloan Kettering, and has been cancer-free since her successful surgery in 2016."
+- The "medical_condition" field should be: "breast cancer"
+- The "diagnosis_year" field should be: "2015"
+- The "medical_care" field should be: "chemotherapy, surgery"
+- The "hospital" field should be: "Memorial Sloan Kettering"
+- Add "recovery_year": "2016"
+
+
+## Agricultural information extraction
+
+When extracting agricultural information, carefully identify:
+- Farm types (e.g., "dairy farm", "vineyard", "organic vegetable farm")
+- Crop specializations (e.g., "wheat", "soybeans", "heirloom tomatoes")
+- Farming practices (e.g., "sustainable farming", "crop rotation", "hydroponics")
+- Agricultural roles (e.g., "vintner", "farm manager", "agricultural scientist")
+- Land details (e.g., "10 acres", "family homestead", "communal farming project")
+- Livestock specifics (e.g., "cattle ranch", "sheep breeding", "poultry production")
+- Yield statistics (e.g., "produces 15,000 bushels annually", "yields 20 tons per acre")
+- Production metrics (e.g., "400 gallons of milk daily", "1,500 pounds of honey per season")
+- Economic results (e.g., "generates $500,000 in annual revenue", "increased profits by 35%")
+- Resource usage (e.g., "reduced water consumption by 40%", "uses 25% less fertilizer")
+
+Example: In "My grandfather ran a 300-acre corn and soybean farm in Iowa for 45 years before passing it down to my cousin who converted part of it to organic farming in 2018."
+- The "business" field should be: "corn and soybean farm"
+- The "business_location" field should be: "Iowa"
+- The "business_duration" field should be: "45 years"
+- The "business_transfer" field should be: "passed down to cousin"
+- Add "farm_size": "300 acres"
+- Add "farming_practice_change": "converted part to organic farming"
+- Add "farming_practice_change_year": "2018"
+
+
+## Technology information extraction
+
+When extracting technology information, carefully identify:
+- Technical roles (e.g., "software engineer", "data scientist", "UX designer")
+- Technology specializations (e.g., "artificial intelligence", "blockchain", "cybersecurity")
+- Technical achievements (e.g., "developed a patented algorithm", "led system migration")
+- Programming languages/tools (e.g., "Python", "TensorFlow", "AWS")
+- Tech companies and startups (e.g., "founded a tech startup", "works at Google")
+- Innovation details (e.g., "created an app that helps elderly people", "patented a new security system")
+- Performance metrics (e.g., "improved processing speed by 200%", "reduced latency by 40ms")
+- Scale indicators (e.g., "serves 1.5 million users", "processes 10TB of data daily")
+- Investment figures (e.g., "raised $12 million in Series A", "bootstrapped with $250,000")
+- Efficiency metrics (e.g., "reduced code complexity by 35%", "decreased error rates by 75%")
+
+Example: In "My brother-in-law Mark developed a machine learning algorithm at his startup that was acquired by Microsoft in 2021 for $50 million."
+- The "occupation" field should be: "technology entrepreneur"
+- The "business" field should be: "startup"
+- The "achievement" field should be: "developed a machine learning algorithm"
+- The "business_transfer" field should be: "acquired by Microsoft"
+- The "transfer_year" field should be: "2021"
+- Add "acquisition_value": "$50 million"
+
+
+## Sales and business information extraction
+
+When extracting sales and business information, carefully identify:
+- Business roles (e.g., "account executive", "marketing director", "entrepreneur")
+- Sales achievements (e.g., "top salesperson", "exceeded quota by 150%")
+- Business types (e.g., "retail store", "consulting firm", "family business")
+- Business growth (e.g., "expanded to three locations", "doubled revenue")
+- Client relationships (e.g., "managed Fortune 500 accounts", "built client base of 300+ customers")
+- Business transitions (e.g., "rebranded the company", "pivoted to e-commerce")
+- Financial metrics (e.g., "$2.5 million in annual revenue", "35% profit margin")
+- Growth percentages (e.g., "increased sales by 75%", "customer base grew by 120%")
+- Market share data (e.g., "captured 40% of local market", "became the #2 provider nationwide")
+- Sales volumes (e.g., "sold 25,000 units", "closed 150 deals in first quarter")
+- ROI figures (e.g., "achieved 300% ROI on marketing spend", "15% year-over-year growth")
+
+Example: In "My aunt Julia started a small clothing boutique in 2004 which she grew to five locations across California by 2015, before selling the business to a retail chain in 2020."
+- The "business" field should be: "clothing boutique"
+- The "business_location" field should be: "California"
+- The "achievement" field should be: "grew business to five locations"
+- The "achievement_year" field should be: "2015"
+- The "business_transfer" field should be: "sold to a retail chain"
+- The "transfer_year" field should be: "2020"
+- Add "business_founding_year": "2004"
+
+
 
 
 Here is the sentence:
@@ -104,6 +220,46 @@ Extract all family relationships and biographical details mentioned in the sente
       "service_period": "period of military or other service, otherwise null",
       "workplace_location": "location of workplace, otherwise null",
       "retirement_year": "year of retirement if mentioned, otherwise null",
+      "recovery_year": "year of medical recovery if mentioned, otherwise null",
+      "farm_size": "size of farm or agricultural land mentioned, otherwise null",
+      "farming_practice": "specific farming method mentioned, otherwise null",
+      "farming_practice_change": "changes to farming practices mentioned, otherwise null",
+      "farming_practice_change_year": "year of farming practice change if mentioned, otherwise null",
+      "crop_type": "specific crop types mentioned, otherwise null",
+      "livestock_type": "specific livestock types mentioned, otherwise null",
+      "acquisition_value": "monetary value of business acquisition if mentioned, otherwise null",
+      "business_founding_year": "year business was founded if mentioned, otherwise null",
+      "business_growth": "details of business expansion mentioned, otherwise null",
+      "technical_specialty": "technical field of expertise mentioned, otherwise null",
+      "programming_languages": "programming languages or technical tools mentioned, otherwise null",
+      "tech_innovation": "technology innovation details mentioned, otherwise null",
+      "patent_year": "year of patent if mentioned, otherwise null",
+      "research_area": "research field or focus mentioned, otherwise null",
+      "teaching_role": "specific teaching position mentioned, otherwise null",
+      "teaching_subject": "subject taught if mentioned, otherwise null",
+      "sales_achievement": "sales-related achievement if mentioned, otherwise null",
+      "client_base": "client or customer information mentioned, otherwise null",
+      "market_share": "market share percentage or ranking mentioned, otherwise null",
+      "revenue_figures": "revenue amounts mentioned, otherwise null",
+      "profit_margin": "profit margin percentage mentioned, otherwise null",
+      "growth_percentage": "business growth percentage mentioned, otherwise null",
+      "sales_volume": "number of units or deals mentioned, otherwise null",
+      "roi_figures": "return on investment metrics mentioned, otherwise null",
+      "student_count": "number of students taught/mentored mentioned, otherwise null",
+      "publication_count": "number of publications mentioned, otherwise null",
+      "research_funding": "research funding amount mentioned, otherwise null",
+      "academic_ranking": "academic ranking or percentile mentioned, otherwise null",
+      "program_metrics": "program success statistics mentioned, otherwise null",
+      "patient_count": "number of patients treated mentioned, otherwise null",
+      "treatment_duration": "length of medical treatment mentioned, otherwise null",
+      "treatment_efficacy": "effectiveness of treatment as percentage mentioned, otherwise null",
+      "yield_amount": "crop or agricultural yield mentioned, otherwise null",
+      "production_volume": "production volume mentioned, otherwise null",
+      "resource_efficiency": "resource usage efficiency mentioned, otherwise null",
+      "performance_improvement": "performance improvement metrics mentioned, otherwise null",
+      "user_metrics": "user or usage statistics mentioned, otherwise null",
+      "processing_metrics": "data processing or computational metrics mentioned, otherwise null",
+      "team_size": "number of team members or employees mentioned, otherwise null",
       "relation_to": [
         {
           "name": "related person's name or descriptor (e.g., 'narrator', 'speaker' for first-person references)",
@@ -1007,6 +1163,438 @@ Example 7: "My maternal great-grandmother, Elizabeth Parker Wilson, was a suffra
         {
           "name": "Elizabeth Parker Wilson",
           "relationship": "great-grandchild"
+        }
+      ]
+    }
+  ]
+}
+
+Example 8: "My father-in-law Dr. Thomas Chen is a renowned neurosurgeon at Mayo Clinic who pioneered a new technique for treating childhood epilepsy that reduced recovery time by 40% and has helped over 500 patients since 2015."
+{
+  "family_members": [
+    {
+      "name": "Thomas Chen",
+      "age": null,
+      "gender": "male",
+      "occupation": "neurosurgeon",
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "title": "Dr.",
+      "workplace": "Mayo Clinic",
+      "specialization": "neurosurgery",
+      "tech_innovation": "pioneered new technique for treating childhood epilepsy",
+      "achievement": "reduced recovery time by 40%",
+      "achievement_year": "2015",
+      "specific_achievement": "helped over 500 patients",
+      "research_area": "childhood epilepsy treatment",
+      "treatment_efficacy": "40% reduction in recovery time",
+      "patient_count": "over 500 patients",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "father-in-law"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "Thomas Chen",
+          "relationship": "child-in-law"
+        }
+      ]
+    }
+  ]
+}
+
+Example 9: "My cousin Sarah developed a cybersecurity app using Python and TensorFlow that won the MIT Innovation Challenge in 2022 and was later acquired by Google for their Cloud Security division."
+{
+  "family_members": [
+    {
+      "name": "Sarah",
+      "age": null,
+      "gender": "female",
+      "occupation": "technology developer",
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": "app development",
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "technical_specialty": "cybersecurity",
+      "programming_languages": "Python, TensorFlow",
+      "tech_innovation": "cybersecurity app",
+      "achievement": "won MIT Innovation Challenge",
+      "achievement_year": "2022",
+      "business_transfer": "acquired by Google",
+      "specific_achievement": "Cloud Security division acquisition",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "cousin"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "Sarah",
+          "relationship": "cousin"
+        }
+      ]
+    }
+  ]
+}
+
+Example 10: "My brother-in-law Michael is a professor of Educational Psychology at Stanford who has published three textbooks on childhood development and recently received a $2 million grant to study technology's impact on learning disabilities."
+{
+  "family_members": [
+    {
+      "name": "Michael",
+      "age": null,
+      "gender": "male",
+      "occupation": "professor",
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": "Stanford",
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": "married",
+      "work_duration": null,
+      "teaching_role": "professor",
+      "teaching_subject": "Educational Psychology",
+      "workplace": "Stanford",
+      "achievement": "published three textbooks",
+      "specific_achievement": "received $2 million grant",
+      "research_area": "technology's impact on learning disabilities, childhood development",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "brother-in-law"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "Michael",
+          "relationship": "sibling-in-law"
+        }
+      ]
+    }
+  ]
+}
+
+Example 11: "My aunt Elaine transformed her small 50-acre family farm in Oregon into a sustainable organic vineyard producing award-winning Pinot Noir that sells to restaurants across the West Coast and generates $1.2 million in annual revenue."
+{
+  "family_members": [
+    {
+      "name": "Elaine",
+      "age": null,
+      "gender": "female",
+      "occupation": "vineyard owner",
+      "birth_year": null,
+      "birth_date": null,
+      "location": "Oregon",
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "business": "vineyard",
+      "business_location": "Oregon",
+      "farm_size": "50 acres",
+      "farming_practice": "sustainable organic",
+      "farming_practice_change": "transformed from family farm to vineyard",
+      "crop_type": "Pinot Noir grapes",
+      "achievement": "award-winning wine",
+      "business_growth": "sells to restaurants across West Coast",
+      "sales_achievement": "$1.2 million in annual revenue",
+      "revenue_figures": "$1.2 million annually",
+      "client_base": "restaurants across West Coast",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "aunt"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "Elaine",
+          "relationship": "niece/nephew"
+        }
+      ]
+    }
+  ]
+}
+
+Example 12: "My brother Alex completed his Ph.D. in Computer Science at MIT with a 4.0 GPA, published 12 papers on quantum computing algorithms, and now leads a team of 35 researchers at Google's AI division working on a project that increased model efficiency by 85%."
+{
+  "family_members": [
+    {
+      "name": "Alex",
+      "age": null,
+      "gender": "male",
+      "occupation": "AI researcher",
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": "MIT",
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": "leadership",
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "degree": "Ph.D. in Computer Science",
+      "academic_ranking": "4.0 GPA",
+      "publication_count": "12 papers",
+      "research_area": "quantum computing algorithms",
+      "workplace": "Google's AI division",
+      "technical_specialty": "AI research",
+      "performance_improvement": "increased model efficiency by 85%",
+      "team_size": "leads team of 35 researchers",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "brother"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "age": null,
+      "gender": null,
+      "occupation": null,
+      "birth_year": null,
+      "birth_date": null,
+      "location": null,
+      "birthplace": null,
+      "deathplace": null,
+      "death_year": null,
+      "age_at_death": null,
+      "military_service": null,
+      "education_milestone": null,
+      "graduation_year": null,
+      "languages": null,
+      "languages_count": null,
+      "children_count": null,
+      "children_names": null,
+      "skills": null,
+      "sports": null,
+      "origin": null,
+      "immigration_year": null,
+      "meeting_place": null,
+      "meeting_year": null,
+      "moved_to": null,
+      "move_year": null,
+      "family_status": null,
+      "work_duration": null,
+      "relation_to": [
+        {
+          "name": "Alex",
+          "relationship": "sibling"
         }
       ]
     }
