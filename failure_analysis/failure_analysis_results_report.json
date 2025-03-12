@@ -1,0 +1,339 @@
+{
+  "summary": {
+    "total_results": 3,
+    "failure_count": 1,
+    "success_count": 2,
+    "failure_rate": 33.33333333333333
+  },
+  "field_errors": {
+    "relationship": {
+      "missing": 1,
+      "incorrect": 0,
+      "total": 1,
+      "missing_pct": 100.0,
+      "incorrect_pct": 0.0,
+      "overall_error_pct": 100.0,
+      "occurrences_pct": 100.0
+    },
+    "event": {
+      "missing": 1,
+      "incorrect": 0,
+      "total": 1,
+      "missing_pct": 100.0,
+      "incorrect_pct": 0.0,
+      "overall_error_pct": 100.0,
+      "occurrences_pct": 100.0
+    },
+    "time_period": {
+      "missing": 1,
+      "incorrect": 0,
+      "total": 1,
+      "missing_pct": 100.0,
+      "incorrect_pct": 0.0,
+      "overall_error_pct": 100.0,
+      "occurrences_pct": 100.0
+    },
+    "award": {
+      "missing": 1,
+      "incorrect": 0,
+      "total": 1,
+      "missing_pct": 100.0,
+      "incorrect_pct": 0.0,
+      "overall_error_pct": 100.0,
+      "occurrences_pct": 100.0
+    },
+    "injury_location": {
+      "missing": 1,
+      "incorrect": 0,
+      "total": 1,
+      "missing_pct": 100.0,
+      "incorrect_pct": 0.0,
+      "overall_error_pct": 100.0,
+      "occurrences_pct": 100.0
+    }
+  },
+  "sentence_clusters": [
+    {
+      "cluster_id": 0,
+      "sentences": [
+        {
+          "sentence": "My great-grandfather fought in World War II from 1942-1945 and received a Purple Heart after being wounded at Normandy.",
+          "expected": {
+            "relationship": "Great-grandfather",
+            "event": "World War II",
+            "time_period": "1942-1945",
+            "award": "Purple Heart",
+            "injury_location": "Normandy"
+          },
+          "extracted": {
+            "family_members": [
+              {
+                "name": "great-grandfather",
+                "age": null,
+                "gender": "male",
+                "occupation": null,
+                "birth_year": null,
+                "birth_date": null,
+                "location": null,
+                "birthplace": null,
+                "deathplace": null,
+                "death_year": null,
+                "age_at_death": null,
+                "military_service": "fought in World War II, received Purple Heart, wounded at Normandy",
+                "education_milestone": null,
+                "graduation_year": null,
+                "languages": null,
+                "languages_count": null,
+                "children_count": null,
+                "children_names": null,
+                "skills": null,
+                "sports": null,
+                "origin": null,
+                "immigration_year": null,
+                "meeting_place": null,
+                "meeting_year": null,
+                "moved_to": null,
+                "move_year": null,
+                "family_status": null,
+                "work_duration": null,
+                "medical_condition": "wounded",
+                "diagnosis_age": null,
+                "diagnosis_year": null,
+                "achievement": "Purple Heart",
+                "specific_achievement": null,
+                "achievement_year": null,
+                "adoption_year": null,
+                "age_at_adoption": null,
+                "degree": null,
+                "graduation_distinction": null,
+                "graduation_date": null,
+                "title": null,
+                "specialization": null,
+                "career_duration": null,
+                "workplace": null,
+                "vessel_name": null,
+                "historical_note": null,
+                "reason": null,
+                "birth_circumstance": null,
+                "birth_weight": null,
+                "medical_care": null,
+                "hospital": null,
+                "activism": null,
+                "activism_location": null,
+                "activism_year": null,
+                "legal_consequence": null,
+                "historical_context": null,
+                "historical_event": "World War II",
+                "historical_event_year": null,
+                "children_description": null,
+                "adoption_type": null,
+                "fostering_duration": null,
+                "business": null,
+                "business_location": null,
+                "business_duration": null,
+                "business_transfer": null,
+                "transfer_year": null,
+                "service_period": "1942-1945",
+                "workplace_location": null,
+                "retirement_year": null,
+                "relation_to": [
+                  {
+                    "name": "narrator",
+                    "relationship": "great-grandfather"
+                  }
+                ]
+              },
+              {
+                "name": "narrator",
+                "age": null,
+                "gender": null,
+                "occupation": null,
+                "birth_year": null,
+                "birth_date": null,
+                "location": null,
+                "birthplace": null,
+                "deathplace": null,
+                "death_year": null,
+                "age_at_death": null,
+                "military_service": null,
+                "education_milestone": null,
+                "graduation_year": null,
+                "languages": null,
+                "languages_count": null,
+                "children_count": null,
+                "children_names": null,
+                "skills": null,
+                "sports": null,
+                "origin": null,
+                "immigration_year": null,
+                "meeting_place": null,
+                "meeting_year": null,
+                "moved_to": null,
+                "move_year": null,
+                "family_status": null,
+                "work_duration": null,
+                "medical_condition": null,
+                "diagnosis_age": null,
+                "diagnosis_year": null,
+                "achievement": null,
+                "specific_achievement": null,
+                "achievement_year": null,
+                "adoption_year": null,
+                "age_at_adoption": null,
+                "degree": null,
+                "graduation_distinction": null,
+                "graduation_date": null,
+                "title": null,
+                "specialization": null,
+                "career_duration": null,
+                "workplace": null,
+                "vessel_name": null,
+                "historical_note": null,
+                "reason": null,
+                "birth_circumstance": null,
+                "birth_weight": null,
+                "medical_care": null,
+                "hospital": null,
+                "activism": null,
+                "activism_location": null,
+                "activism_year": null,
+                "legal_consequence": null,
+                "historical_context": null,
+                "historical_event": null,
+                "historical_event_year": null,
+                "children_description": null,
+                "adoption_type": null,
+                "fostering_duration": null,
+                "business": null,
+                "business_location": null,
+                "business_duration": null,
+                "business_transfer": null,
+                "transfer_year": null,
+                "service_period": null,
+                "workplace_location": null,
+                "retirement_year": null,
+                "relation_to": [
+                  {
+                    "name": "great-grandfather",
+                    "relationship": "great-grandchild"
+                  }
+                ]
+              }
+            ]
+          },
+          "full_response": "```json\n{\n  \"family_members\": [\n    {\n      \"name\": \"great-grandfather\",\n      \"age\": null,\n      \"gender\": \"male\",\n      \"occupation\": null,\n      \"birth_year\": null,\n      \"birth_date\": null,\n      \"location\": null,\n      \"birthplace\": null,\n      \"deathplace\": null,\n      \"death_year\": null,\n      \"age_at_death\": null,\n      \"military_service\": \"fought in World War II, received Purple Heart, wounded at Normandy\",\n      \"education_milestone\": null,\n      \"graduation_year\": null,\n      \"languages\": null,\n      \"languages_count\": null,\n      \"children_count\": null,\n      \"children_names\": null,\n      \"skills\": null,\n      \"sports\": null,\n      \"origin\": null,\n      \"immigration_year\": null,\n      \"meeting_place\": null,\n      \"meeting_year\": null,\n      \"moved_to\": null,\n      \"move_year\": null,\n      \"family_status\": null,\n      \"work_duration\": null,\n      \"medical_condition\": \"wounded\",\n      \"diagnosis_age\": null,\n      \"diagnosis_year\": null,\n      \"achievement\": \"Purple Heart\",\n      \"specific_achievement\": null,\n      \"achievement_year\": null,\n      \"adoption_year\": null,\n      \"age_at_adoption\": null,\n      \"degree\": null,\n      \"graduation_distinction\": null,\n      \"graduation_date\": null,\n      \"title\": null,\n      \"specialization\": null,\n      \"career_duration\": null,\n      \"workplace\": null,\n      \"vessel_name\": null,\n      \"historical_note\": null,\n      \"reason\": null,\n      \"birth_circumstance\": null,\n      \"birth_weight\": null,\n      \"medical_care\": null,\n      \"hospital\": null,\n      \"activism\": null,\n      \"activism_location\": null,\n      \"activism_year\": null,\n      \"legal_consequence\": null,\n      \"historical_context\": null,\n      \"historical_event\": \"World War II\",\n      \"historical_event_year\": null,\n      \"children_description\": null,\n      \"adoption_type\": null,\n      \"fostering_duration\": null,\n      \"business\": null,\n      \"business_location\": null,\n      \"business_duration\": null,\n      \"business_transfer\": null,\n      \"transfer_year\": null,\n      \"service_period\": \"1942-1945\",\n      \"workplace_location\": null,\n      \"retirement_year\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"narrator\",\n          \"relationship\": \"great-grandfather\"\n        }\n      ]\n    },\n    {\n      \"name\": \"narrator\",\n      \"age\": null,\n      \"gender\": null,\n      \"occupation\": null,\n      \"birth_year\": null,\n      \"birth_date\": null,\n      \"location\": null,\n      \"birthplace\": null,\n      \"deathplace\": null,\n      \"death_year\": null,\n      \"age_at_death\": null,\n      \"military_service\": null,\n      \"education_milestone\": null,\n      \"graduation_year\": null,\n      \"languages\": null,\n      \"languages_count\": null,\n      \"children_count\": null,\n      \"children_names\": null,\n      \"skills\": null,\n      \"sports\": null,\n      \"origin\": null,\n      \"immigration_year\": null,\n      \"meeting_place\": null,\n      \"meeting_year\": null,\n      \"moved_to\": null,\n      \"move_year\": null,\n      \"family_status\": null,\n      \"work_duration\": null,\n      \"medical_condition\": null,\n      \"diagnosis_age\": null,\n      \"diagnosis_year\": null,\n      \"achievement\": null,\n      \"specific_achievement\": null,\n      \"achievement_year\": null,\n      \"adoption_year\": null,\n      \"age_at_adoption\": null,\n      \"degree\": null,\n      \"graduation_distinction\": null,\n      \"graduation_date\": null,\n      \"title\": null,\n      \"specialization\": null,\n      \"career_duration\": null,\n      \"workplace\": null,\n      \"vessel_name\": null,\n      \"historical_note\": null,\n      \"reason\": null,\n      \"birth_circumstance\": null,\n      \"birth_weight\": null,\n      \"medical_care\": null,\n      \"hospital\": null,\n      \"activism\": null,\n      \"activism_location\": null,\n      \"activism_year\": null,\n      \"legal_consequence\": null,\n      \"historical_context\": null,\n      \"historical_event\": null,\n      \"historical_event_year\": null,\n      \"children_description\": null,\n      \"adoption_type\": null,\n      \"fostering_duration\": null,\n      \"business\": null,\n      \"business_location\": null,\n      \"business_duration\": null,\n      \"business_transfer\": null,\n      \"transfer_year\": null,\n      \"service_period\": null,\n      \"workplace_location\": null,\n      \"retirement_year\": null,\n      \"relation_to\": [\n        {\n          \"name\": \"great-grandfather\",\n          \"relationship\": \"great-grandchild\"\n        }\n      ]\n    }\n  ]\n}\n```",
+          "score": 0.2,
+          "sentence_info": {
+            "sentence": "My great-grandfather fought in World War II from 1...",
+            "score": 0.2,
+            "correct_values": 1,
+            "total_values": 5,
+            "extracted_fields": 0,
+            "total_fields": 5,
+            "error_count": 4
+          }
+        }
+      ],
+      "common_phrases": []
+    }
+  ],
+  "linguistic_patterns": {
+    "complex_temporal": [
+      "My great-grandfather fought in World War II from 1942-1945 and received a Purple Heart after being wounded at Normandy."
+    ]
+  },
+  "success_comparison": {
+    "sentence_complexity": {
+      "avg_failure_length": 19.0,
+      "avg_success_length": 30.0,
+      "length_difference_pct": -36.66666666666667,
+      "avg_failure_commas": 0.0,
+      "avg_success_commas": 3.0,
+      "comma_difference_pct": -100.0
+    },
+    "field_complexity": {
+      "avg_failure_fields": 5.0,
+      "avg_success_fields": 8.0,
+      "field_difference_pct": -37.5
+    },
+    "unique_fields": {
+      "unique_to_failures": [
+        "time_period",
+        "event",
+        "injury_location",
+        "award"
+      ],
+      "unique_to_successes": [
+        "age_at_adoption",
+        "death_year",
+        "name",
+        "spouse",
+        "adoption_year",
+        "occupation",
+        "career_duration",
+        "talent",
+        "location",
+        "career_start",
+        "birth_country",
+        "cause_of_death",
+        "number_of_children"
+      ]
+    }
+  },
+  "prompt_improvement_areas": [
+    {
+      "area": "field_relationship",
+      "description": "Improve extraction of 'relationship' field",
+      "evidence": "1 missing and 0 incorrect out of 1 occurrences",
+      "suggestion": "Add explicit examples showing correct extraction of this field"
+    },
+    {
+      "area": "field_event",
+      "description": "Improve extraction of 'event' field",
+      "evidence": "1 missing and 0 incorrect out of 1 occurrences",
+      "suggestion": "Add explicit examples showing correct extraction of this field"
+    },
+    {
+      "area": "field_time_period",
+      "description": "Improve extraction of 'time_period' field",
+      "evidence": "1 missing and 0 incorrect out of 1 occurrences",
+      "suggestion": "Add explicit examples showing correct extraction of this field"
+    },
+    {
+      "area": "field_award",
+      "description": "Improve extraction of 'award' field",
+      "evidence": "1 missing and 0 incorrect out of 1 occurrences",
+      "suggestion": "Add explicit examples showing correct extraction of this field"
+    },
+    {
+      "area": "field_injury_location",
+      "description": "Improve extraction of 'injury_location' field",
+      "evidence": "1 missing and 0 incorrect out of 1 occurrences",
+      "suggestion": "Add explicit examples showing correct extraction of this field"
+    },
+    {
+      "area": "unique_field_time_period",
+      "description": "Improve extraction of rare field: 'time_period'",
+      "evidence": "This field appears only in failure cases",
+      "suggestion": "Add specific examples with this field to the prompt"
+    },
+    {
+      "area": "unique_field_event",
+      "description": "Improve extraction of rare field: 'event'",
+      "evidence": "This field appears only in failure cases",
+      "suggestion": "Add specific examples with this field to the prompt"
+    },
+    {
+      "area": "unique_field_injury_location",
+      "description": "Improve extraction of rare field: 'injury_location'",
+      "evidence": "This field appears only in failure cases",
+      "suggestion": "Add specific examples with this field to the prompt"
+    },
+    {
+      "area": "unique_field_award",
+      "description": "Improve extraction of rare field: 'award'",
+      "evidence": "This field appears only in failure cases",
+      "suggestion": "Add specific examples with this field to the prompt"
+    }
+  ]
+}
