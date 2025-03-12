@@ -25,6 +25,11 @@ test_domain_context_dataset.json
 prompt_with_context.txt
 prompt_without_context.txt
 
+# Prompt refinement artifacts
+prompt_refinement_workflow/**/dataset_splits/
+prompt_refinement_workflow/**/failure_analysis/
+prompt_refinement_workflow/**/final_evaluation/
+
 # C extensions
 *.so
 
