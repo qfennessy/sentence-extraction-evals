@@ -16,6 +16,7 @@ import anthropic
 import openai
 import pandas as pd
 import click
+import concurrent.futures
 from typing import Dict, List, Any, Optional, Protocol, Union
 from tqdm import tqdm
 from pathlib import Path
@@ -195,55 +196,172 @@ def extract_json_from_response(response: str) -> Dict:
         print(f"Failed to extract JSON from response: {response[:100]}...")
         return {}
 
+def process_single_item(client: Union[AnthropicAdapter, OpenAIAdapter, GeminiAdapter, DeepSeekAdapter], 
+                      prompt_template: str, 
+                      item: Dict, 
+                      model: str, 
+                      temperature: float = 0.0,
+                      rate_limiter=None,
+                      cache=None) -> Dict:
+    """Process a single sentence using the model.
+    
+    Args:
+        client: Model client adapter
+        prompt_template: Template for the prompt
+        item: Dictionary containing the sentence and expected data
+        model: Model identifier
+        temperature: Temperature for model responses
+        rate_limiter: Optional rate limiter instance
+        cache: Optional response cache instance
+        
+    Returns:
+        Dict with processing results
+    """
+    sentence = item["sentence"]
+    expected = item["extracted_information"]
+    
+    # Format prompt with the sentence
+    prompt = format_prompt(prompt_template, sentence)
+    
+    # Apply rate limiting if provided
+    if rate_limiter:
+        rate_limiter.wait()
+    
+    # Check cache first if provided
+    cached_response = None
+    if cache:
+        cached_response = cache.get(prompt, sentence, model)
+    
+    try:
+        if cached_response:
+            # Use cached response
+            response_text = cached_response
+        else:
+            # Call model API through the adapter interface
+            response_text = client(prompt, model, temperature)
+            # Cache the response if cache is available
+            if cache:
+                cache.set(prompt, sentence, model, response_text)
+        
+        # Parse the extracted information from the response
+        extracted = extract_json_from_response(response_text)
+        
+        # Return results
+        return {
+            "sentence": sentence,
+            "expected": expected,
+            "extracted": extracted,
+            "full_response": response_text,
+            "cached": cached_response is not None
+        }
+            
+    except Exception as e:
+        print(f"Error processing sentence: {sentence[:50]}...")
+        print(f"Error: {str(e)}")
+        return {
+            "sentence": sentence,
+            "expected": expected,
+            "extracted": {},
+            "error": str(e),
+            "full_response": "",
+            "cached": False
+        }
+
 def evaluate_extraction(client: Union[AnthropicAdapter, OpenAIAdapter, GeminiAdapter, DeepSeekAdapter], 
                        prompt_template: str, 
                        sentences: List[Dict], 
                        model: str, 
                        batch_size: int = 5, 
-                       temperature: float = 0.0) -> List[Dict]:
-    """Evaluate model's extraction capabilities on the given sentences."""
+                       temperature: float = 0.0,
+                       parallel: bool = True,
+                       max_workers: int = 5) -> List[Dict]:
+    """Evaluate model's extraction capabilities on the given sentences.
+    
+    Args:
+        client: Model client adapter
+        prompt_template: Template for the prompt
+        sentences: List of sentences to process
+        model: Model identifier
+        batch_size: Size of each processing batch
+        temperature: Temperature for model responses
+        parallel: Whether to process items in parallel
+        max_workers: Maximum number of parallel workers when parallel=True
+        
+    Returns:
+        List of dictionaries with extraction results
+    """
+    from concurrent.futures import ThreadPoolExecutor
+    import importlib.util
+    
     results = []
+    
+    # Initialize cache and rate limiter if modules are available
+    cache = None
+    rate_limiter = None
+    
+    # Check if extraction_cache module is available
+    if importlib.util.find_spec("extraction_cache"):
+        from extraction_cache import ResponseCache
+        cache = ResponseCache(cache_dir="./cache")
+        print(f"Response caching enabled")
+    
+    # Check if rate_limiting module is available
+    if importlib.util.find_spec("rate_limiting"):
+        from rate_limiting import ModelRateLimiter
+        rate_limiter = ModelRateLimiter().get_limiter(model)
+        print(f"Adaptive rate limiting enabled for {model}")
     
     # Process sentences in batches
     for i in range(0, len(sentences), batch_size):
         batch = sentences[i:i+batch_size]
+        batch_results = []
         
-        for item in tqdm(batch, desc=f"Processing batch {i//batch_size + 1}"):
-            sentence = item["sentence"]
-            expected = item["extracted_information"]
-            
-            # Format prompt with the sentence
-            prompt = format_prompt(prompt_template, sentence)
-            
-            try:
-                # Call model API through the adapter interface
-                response_text = client(prompt, model, temperature)
+        if parallel:
+            # Process batch in parallel using ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                # Create a list of futures
+                futures = [
+                    executor.submit(
+                        process_single_item, 
+                        client, 
+                        prompt_template, 
+                        item, 
+                        model, 
+                        temperature,
+                        rate_limiter,
+                        cache
+                    ) 
+                    for item in batch
+                ]
                 
-                # Parse the extracted information from the response
-                extracted = extract_json_from_response(response_text)
-                
-                # Store results
-                results.append({
-                    "sentence": sentence,
-                    "expected": expected,
-                    "extracted": extracted,
-                    "full_response": response_text
-                })
-                
-                # Add a small delay to avoid rate limiting
-                time.sleep(0.5)
-                
-            except Exception as e:
-                print(f"Error processing sentence: {sentence[:50]}...")
-                print(f"Error: {str(e)}")
-                results.append({
-                    "sentence": sentence,
-                    "expected": expected,
-                    "extracted": {},
-                    "error": str(e),
-                    "full_response": ""
-                })
-                time.sleep(1)  # Longer delay after an error
+                # Process results as they complete
+                for future in tqdm(
+                    concurrent.futures.as_completed(futures), 
+                    total=len(futures),
+                    desc=f"Processing batch {i//batch_size + 1}"
+                ):
+                    batch_results.append(future.result())
+        else:
+            # Process batch sequentially
+            for item in tqdm(batch, desc=f"Processing batch {i//batch_size + 1}"):
+                result = process_single_item(
+                    client, 
+                    prompt_template, 
+                    item, 
+                    model, 
+                    temperature,
+                    rate_limiter,
+                    cache
+                )
+                batch_results.append(result)
+        
+        # Add batch results to overall results
+        results.extend(batch_results)
+    
+    # If cache is available, log statistics
+    if cache:
+        stats = cache.get_stats()
+        print(f"Cache statistics: {stats['entry_count']} entries, {stats['total_size_mb']:.2f} MB")
     
     return results
 
@@ -1244,7 +1362,9 @@ def save_results(results: List[Dict], metrics: Dict, output_dir: Path, model_nam
 @click.option("--batch-size", type=int, default=5, help="Number of sentences to evaluate in each batch")
 @click.option("--max-sentences", type=int, default=None, help="Maximum number of sentences to evaluate")
 @click.option("--temperature", type=float, default=0.0, help="Temperature for model responses (0.0-1.0)")
-def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temperature):
+@click.option("--parallel/--no-parallel", default=True, help="Process sentences in parallel (default: True)")
+@click.option("--max-workers", type=int, default=5, help="Maximum number of parallel workers when parallel=True (default: 5)")
+def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temperature, parallel, max_workers):
     """Evaluate a model's ability to extract family details from sentences."""
     # Start timing the evaluation
     start_time = time.time()
@@ -1300,13 +1420,19 @@ def main(prompt_file, eval_data, api_key, model, batch_size, max_sentences, temp
     click.echo(f"Output directory: {output_dir}")
     
     # Evaluate extraction
+    click.echo(f"Parallelization: {'Enabled' if parallel else 'Disabled'}")
+    if parallel:
+        click.echo(f"Max workers: {max_workers}")
+    
     results = evaluate_extraction(
         client, 
         prompt_template, 
         sentences, 
         model_id, 
         batch_size,
-        temperature
+        temperature,
+        parallel,
+        max_workers
     )
     
     # Calculate metrics
