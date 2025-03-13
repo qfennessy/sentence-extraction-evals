@@ -3,7 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Evaluation outputs and test results
 eval-output/
+**/eval-output/
+*_results/
+*-results/
+*_results_*/
+*-results-*/
 comparative_cv_results/
 cross_validation_results/
 cv_test_results/
@@ -11,24 +17,42 @@ mini_cv_results/
 *_cv_results/
 *_test_results/
 *_test_results_*/
-*_results_*/
 domain_context_results_*/
 cot_test_results/
 simple_cot_test_results/
 complex_cot_test_results/
 structure_preference_results/
+optimization_test_results_*/
+performance_metrics.json
+
+# Extraction results and reports
 extraction_results.json
 extraction_results_*.csv
 extraction_results_*.txt
+*_analysis_results_*.json
+*_summary_*.md
+*_report.md
+*_report_*.md
+phase1_summary.txt
+
+# Test datasets and temporary files
 tiny_test_dataset.json
 test_domain_context_dataset.json
 prompt_with_context.txt
 prompt_without_context.txt
 
+# Cache directories and files
+cache/
+**/cache/
+.cache/
+**/**.cache
+**/.cache
+
 # Prompt refinement artifacts
 prompt_refinement_workflow/**/dataset_splits/
 prompt_refinement_workflow/**/failure_analysis/
 prompt_refinement_workflow/**/final_evaluation/
+prompt_refinement/
 
 # C extensions
 *.so
