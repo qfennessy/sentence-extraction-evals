@@ -28,6 +28,24 @@ setup(
         "tqdm>=4.60.0",
         "matplotlib>=3.5.0",
     ],
+    extras_require={
+        "dev": [
+            "pre-commit>=2.20.0",
+            "black>=23.1.0",
+            "isort>=5.12.0",
+            "flake8>=6.0.0",
+            "flake8-docstrings>=1.7.0",
+            "flake8-bugbear>=23.1.20",
+            "mypy>=1.0.1",
+            "pytest>=7.2.1",
+            "pytest-cov>=4.0.0",
+            "bandit>=1.7.5",
+            "ruff>=0.0.54",
+            "nbqa>=1.7.0",
+            "types-requests>=2.28.11.17",
+            "types-PyYAML>=6.0.12.9",
+        ],
+    },
     entry_points={
         "console_scripts": [
             "extraction-eval=sentence_extraction.scripts.extraction_eval:main",
