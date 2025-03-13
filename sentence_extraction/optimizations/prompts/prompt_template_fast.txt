@@ -1,0 +1,58 @@
+You will extract structured information about family members and relationships from this sentence:
+{SENTENCE}
+
+Extract all family members and their details, and output a JSON object with this structure:
+{
+  "family_members": [
+    {
+      "name": "person's name or identifier",
+      "gender": "female/male if known",
+      "occupation": "occupation if mentioned",
+      "birthplace": "place of birth if mentioned",
+      "birthdate": "birth date if mentioned",
+      "location": "where they live if mentioned",
+      "relation_to": [
+        {
+          "name": "related person's name or 'narrator'",
+          "relationship": "relationship type"
+        }
+      ]
+    }
+  ]
+}
+
+GUIDELINES:
+1. Use "narrator" for first-person references
+2. Create entries for ALL people mentioned
+3. Include all reciprocal relationships
+4. Extract all factual details provided
+
+Example: "My father David worked as a mechanic in Chicago for 35 years."
+{
+  "family_members": [
+    {
+      "name": "David",
+      "gender": "male",
+      "occupation": "mechanic",
+      "location": "Chicago",
+      "work_duration": "35 years",
+      "relation_to": [
+        {
+          "name": "narrator",
+          "relationship": "father"
+        }
+      ]
+    },
+    {
+      "name": "narrator",
+      "relation_to": [
+        {
+          "name": "David",
+          "relationship": "child"
+        }
+      ]
+    }
+  ]
+}
+
+Only return the JSON object, with no other text.

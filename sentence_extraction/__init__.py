@@ -13,7 +13,7 @@ Main components:
 
 Usage:
     from sentence_extraction.core import evaluate_extraction, AnthropicAdapter
-    from sentence_extraction.optimizations import ResponseCache
+    from sentence_extraction.optimizations import ResponseCache, TieredPromptSystem
     from sentence_extraction.utils import calculate_metrics
 """
 
@@ -37,12 +37,22 @@ from .core.extraction_eval import (
     DEEPSEEK_MODELS
 )
 
+# Phase 1 Optimizations
 from .optimizations import (
     ResponseCache,
     AdaptiveRateLimiter,
     ModelRateLimiter,
     ParallelProcessor,
     process_data_parallel
+)
+
+# Phase 2 Optimizations 
+from .optimizations import (
+    extract_json_efficiently,
+    TieredPromptSystem,
+    normalize_structure_fast,
+    compare_extraction_results,
+    calculate_metrics_optimized
 )
 
 from .utils import calculate_metrics
